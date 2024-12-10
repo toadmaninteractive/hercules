@@ -1,0 +1,3 @@
+[submodule "AvalonDock"]
+	path = AvalonDock
+	url = https://github.com/artplant/AvalonDock.git
