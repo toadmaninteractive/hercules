@@ -1,0 +1,39 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:hd="clr-namespace:Hercules.Diagrams">
+
+    <DataTemplate x:Key="ToolBoxItemTemplate" DataType="{x:Type hd:ToolBoxItem}">
+        <Grid HorizontalAlignment="Stretch" Height="27" ToolTip="{Binding Path=Name, Mode=OneTime}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="27" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image
+                Grid.Column="0"
+                Stretch="None"
+                Source="{Binding Path=IconSource, Mode=OneTime}" />
+
+            <TextBlock
+                Grid.Column="1"
+                Margin="3,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontFamily="Segoe UI Semibold"
+                FontSize="12"
+                Text="{Binding Path=Name}" />
+
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#99D3EAEA" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

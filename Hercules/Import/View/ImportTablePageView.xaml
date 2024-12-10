@@ -1,0 +1,223 @@
+﻿<UserControl x:Class="Hercules.Import.View.ImportTablePageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:ae="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
+    xmlns:hc="clr-namespace:Hercules.Controls"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    DataContextChanged="UserControl_DataContextChanged"
+    hc:RoutedCommandBindings.CommandBindings="{Binding RoutedCommandBindings}"
+    mc:Ignorable="d"
+    d:DesignHeight="600" d:DesignWidth="600">
+    <telerik:RadBusyIndicator IsBusy="{Binding Job.IsBusy}" IsIndeterminate="True" Name="BusyIndicator">
+
+        <telerik:RadBusyIndicator.BusyContentTemplate>
+            <DataTemplate>
+                <StackPanel Margin="4" Width="300" DataContext="{Binding DataContext, ElementName=BusyIndicator}" Orientation="Vertical">
+                    <TextBlock Text="{Binding Job.Status}" />
+                    <Button Width="100" Content="Abort" HorizontalAlignment="Right" Margin="0,6,2,0" Command="{Binding Job.Abort}" />
+                </StackPanel>
+            </DataTemplate>
+        </telerik:RadBusyIndicator.BusyContentTemplate>
+
+        <AdornerDecorator>
+            <Border>
+                <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <ScrollViewer VerticalAlignment="Stretch" Width="200" Background="Beige" Margin="0,0,3,0" VerticalScrollBarVisibility="Auto">
+                        <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="8,8,12,8">
+                            <Canvas Height="44">
+                                <BulletDecorator>
+                                    <BulletDecorator.Bullet>
+                                        <Rectangle Width="5" Height="5" Fill="DarkBlue" />
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Foreground="DarkBlue" FontWeight="Bold" FontFamily="Courier New" Margin="4,0,0,0" Text="Step 1" />
+                                </BulletDecorator>
+                                <TextBlock Canvas.Left="10" Canvas.Top="20">Select category</TextBlock>
+                                <Image Source="{StaticResource fugue-tick}" Visibility="{Binding Category, Converter={StaticResource NullToVisibilityConverter}}" Canvas.Right="0" />
+                                <Image Source="{StaticResource fugue-minus}" Visibility="{Binding Category, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=1}" Canvas.Right="0" />
+                            </Canvas>
+                            <ComboBox Margin="10,0,0,0" Style="{StaticResource ValidatedComboBox}" ItemsSource="{Binding Project.SchemafulDatabase.Categories}" SelectedItem="{Binding Category, ValidatesOnDataErrors=True}" DisplayMemberPath="Name" HorizontalAlignment="Stretch" />
+                            <Canvas Height="44" Margin="0,20,0,0">
+                                <BulletDecorator>
+                                    <BulletDecorator.Bullet>
+                                        <Rectangle Width="5" Height="5" Fill="DarkBlue" />
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Foreground="DarkBlue" FontWeight="Bold" FontFamily="Courier New" Margin="4,0,0,0" Text="Step 2" />
+                                </BulletDecorator>
+                                <TextBlock Canvas.Left="10" Canvas.Top="20">Load table</TextBlock>
+                                <Image Source="{StaticResource fugue-tick}" Visibility="{Binding MapTable, Converter={StaticResource NullToVisibilityConverter}}" Canvas.Right="0" />
+                                <Image Source="{StaticResource fugue-minus}" Visibility="{Binding MapTable, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=1}" Canvas.Right="0" />
+                            </Canvas>
+                            <Button
+                            Command="{Binding LoadFromFileCommand}"
+                            Margin="10,0,0,0" Style="{StaticResource FlatBorder}" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-table-import}" />
+                                    <TextBlock
+                                Margin="7,0,0,0"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                FontSize="11.5" FontFamily="Arial"
+                                FontWeight="Regular" FontStretch="UltraExpanded"
+                                FontStyle="Normal" Foreground="Black"
+                                Text = "Load from file" />
+                                </StackPanel>
+                            </Button>
+                            <Button
+                            Command="{Binding PasteCommand}"
+                            Margin="10,5,0,0" Style="{StaticResource FlatBorder}" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-clipboard-paste}" />
+                                    <TextBlock
+                                Margin="7,0,0,0"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                FontSize="11.5" FontFamily="Arial"
+                                FontWeight="Regular" FontStretch="UltraExpanded"
+                                FontStyle="Normal" Foreground="Black"
+                                Text = "Paste from clipboard" />
+                                </StackPanel>
+                            </Button>
+                            <TextBlock Margin="10,4,0,0">OR</TextBlock>
+                            <TextBlock Margin="10,4,0,10">Load JSON</TextBlock>
+                            <Button
+                            Command="{Binding LoadJsonFromFileCommand}"
+                            Margin="10,0,0,0" Style="{StaticResource FlatBorder}" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-table-import}" />
+                                    <TextBlock
+                                Margin="7,0,0,0"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                FontSize="11.5" FontFamily="Arial"
+                                FontWeight="Regular" FontStretch="UltraExpanded"
+                                FontStyle="Normal" Foreground="Black"
+                                Text = "Load from file" />
+                                </StackPanel>
+                            </Button>
+                            <Button
+                            Command="{Binding PasteJsonCommand}"
+                            Margin="10,5,0,0" Style="{StaticResource FlatBorder}" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-clipboard-paste}" />
+                                    <TextBlock
+                                Margin="7,0,0,0"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                FontSize="11.5" FontFamily="Arial"
+                                FontWeight="Regular" FontStretch="UltraExpanded"
+                                FontStyle="Normal" Foreground="Black"
+                                Text = "Paste from clipboard" />
+                                </StackPanel>
+                            </Button>
+                            <Canvas Height="44" Margin="0,20,0,0">
+                                <BulletDecorator>
+                                    <BulletDecorator.Bullet>
+                                        <Rectangle Width="5" Height="5" Fill="DarkBlue" />
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Foreground="DarkBlue" FontWeight="Bold" FontFamily="Courier New" Margin="4,0,0,0" Text="Step 3" />
+                                </BulletDecorator>
+                                <TextBlock Canvas.Left="10" Canvas.Top="20">Select column with ids</TextBlock>
+                                <Image Source="{StaticResource fugue-tick}" Visibility="{Binding IdColumn, Converter={StaticResource NullToVisibilityConverter}}" Canvas.Right="0" />
+                                <Image Source="{StaticResource fugue-minus}" Visibility="{Binding IdColumn, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=1}" Canvas.Right="0" />
+                            </Canvas>
+                            <ComboBox Margin="10,0,0,0" Style="{StaticResource ValidatedComboBox}" ItemsSource="{Binding MapTable.Columns}" SelectedItem="{Binding IdColumn, ValidatesOnDataErrors=True}" DisplayMemberPath="Title" HorizontalAlignment="Stretch" />
+                            <Canvas Height="44" Margin="0,20,0,0">
+                                <BulletDecorator>
+                                    <BulletDecorator.Bullet>
+                                        <Rectangle Width="5" Height="5" Fill="DarkBlue" />
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Foreground="DarkBlue" FontWeight="Bold" FontFamily="Courier New" Margin="4,0,0,0" Text="Step 4" />
+                                </BulletDecorator>
+                                <TextBlock Canvas.Left="10" Canvas.Top="20">Select fields to import</TextBlock>
+                                <Image Source="{StaticResource fugue-tick}" Visibility="{Binding Category, Converter={StaticResource NullToVisibilityConverter}}" Canvas.Right="0" />
+                                <Image Source="{StaticResource fugue-minus}" Visibility="{Binding Category, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=1}" Canvas.Right="0" />
+                            </Canvas>
+                            <telerik:RadComboBox
+                            Margin="10,0,0,0"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            DisplayMemberPath="Field"
+                            ItemsSource="{Binding MapTable.Columns}"
+                            AllowMultipleSelection="True">
+                                <i:Interaction.Behaviors>
+                                    <hc:RadComboBoxSelectedItemsBehavior SelectedItems="{Binding ImportColumns}"/>
+                                </i:Interaction.Behaviors>
+                            </telerik:RadComboBox>
+                            <TextBlock Margin="10,4,0,0">OR</TextBlock>
+                            <TextBlock Margin="10,4,0,0">edit import script manually</TextBlock>
+                            <Canvas Height="20" Margin="0,20,0,0">
+                                <BulletDecorator>
+                                    <BulletDecorator.Bullet>
+                                        <Rectangle Width="5" Height="5" Fill="DarkBlue" />
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Foreground="DarkBlue" FontWeight="Bold" FontFamily="Courier New" Margin="4,0,0,0" Text="Step 5" />
+                                </BulletDecorator>
+                                <Image Source="{StaticResource fugue-tick}" Visibility="{Binding IsCompleted, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" Canvas.Right="0" />
+                            </Canvas>
+                            <Button
+                            Command="{Binding RunCommand}"
+                            Margin="10,0,0,0" Style="{StaticResource FlatBorder}" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-document-import}" />
+                                    <TextBlock
+                                Margin="7,0,0,0"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                FontSize="11.5" FontFamily="Arial"
+                                FontWeight="Regular" FontStretch="UltraExpanded"
+                                FontStyle="Normal" Foreground="Black"
+                                Text = "Apply" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="3" />
+                            <RowDefinition Height="150" />
+                        </Grid.RowDefinitions>
+                        <DataGrid
+                        Grid.Row="0"
+                        Background="#ffe9ecfa"
+                        Name="DataGrid"
+                        AutoGenerateColumns="False"
+                        IsReadOnly="False"
+                        CanUserSortColumns="False"
+                        ItemsSource="{Binding Path=MapTable.Rows}">
+                        </DataGrid>
+                        <GridSplitter HorizontalAlignment="Stretch" Height="3" Grid.Row="1" />
+                        <Border
+                        Grid.Row="2"
+                            BorderThickness="1"
+                            BorderBrush="Gray">
+                            <ae:TextEditor
+                            Name="textEditor"
+                            FontFamily="Courier New"
+                            Document="{Binding ScriptEditor}"
+                            ShowLineNumbers="True"
+                            VerticalScrollBarVisibility="Visible">
+                                <i:Interaction.Behaviors>
+                                    <hc:CodeCompletionBehavior Strategy="{Binding CodeCompletionStrategy}" />
+                                    <hc:SyntaxHighlightBehavior Syntax="SyntaxHighlight\\JavaScript.xshd" />
+                                    <hc:FoldingBehavior />
+                                    <hc:BracketHighlightBehavior />
+                                    <hc:HighlightSelectedIdentifierBehaviour />
+                                </i:Interaction.Behaviors>
+                                <ae:TextEditor.Options>
+                                    <ae:TextEditorOptions ConvertTabsToSpaces="True" EnableImeSupport="False" HighlightCurrentLine="True" />
+                                </ae:TextEditor.Options>
+                                <ae:TextEditor.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Command="{x:Static ApplicationCommands.Copy}" />
+                                        <MenuItem Command="{x:Static ApplicationCommands.Cut}" />
+                                        <MenuItem Command="{x:Static ApplicationCommands.Paste}" />
+                                        <MenuItem Command="{x:Static ApplicationCommands.Delete}" />
+                                        <MenuItem Command="{x:Static ApplicationCommands.SelectAll}" />
+                                    </ContextMenu>
+                                </ae:TextEditor.ContextMenu>
+                            </ae:TextEditor>
+                        </Border>
+                    </Grid>
+                </DockPanel>
+            </Border>
+        </AdornerDecorator>
+    </telerik:RadBusyIndicator>
+</UserControl>

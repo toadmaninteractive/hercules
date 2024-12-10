@@ -1,0 +1,34 @@
+﻿<Window x:Class="Hercules.Documents.View.Dialogs.InheritDocumentDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="{Binding Path=Title}" 
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource DialogWindow}"
+        MinWidth="550" Width="518" MinHeight="280" Height="280"
+        FocusManager.FocusedElement="{Binding ElementName=DocumentTextBox}">
+    <StackPanel Margin="20,20,20,15">
+        <Label Padding="0" VerticalContentAlignment="Center" FontSize="13">Select base document name:</Label>
+        <ComboBox
+            FontSize="16" FontWeight="Bold"
+            Margin="0,12,0,0" Height="28"
+            ItemsSource="{Binding Path=AvailableDocuments}"
+            SelectedItem="{Binding Path=SelectedDocument}"
+            DisplayMemberPath="DocumentId"/>
+        <Label  Margin="0,12,0,0" Padding="0" VerticalContentAlignment="Center" FontSize="13">Enter new document name:</Label>
+        <TextBox
+            Name="DocumentTextBox"
+            HorizontalAlignment="Stretch"
+            FontSize="16" FontWeight="Bold"
+            Margin="0,12,0,0" Height="28"
+            Style="{StaticResource ValidatedTextBox}"
+            Text="{Binding Path=DocumentName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+        <TextBlock 
+            HorizontalAlignment="Left"
+            TextWrapping="Wrap" 
+            Text="{Binding Path=DocumentNameError}" Foreground="IndianRed"/>
+        <Button Margin="0,16,0,0" HorizontalAlignment="Right" Width="75" Height="24" IsDefault="True" Command="{Binding OkCommand}">OK</Button>
+    </StackPanel>
+</Window>

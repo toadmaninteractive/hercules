@@ -1,0 +1,234 @@
+[csharp json.enabled list_implementation=readonly dict_implementation=readonly]
+[csharp namespace="Igor.Schema"]
+[schema enabled]
+module Schema
+{
+    [schema meta=(reference.id="custom_type_name")]
+    define CustomTypeName string;
+    
+    [schema meta=(reference.id="custom_type_name" reference.source reference.unique)]
+    define CustomTypeNameDefinition CustomTypeName;
+    
+    [schema meta=(reference.id="interface_name")]
+    define InterfaceName string;
+    
+    [schema meta=(reference.id="interface_name" reference.source)]
+    define InterfaceNameDefinition string;
+    
+    define GenericArgumentName string;
+
+    enum DescriptorKind
+    {
+        bool;
+        int;
+        float;
+        string;
+        binary;
+        list;
+        dict;
+        enum;
+        record;
+        union;
+        key;
+        localized;
+        datetime;
+        json;
+        custom;
+        generic_instance;
+        generic_argument;
+    }
+    
+    [csharp immutable]
+    variant Descriptor
+    {
+        tag DescriptorKind kind;
+        bool optional = false;
+        ?string help;
+        ?atom editor_key;
+        ?dict<string, json> meta;
+    }
+
+    record Descriptor.BoolDescriptor[bool]
+    {
+        ?bool default;
+    }
+    
+    enum IntTypeName
+    {
+        int8;
+        uint8;
+        int16;
+        uint16;
+        int32;
+        uint32;
+        int64;
+        uint64;
+    }
+
+    record Descriptor.IntDescriptor[int]
+    {
+        ?int default;
+        ?int min;
+        ?int max;
+        ?IntTypeName type;
+    }
+
+    enum FloatTypeName
+    {
+        float32;
+        float64;
+    }
+
+    record Descriptor.FloatDescriptor[float]
+    {
+        ?double default;
+        ?double min;
+        ?double max;
+        ?FloatTypeName type;
+    }
+
+    [csharp immutable]
+    record PathOptions
+    {
+        ?string root;
+        ?string default_path;
+        ?string extension;
+        ?bool include_extension;
+    }
+
+    record Descriptor.StringDescriptor[string]
+    {
+        ?string default;
+        bool multiline = false;
+        bool not_empty = false;
+        ?bool low_cardinality;
+        ?string source;
+        ?PathOptions path;
+        ?string syntax;
+    }
+
+    record Descriptor.BinaryDescriptor[binary]
+    {
+    }
+    
+    record Descriptor.ListDescriptor[list]
+    {
+        Descriptor element;
+        ?json default;
+    }
+    
+    record Descriptor.DictDescriptor[dict]
+    {
+        Descriptor key;
+        Descriptor value;
+        ?dict<string, Descriptor> keys;
+        ?json default;
+    }
+    
+    record Descriptor.EnumDescriptor[enum]
+    {
+        CustomTypeName name;
+        ?string default;
+    }
+    
+    record Descriptor.RecordDescriptor[record]
+    {
+        CustomTypeName name;
+        bool compact = false;
+    }
+    
+    record Descriptor.UnionDescriptor[union]
+    {
+        CustomTypeName name;
+        bool compact = false;
+    }
+    
+    record Descriptor.KeyDescriptor[key]
+    {
+        ?string category;
+        ?InterfaceName interface;
+    }
+    
+    record Descriptor.LocalizedDescriptor[localized]
+    {
+        CustomTypeName name;
+        bool multiline = false;
+    }
+
+    record Descriptor.DateTimeDescriptor[datetime]
+    {
+    }
+
+    record Descriptor.JsonDescriptor[json]
+    {
+    }
+    
+    record Descriptor.CustomDescriptor[custom]
+    {
+    }
+
+    record Descriptor.GenericInstanceDescriptor[generic_instance]
+    {
+        CustomTypeName prototype;
+        list<Descriptor> arguments;
+    }
+    
+    record Descriptor.GenericArgumentDescriptor[generic_argument]
+    {
+        GenericArgumentName name;
+    }
+    
+    enum CustomTypeKind
+    {
+        record;
+        variant;
+        enum;
+        union;
+    }
+    
+    [csharp immutable]
+    variant CustomType
+    {
+        tag CustomTypeKind kind;
+        ?dict<string, json> meta;
+    }
+
+    variant CustomType.StructCustomType
+    {
+        dict<string,Descriptor> fields;
+        ?CustomTypeName parent;
+        list<InterfaceNameDefinition> interfaces;
+    }
+    
+    record StructCustomType.RecordCustomType[record]
+    {
+        ?list<GenericArgumentName> generic_arguments;
+        ?string group;
+    }
+    
+    record StructCustomType.VariantCustomType[variant]
+    {
+        string tag;
+        dict<string,CustomTypeName> children;
+    }
+    
+    record CustomType.EnumCustomType[enum]
+    {
+        list<string> values;
+    }
+ 
+    record CustomType.UnionCustomType[union]
+    {
+        dict<string,?Descriptor> clauses;
+        ?list<GenericArgumentName> generic_arguments;
+    }
+ 
+    [schema root]
+    [csharp immutable]
+    record Schema
+    {
+        dict<CustomTypeNameDefinition, CustomType> custom_types;
+        CustomTypeName document_type;
+        string version = "1.0";
+    }
+}

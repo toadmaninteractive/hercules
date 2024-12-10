@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="Hercules.Documents.View.Editor.SearchNotificationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:hc="clr-namespace:Hercules.Controls"
+             PreviewKeyDown="UserControl_PreviewKeyDown"
+             Height="30"
+             mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <hc:DataEventTrigger Source="{Binding}" EventName="OnActivate">
+            <hc:CallMethod MethodName="Activate" />
+        </hc:DataEventTrigger>
+    </i:Interaction.Triggers>
+    <Border HorizontalAlignment="Stretch" BorderThickness="1" BorderBrush="Gainsboro" Background="Beige">
+        <DockPanel>
+            <TextBox Name="FindTextBox" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" Width="200" Height="22" Margin="4,0,0,0" />
+            <Button IsDefault="{Binding IsFocused, ElementName=FindTextBox}" Command="{Binding FindCommand}" Content="Find" Width="60" Margin="5,3,5,3" />
+            <CheckBox IsChecked="{Binding MatchCase}" Content="Match case" VerticalAlignment="Center" Margin="5,3,0,3" />
+            <CheckBox IsChecked="{Binding WholeWord}" Content="Whole words" VerticalAlignment="Center" Margin="5,3,5,3" />
+            <Button DockPanel.Dock="Right" Command="{Binding CloseCommand}" Template="{StaticResource ButtonCloseTemplate}" Cursor="Hand" HorizontalAlignment="Right" />
+        </DockPanel>
+    </Border>
+</UserControl>

@@ -1,0 +1,76 @@
+﻿<Window x:Class="Hercules.Summary.View.SummaryParamsDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="clr-namespace:Hercules.Controls"
+        xmlns:summary="clr-namespace:Hercules.Summary"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance summary:SummaryParamsDialog}"
+        hc:ApWindow.EscapeClosesWindow="True"
+        Style="{StaticResource DialogWindow}"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+        Title="{Binding Title}" Height="500" Width="400">
+    <StackPanel Margin="10,10,10,10">
+        <Label FontSize="13">Category:</Label>
+        <ComboBox
+            Style="{StaticResource ValidatedComboBox}"
+            HorizontalAlignment="Stretch"
+            FontSize="14"
+            DisplayMemberPath="Name"
+            SelectedItem="{Binding Category, Mode=TwoWay, ValidatesOnDataErrors=True}"
+            ItemsSource="{Binding SchemafulDatabase.Categories}" />
+        <TextBlock 
+            Margin="0,2,0,5"
+            HorizontalAlignment="Left"
+            TextWrapping="Wrap" 
+            Text="{Binding Path=CategoryError}" Foreground="IndianRed"/>
+        <Label FontSize="13">Fields:</Label>
+        <TreeView
+            Height="300"
+            ItemsSource="{Binding Structure.Children}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsCategory}" Value="True">
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type summary:StructureCategory}"
+                        ItemsSource="{Binding Children}">
+                    <TextBlock Foreground = "MidnightBlue" Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type summary:StructureDummyItem}">
+                    <TextBlock Foreground = "Blue" FontStyle="Italic" Text="{Binding Name}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type summary:StructureValue}">
+                    <CheckBox IsChecked="{Binding IsChecked}">
+                        <TextBlock Text="{Binding Name}" ToolTip="{Binding Path=Path}" />
+                    </CheckBox>
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        <Button Style="{StaticResource Flat}" HorizontalAlignment="Left" Command="{Binding CheckAllCommand}" Focusable="False">
+            <StackPanel Orientation="Horizontal">
+                <Image Stretch="None" Source="{StaticResource fugue-ui-check-box}" />
+                <TextBlock Text="Check all" />
+            </StackPanel>
+        </Button>
+        <Button Style="{StaticResource Flat}" HorizontalAlignment="Left" Command="{Binding UncheckAllCommand}" Focusable="False">
+            <StackPanel Orientation="Horizontal">
+                <Image Stretch="None" Source="{StaticResource fugue-ui-check-box-uncheck}" />
+                <TextBlock Text="Uncheck all" />
+            </StackPanel>
+        </Button>
+        <Button
+            HorizontalAlignment="Right"
+            Margin="0,10,0,0"
+            Command="{Binding OkCommand}"
+            Width="75"
+            FontWeight="Bold">OK</Button>
+    </StackPanel>
+</Window>

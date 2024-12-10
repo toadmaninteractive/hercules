@@ -1,0 +1,1218 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:hd="clr-namespace:Hercules.Diagrams"
+                    xmlns:view="clr-namespace:Hercules.Diagrams.View"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:primitives="clr-namespace:Telerik.Windows.Controls.Diagrams.Primitives;assembly=Telerik.Windows.Controls.Diagrams"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    mc:Ignorable="d">
+
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+    <Style x:Key="SimpleConnectorStyle" TargetType="{x:Type hd:BaseConnector}">
+        <Setter Property="Width" Value="160" />
+        <Setter Property="Height" Value="35" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="hd:BaseConnector">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup
+                                x:Name="MouseStates">
+                                <VisualState
+                                    x:Name="Normal" />
+                                <VisualState
+                                    x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Duration="0"
+                                            Storyboard.TargetName="OverElement"
+                                            Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup
+                                x:Name="ActiveStates">
+                                <VisualState
+                                    x:Name="Inactive" />
+                                <VisualState
+                                    x:Name="Active">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Duration="0"
+                                            Storyboard.TargetName="DisplayElement"
+                                            Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Collapsed</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Duration="0"
+                                            Storyboard.TargetName="OverElement"
+                                            Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Duration="0"
+                                            Storyboard.TargetName="OverElement"
+                                            Storyboard.TargetProperty="StrokeThickness">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <sys:Double>2</sys:Double>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Duration="0"
+                                            Storyboard.TargetName="OverElement"
+                                            Storyboard.TargetProperty="Margin">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Thickness>-2</Thickness>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid>
+                            <StackPanel
+                                Orientation="Vertical"
+                                VerticalAlignment="Top">
+
+                                <TextBlock
+                                    Visibility="{TemplateBinding LabelVisibility}"
+                                    HorizontalAlignment="Center"
+                                    Text="{TemplateBinding Caption, Converter={StaticResource ToUpperConvertor}}"
+                                    FontFamily="Verdana"
+                                    FontSize="9" />
+                            </StackPanel>
+
+                            <Ellipse
+                                x:Name="DisplayElement"
+                                Width="12"
+                                Height="12"
+                                Fill="{TemplateBinding FillColor}"
+                                StrokeThickness="{TemplateBinding BorderThickness}"
+                                Stroke="{TemplateBinding Color}" />
+
+                            <Ellipse
+                                x:Name="OverElement"
+                                Width="12"
+                                Height="12"
+                                Visibility="Collapsed"
+                                Fill="{TemplateBinding Color}" />
+                            <ToolTipService.ToolTip>
+                                <ToolTip Content="{TemplateBinding Name}" />
+                            </ToolTipService.ToolTip>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SpecialFieldText" TargetType="{x:Type TextBlock}">
+        <Setter Property="Text" Value="{Binding Path=SpecialFieldText.Value}" />
+        <Setter Property="FontStyle" Value="Italic" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=SpecialFieldText.Value}" Value="{x:Null}">
+                <Setter Property="Text" Value="{Binding Path=Prototype.Caption}" />
+                <Setter Property="FontStyle" Value="Normal" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="BlockBaseStyle" TargetType="view:BlockView">
+        <d:Style.DataContext>
+            <x:Type Type="hd:BlockBase" />
+        </d:Style.DataContext>
+        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+        <Setter Property="Position" Value="{Binding Position, Mode=TwoWay}" />
+        <Setter Property="MinHeight" Value="60" />
+        <Setter Property="MinWidth" Value="75" />
+        <Setter Property="Opacity" Value="0.8" />
+        <Setter Property="ZIndex" Value="4" />
+        <Setter Property="IsRotationEnabled" Value="False" />
+        <Setter Property="UseDefaultConnectors" Value="False" />
+        <Setter Property="CustomConnectors" Value="{Binding Connectors}" />
+        <Setter Property="ToolTip" Value="{Binding Path=Prototype.Name}" />
+    </Style>
+
+    <!-- =========================================   old Arch  =============================== -->
+
+    <Style x:Key="BlockInvalidStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path Data="M98.5,0.5 L100,0.5 L300,0.5 L314.5,0.5 L314.5,1.55334 L314.921,1.61134 C361.971,8.68686 398.233,48.7069 399.467,97.4319 L399.481,98.5 L399.5,98.5 L399.5,100 L399.5,300 L399.5,306.5 L399.283,306.5 L399.21,307.656 C395.789,352.609 362.498,389.212 319.14,397.661 L314.5,398.45 L314.5,399.5 L300,399.5 L100,399.5 L98.5,399.5 L98.5,399.464 L95.1183,399.382 C44.9789,396.96 4.57704,357.425 0.790131,307.656 L0.716904,306.5 L0.5,306.5 L0.5,300 L0.5,100 L0.5,98.5 L0.518982,98.5 L0.532501,97.4319 C1.87337,44.5065 44.5414,1.85153 97.4719,0.531494 L98.5,0.518692 z"
+                              Fill="#FFFDF5E6" Stretch="Fill" Stroke="#FFB22222" StrokeThickness="5" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.25*" />
+                                <RowDefinition Height="0.3*" />
+                                <RowDefinition Height="0.25*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.25*" />
+                                <ColumnDefinition Width="0.3*" />
+                                <ColumnDefinition Width="0.25*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Stretch="None"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockStartStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path
+                            x:Name="Background"
+                            Data="M3.0813,3.83354 L0.97125,7.90224 L-0.480802,14.5614 L-0.019395,383.414 L0.84755,391.184 L3.57772,396.856 L8.29347,401.172 L14.6912,403.559 L464.083,553.425 L472.423,555.323 L481.109,556.68 L489.052,555.693 L497.226,553.547 L948.025,403.314 L955.043,399.323 L958.889,395.376 L960.751,389.58 L961.422,383.908 L959.58,16.1653 L958.518,9.75293 L956.16,4.94343 L950.699,2.3537 L942.261,1.23569 L16.4836,0.758421 L8.16935,1.61377 z"
+                            Fill="#FFE0EAF1"
+                            Stretch="Fill"
+                            Stroke="#FF5B7199"
+                            StrokeThickness="3" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.25*" />
+                                <RowDefinition Height="0.35*" />
+                                <RowDefinition Height="0.4*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.1*" />
+                                <ColumnDefinition Width="0.3*" />
+                                <ColumnDefinition Width="0.1*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Stretch="None"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockFinishStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path
+                            x:Name="Background"
+                            Data="M3.71772,161.817 L1.1153,167.223 L0.019538,172.997 L0.637945,542.186 L1.23922,550.417 L3.34595,555.085 L7.80725,557.911 L19.0845,559.346 L942.822,559.987 L951.497,558.771 L957.197,555.946 L960.047,550.417 L960.667,542.554 L960.667,177.829 L960.006,168.984 L957.362,161.94 L951.579,157.353 L944.352,153.95 L498.892,6.98243 L489.421,4.68113 L480.086,3.82145 L470.585,4.68113 L461.783,6.84401 L16.3399,155.866 L8.79839,158.5 z"
+                            Fill="#FFE0EAF1"
+                            Stretch="Fill"
+                            Stroke="#FF5B7199"
+                            StrokeThickness="3" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.4*" />
+                                <RowDefinition Height="0.35*" />
+                                <RowDefinition Height="0.25*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.1*" />
+                                <ColumnDefinition Width="0.3*" />
+                                <ColumnDefinition Width="0.1*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Stretch="None"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockRandomStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path
+                            x:Name="Background"
+                            Data="M49.9671,0.929203 L51.058,1.21681 L52.0066,2.00655 L97.4958,47.4958 L98.4624,48.8053 L98.7909,50.0663 L98.4755,51.2389 L97.5525,52.4475 L51.9389,98.0611 L50.9265,98.9159 L50.0329,99.2256 L49.126,98.9381 L48.1213,98.1213 L1.90092,51.9009 L1.13024,50.9513 L0.959387,50 L1.20909,49.0265 L1.96104,48.039 L48.0186,1.98138 L48.9552,1.17257 z"
+                            Fill="#FFE0EAF1"
+                            Stretch="Fill"
+                            Stroke="#FF5B7199"
+                            StrokeThickness="3" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.25*" />
+                                <RowDefinition Height="0.3*" />
+                                <RowDefinition Height="0.35*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.35*" />
+                                <ColumnDefinition Width="0.3*" />
+                                <ColumnDefinition Width="0.35*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Stretch="None"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockTimerStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path
+                            x:Name="Background"
+                            Data="M748.5,375 C748.5,581.278 581.278,748.5 375,748.5 C168.722,748.5 1.5,581.278 1.5,375 C1.5,168.722 168.722,1.5 375,1.5 C581.278,1.5 748.5,168.722 748.5,375 z"
+                            Fill="#FFE0EAF1"
+                            Stretch="Fill"
+                            Stroke="#FF5B7199"
+                            StrokeThickness="3" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.25*" />
+                                <RowDefinition Height="0.3*" />
+                                <RowDefinition Height="0.35*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.35*" />
+                                <ColumnDefinition Width="0.3*" />
+                                <ColumnDefinition Width="0.35*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Stretch="None"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockCheckStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path
+                            x:Name="Background"
+                            Data="M90,0.5 L92.5,0.561218 L92.5,0.5 L658.5,0.5 L658.5,0.537903 L660,0.5 C707.885,0.5 746.986,38.1052 749.384,85.3943 L749.462,88.5 L749.5,88.5 L749.5,89.9987 L749.5,90 L749.5,90.0013 L749.5,660 L749.5,660.5 L749.487,660.5 L749.384,664.606 C746.986,711.895 707.885,749.5 660,749.5 L658.5,749.463 L658.5,749.5 L92.5,749.5 L92.5,749.437 L90,749.5 C42.1152,749.5 3.01355,711.895 0.616455,664.606 L0.512634,660.5 L0.5,660.5 L0.5,660 L0.5,90 L0.5,88.5 L0.537903,88.5 L0.616455,85.3943 C3.01355,38.1052 42.1152,0.5 90,0.5 z"
+                            Fill="#FFE0EAF1"
+                            Stretch="Fill"
+                            Stroke="#FF5B7199"
+                            StrokeThickness="5" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.55*" />
+                                <RowDefinition Height="0.3*" />
+                                <RowDefinition Height="0.55*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.55*" />
+                                <ColumnDefinition Width="0.3*" />
+                                <ColumnDefinition Width="0.55*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Stretch="None"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockDecaratorStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path x:Name="Background"
+                              Data="M524.073,469.029 L522.853,460.84 L525.123,451.503 L659.278,13.2612 L663.348,5.08525 L666.069,1.41065 L670.105,-0.79411 L678.833,-1.52903 L1083.42,-1.52903 L1090.74,-0.584134 L1096.18,2.04058 L1099.28,6.13513 L1102.61,13.2216 L1236.37,451.119 L1236.96,460.21 L1235.36,467.35 L1229.83,471.129 L1220.25,473.019 L539.653,473.019 L529.235,471.864 z"
+                              Fill="#FFE0EAF1"
+                              Stretch="Fill"
+                              Stroke="#FF5B7199"
+                              StrokeThickness="5" />
+                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.15*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="0.15*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="1"
+                                Grid.Row="0"
+                                Margin="1"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Center"
+                                Stretch="None"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="3"
+                                TextWrapping="Wrap"
+                                TextAlignment="Center"
+                                Foreground="#FF1B3159"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Center"
+                                Style="{StaticResource SpecialFieldText}" />
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockBehaviourStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path x:Name="Background"
+                              Data="M585.771,463.712 L582.344,459.064 L579.54,452.516 L577.826,445.545 L577.394,437.306 L576.424,29.128 L577.474,21.2884 L579.727,13.5892 L584.857,6.17003 L592.365,0.430654 L601.375,-1.24916 L612.386,-2.29345 L1144.82,-1.17805 L1153.13,0.663972 L1159.57,3.19891 L1166.42,7.14214 L1170.57,12.4937 L1174.94,20.6618 L1177.64,31.0832 L1177.84,438.644 L1176.81,450.192 L1174.31,458.36 L1170.36,464.838 L1163.92,469.345 L1154.78,472.725 L1144.2,474.697 L612.099,471.557 L602.751,470.472 L595.429,468.782 L590.444,466.247 z"
+                              Fill="#FFE0EAF1"
+                              Stretch="Fill"
+                              Stroke="#FF5B7199"
+                              StrokeThickness="5" />
+
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.1*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="4*" />
+                                <RowDefinition Height="0.5*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.15*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="0.15*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Stretch="None"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                TextWrapping="Wrap"
+                                TextAlignment="Center"
+                                FontSize="14"
+                                Foreground="#FF1B3159"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Style="{StaticResource SpecialFieldText}" />
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockConditionStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path
+                            x:Name="Background"
+                            Data="M108,2.5 L108.5,2.51208 L108.5,2.5 L538,2.5 L539.5,2.5 L539.5,2.53625 L540.723,2.56581 C597.731,5.32435 643.5,94.4535 643.5,204 C643.5,313.547 597.731,402.676 540.723,405.434 L539.5,405.464 L539.5,405.5 L538,405.5 L108.5,405.5 L108.5,405.488 L108,405.5 C49.7339,405.5 2.5,315.285 2.5,204 C2.5,92.7146 49.7339,2.5 108,2.5 z"
+                            Fill="#FFE0EAF1"
+                            Stretch="Fill"
+                            Stroke="#FF5B7199"
+                            StrokeThickness="5" />
+
+                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="7*" />
+                                <RowDefinition Height="20" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.15*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="0.15*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Margin="1"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Center"
+                                Stretch="None"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                TextWrapping="Wrap"
+                                TextAlignment="Center"
+                                Foreground="#FF1B3159"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Style="{StaticResource SpecialFieldText}" />
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockAssetStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid>
+                            <Grid.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </Grid.RenderTransform>
+                            <Rectangle x:Name="RectangleBG"
+                                Fill="Honeydew"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                Stroke="#FF1B3159"
+                                StrokeThickness="0.7">
+                            </Rectangle>
+
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Center"
+                                FontSize="12"
+                                Foreground="#FF1B3159"
+                                FontWeight="Bold"
+                                Padding="5"
+                                Margin="10,35,10,20"
+                                Text="{Binding Path=SpecialFieldText.Value}" />
+
+                            <Grid Background="{x:Null}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="40" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Rectangle x:Name="RectangleHeader"
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Fill="#FF2E8B57"
+                                    VerticalAlignment="Stretch"
+                                    Stroke="#FF1B3159"
+                                    HorizontalAlignment="Stretch"
+                                    Panel.ZIndex="1"
+                                    StrokeThickness="0.7" />
+
+                                <Image
+                                    Panel.ZIndex="1"
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Width="16"
+                                    Height="16"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Stretch="Uniform"
+                                    Source="{Binding Path=IconSource, Mode=OneTime}" />
+
+                                <TextBlock Text="{Binding Path=Prototype.Caption}"
+                                    Padding="0"
+                                    Foreground="White"
+                                    FontWeight="Bold"
+                                    Panel.ZIndex="1"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    Grid.Column="1"
+                                    Grid.Row="0" />
+
+                                <TextBlock Text="{Binding Path=SpecialFieldName.Value}"
+                                    Margin="0,5,10,0"
+                                    Foreground="White"
+                                    FontWeight="Bold"
+                                    Panel.ZIndex="1"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Right"
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    FontSize="8"
+                                    FontStyle="Italic" />
+
+                                <StackPanel
+                                    Grid.Column="1"
+                                    Grid.Row="2"
+                                    Margin="5"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Right">
+                                    <Path Data="M12,20A7,7 0 0,1 5,13A7,7 0 0,1 12,6A7,7 0 0,1 19,13A7,7 0 0,1 12,20M12,4A9,9 0 0,0 3,13A9,9 0 0,0 12,22A9,9 0 0,0 21,13A9,9 0 0,0 12,4M12.5,8H11V14L15.75,16.85L16.5,15.62L12.5,13.25V8M7.88,3.39L6.6,1.86L2,5.71L3.29,7.24L7.88,3.39M22,5.72L17.4,1.86L16.11,3.39L20.71,7.25L22,5.72Z"
+                                        Width="18"
+                                        Height="18"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Fill="White"
+                                        Stretch="Fill" />
+                                    <TextBlock
+                                        Padding="0"
+                                        Text="{Binding Path=SpecialFieldTime.Value}"
+                                        Panel.ZIndex="1"
+                                        Margin="3,0,0,0" VerticalAlignment="Center" />
+                                    <StackPanel.Style>
+                                        <Style TargetType="{x:Type StackPanel}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=SpecialFieldTime}" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                </StackPanel>
+                            </Grid>
+
+                            <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="RectangleBG" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Fill" TargetName="RectangleHeader" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockRhombusStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path
+                            x:Name="Background"
+                            Data="M49.9671,0.929203 L51.058,1.21681 L52.0066,2.00655 L97.4958,47.4958 L98.4624,48.8053 L98.7909,50.0663 L98.4755,51.2389 L97.5525,52.4475 L51.9389,98.0611 L50.9265,98.9159 L50.0329,99.2256 L49.126,98.9381 L48.1213,98.1213 L1.90092,51.9009 L1.13024,50.9513 L0.959387,50 L1.20909,49.0265 L1.96104,48.039 L48.0186,1.98138 L48.9552,1.17257 z"
+                            Fill="#FFE0EAF1"
+                            Stretch="Fill" Stroke="#FF5B7199" StrokeThickness="3" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.35*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="0.35*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.25*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="0.25*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Stretch="None"
+                                Visibility="{Binding Path=Prototype.ShowIcon, Mode=OneTime, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+                        </Grid>
+                        <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =========================================   For without Arch  =============================== -->
+
+    <Style x:Key="BlockCommonStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path
+                            x:Name="Background"
+                            Data="{Binding Path=Type, Converter={StaticResource ArchetypeToPathConverter}}"
+                            Stretch="Fill"
+                            Fill="AliceBlue"
+                            Stroke="{Binding RelativeSource={RelativeSource Self}, Path=DataContext, Converter={StaticResource BlockFillColorConverter}}"
+                            StrokeThickness="5">
+                            <Path.Style>
+                                <Style TargetType="{x:Type Path}">
+                                    <Setter Property="LayoutTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="{Binding Path=Type, Converter={StaticResource ArchetypeToPathRotationConverter}}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Path.Style>
+                        </Path>
+                        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height="1*" MinHeight="18" />
+                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="{Binding Path=Type, Converter={StaticResource ArchetypeToBottomMargin}}" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.2*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="0.2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Stretch="None"
+                                Visibility="{Binding Path=Prototype.ShowIcon, Mode=OneTime, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Source="{Binding Path=IconSource, Mode=OneTime}" />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                TextWrapping="Wrap"
+                                TextAlignment="Center"
+                                Foreground="{Binding RelativeSource={RelativeSource Self}, Path=DataContext, Converter={StaticResource BlockFillColorConverter}}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Text="{Binding Path=Prototype.Caption, Mode=OneTime}" />
+
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                TextWrapping="Wrap"
+                                TextAlignment="Center"
+                                Foreground="{Binding RelativeSource={RelativeSource Self}, Path=DataContext, Converter={StaticResource BlockFillColorConverter}}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                FontWeight="Medium"
+                                Text="{Binding Path=SpecialFieldText.Value}" />
+
+                            <StackPanel
+                                    Grid.Column="1"
+                                    Grid.Row="1"
+                                Grid.RowSpan="3"
+                                    Margin="2"
+                                    Orientation="Horizontal"
+                                VerticalAlignment="Top"
+                                    HorizontalAlignment="Right">
+                                <Path Data="M12,20A7,7 0 0,1 5,13A7,7 0 0,1 12,6A7,7 0 0,1 19,13A7,7 0 0,1 12,20M12,4A9,9 0 0,0 3,13A9,9 0 0,0 12,22A9,9 0 0,0 21,13A9,9 0 0,0 12,4M12.5,8H11V14L15.75,16.85L16.5,15.62L12.5,13.25V8M7.88,3.39L6.6,1.86L2,5.71L3.29,7.24L7.88,3.39M22,5.72L17.4,1.86L16.11,3.39L20.71,7.25L22,5.72Z"
+                                        Width="14"
+                                        Height="14"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Fill="{Binding RelativeSource={RelativeSource Self}, Path=DataContext, Converter={StaticResource BlockFillColorConverter}}"
+                                        Stretch="Fill" />
+                                <TextBlock
+                                        Padding="0"
+                                        Text="{Binding Path=SpecialFieldTime.Value}"
+                                        Foreground="{Binding RelativeSource={RelativeSource Self}, Path=DataContext, Converter={StaticResource BlockFillColorConverter}}"
+                                        Panel.ZIndex="1"
+                                        Margin="3,0,0,0" VerticalAlignment="Center" />
+                                <StackPanel.Style>
+                                    <Style TargetType="{x:Type StackPanel}">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=SpecialFieldTime}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                            </StackPanel>
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                            ItemsSource="{Binding Path=Connectors}"
+                            Visibility="Visible"
+                            ItemContainerStyle="{StaticResource SimpleConnectorStyle}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockCommonLiteStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Path
+                            x:Name="Background"
+                            Data="{Binding Path=Type, Converter={StaticResource ArchetypeToPathConverter}}"
+                            Stretch="Fill"
+                            Fill="AliceBlue"
+                            Stroke="{Binding RelativeSource={RelativeSource Self}, Path=DataContext, Converter={StaticResource BlockFillColorConverter}}"
+                            StrokeThickness="3">
+                            <Path.Style>
+                                <Style TargetType="{x:Type Path}">
+                                    <Setter Property="LayoutTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="{Binding Path=Type, Converter={StaticResource ArchetypeToPathRotationConverter}}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Path.Style>
+                        </Path>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.25*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="0.25*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.25*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="0.25*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel
+                                Orientation="Vertical"
+                                VerticalAlignment="Center"
+                                Grid.Row="1"
+                                Grid.Column="1">
+                                <Image
+                                    Stretch="None"
+                                    Margin="0,0,0,5"
+                                    ToolTip="{Binding Path=Prototype.Caption, Mode=OneTime}"
+                                    Visibility="{Binding Path=Prototype.ShowIcon, Mode=OneTime, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    Source="{Binding Path=IconSource, Mode=OneTime}" />
+                                <TextBlock
+                                    TextWrapping="Wrap"
+                                    TextAlignment="Center"
+                                    Foreground="{Binding RelativeSource={RelativeSource Self}, Path=DataContext, Converter={StaticResource BlockFillColorConverter}}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontWeight="Medium"
+                                    Text="{Binding Path=SpecialFieldText.Value}" />
+                            </StackPanel>
+                        </Grid>
+
+                        <primitives:ConnectorsControl
+                            ItemsSource="{Binding Path=Connectors}"
+                            ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                            Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="Background" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Stroke" TargetName="Background" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BlockWindowStyle" BasedOn="{StaticResource BlockBaseStyle}" TargetType="view:BlockView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid>
+                            <Grid.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </Grid.RenderTransform>
+                            <Rectangle x:Name="RectangleBG"
+                                Fill="AliceBlue"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                Stroke="#FF1B3159"
+                                StrokeThickness="0.7">
+                            </Rectangle>
+
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Center"
+                                FontSize="12"
+                                Foreground="#FF1B3159"
+                                FontWeight="Bold"
+                                Padding="5"
+                                Margin="10,35,10,20"
+                                Text="{Binding Path=SpecialFieldText.Value}" />
+
+                            <Grid Background="{x:Null}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="40" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Rectangle x:Name="RectangleHeader"
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Fill="#FF5B7199"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch"
+                                    Panel.ZIndex="1"
+                                    Stroke="#FF1B3159"
+                                    StrokeThickness="0.7" />
+
+                                <Image
+                                    Panel.ZIndex="1"
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Width="16"
+                                    Height="16"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Stretch="Uniform"
+                                    Source="{Binding Path=IconSource, Mode=OneTime}" />
+
+                                <TextBlock Text="{Binding Path=Prototype.Caption}"
+                                    Padding="0"
+                                    Foreground="White"
+                                    FontWeight="Bold"
+                                    Panel.ZIndex="1"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    Grid.Column="1"
+                                    Grid.Row="0" />
+
+                                <TextBlock Text="{Binding Path=SpecialFieldName.Value}"
+                                    Margin="0,5,10,0"
+                                    Foreground="White"
+                                    FontWeight="Bold"
+                                    Panel.ZIndex="1"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Right"
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    FontSize="8"
+                                    FontStyle="Italic" />
+
+                                <StackPanel
+                                    Grid.Column="1"
+                                    Grid.Row="2"
+                                    Margin="5"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Right">
+                                    <Path Data="M12,20A7,7 0 0,1 5,13A7,7 0 0,1 12,6A7,7 0 0,1 19,13A7,7 0 0,1 12,20M12,4A9,9 0 0,0 3,13A9,9 0 0,0 12,22A9,9 0 0,0 21,13A9,9 0 0,0 12,4M12.5,8H11V14L15.75,16.85L16.5,15.62L12.5,13.25V8M7.88,3.39L6.6,1.86L2,5.71L3.29,7.24L7.88,3.39M22,5.72L17.4,1.86L16.11,3.39L20.71,7.25L22,5.72Z"
+                                        Width="18"
+                                        Height="18"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Fill="White"
+                                        Stretch="Fill" />
+                                    <TextBlock
+                                        Padding="0"
+                                        Text="{Binding Path=SpecialFieldTime.Value}"
+                                        Panel.ZIndex="1"
+                                        Margin="3,0,0,0" VerticalAlignment="Center" />
+                                    <StackPanel.Style>
+                                        <Style TargetType="{x:Type StackPanel}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=SpecialFieldTime}" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                </StackPanel>
+                            </Grid>
+
+                            <primitives:ConnectorsControl
+                                ItemsSource="{Binding Path=Connectors}"
+                                ItemContainerStyle="{StaticResource SimpleConnectorStyle}"
+                                Visibility="Visible" />
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=FormListItem.IsValid}" Value="False">
+                            <Setter Property="Fill" TargetName="RectangleBG" Value="#FFEEC3C3"></Setter>
+                            <Setter Property="Fill" TargetName="RectangleHeader" Value="#FFF04D4D"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

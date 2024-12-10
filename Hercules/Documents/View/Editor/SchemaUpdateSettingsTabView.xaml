@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Hercules.Documents.View.Editor.SchemaUpdateSettingsTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="clr-namespace:Hercules.Controls"
+             xmlns:editor="clr-namespace:Hercules.Documents.Editor"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance editor:SchemaUpdateSettingsTab}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel>
+        <TextBlock Margin="0,0,0,10" Text="Schema Update" FontWeight="Black" />
+        <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
+                        Hercules schema defines what document categories are available for the certain database, what fields are available for each category and how they can be edited. When Hercules gets notification on schema update, it can apply the new schema to adjust is views and editors.
+        </TextBlock>
+        <BulletDecorator>
+            <BulletDecorator.Bullet>
+                <Image Source="{StaticResource fugue-exclamation--frame}" Stretch="None" />
+            </BulletDecorator.Bullet>
+            <TextBlock TextWrapping="Wrap" Margin="10,0,0,0">If current changes made by user are not compliant with the new schema, they will be lost when schema is applied.</TextBlock>
+        </BulletDecorator>
+        <BulletDecorator Margin="0,4,0,8">
+            <BulletDecorator.Bullet>
+                <Image Source="{StaticResource fugue-exclamation--frame}" Stretch="None" />
+            </BulletDecorator.Bullet>
+            <TextBlock TextWrapping="Wrap" Margin="10,0,0,0">It is not recommended to save the document with the old schema.</TextBlock>
+        </BulletDecorator>
+        <TextBlock TextWrapping="Wrap">It is recommended to apply the new schema as soon as possible.</TextBlock>
+        <TextBlock Margin="0,8,0,2" Text="Schema update confirmation type:" />
+        <ComboBox MinWidth="300" HorizontalAlignment="Left" ItemsSource="{hc:EnumDescriptions {x:Type editor:SchemaUpdateType}}" SelectedValuePath="Value" SelectedValue="{Binding SchemaUpdate.Value}" />
+        <CheckBox Margin="0,8,0,0" Content="Always ask confirmation when updating schema for modified documents" IsChecked="{Binding AskSchemaUpdateConfirmationForModified.Value}" />
+    </StackPanel>
+</UserControl>

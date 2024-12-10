@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hercules.io &mdash; Hercules Manual 2.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/hercules_theme.css?v=547657ed" />
+
+  
+    <link rel="shortcut icon" href="../_static/hercules.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=67b02a41"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="hercules.json" href="hercules.json.html" />
+    <link rel="prev" title="hercules.http" href="hercules.http.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Hercules Manual
+              <img src="../_static/hercules_64x64.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../designers/designers-index.html">Hercules For Designers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/developers-index.html">Hercules For Developers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="scripting-index.html">Scripting Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="doc.html">doc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.html">hercules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.db.html">hercules.db</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.gapi.html">hercules.gapi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.http.html">hercules.http</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">hercules.io</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#getsheetnames">getSheetNames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loadjsonfromfile">loadJsonFromFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loadtablefromfile">loadTableFromFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loadtextfromfile">loadTextFromFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#savejsontofile">saveJsonToFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#savetabletofile">saveTableToFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#savetexttofile">saveTextToFile</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.json.html">hercules.json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.project.html">hercules.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.xml.html">hercules.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Hercules Manual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="scripting-index.html">Scripting Reference</a></li>
+      <li class="breadcrumb-item active">hercules.io</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hercules-io">
+<h1>hercules.io<a class="headerlink" href="#hercules-io" title="Link to this heading"></a></h1>
+<p>The <strong>hercules.io</strong> variable provides access to the Input/Output library API.</p>
+<section id="getsheetnames">
+<h2>getSheetNames<a class="headerlink" href="#getsheetnames" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">getSheetNames</span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function returns the array of Excel sheet names.</p>
+</section>
+<section id="loadjsonfromfile">
+<h2>loadJsonFromFile<a class="headerlink" href="#loadjsonfromfile" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">loadJsonFromFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function loads JSON from the file. Returns the loaded JSON.</p>
+</section>
+<section id="loadtablefromfile">
+<h2>loadTableFromFile<a class="headerlink" href="#loadtablefromfile" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">loadTableFromFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="nx">options</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Loads a spreadsheet table from the file.</p>
+<ul class="simple">
+<li><p><em>filename</em> - target file name. Use “.xlxs” or “.xls” extensions for an Excel file, or “.csv” for a CSV file</p></li>
+<li><p><em>options</em> - options</p></li>
+</ul>
+<p>Supported options:</p>
+<ul class="simple">
+<li><p><em>sheet</em> - Sheet name or index (default is 0)</p></li>
+</ul>
+<p>The first row in a table is expected to be a row with column headers. The function returns an array of rows, where each row is an object.
+Keys are column header strings and values are cell values.</p>
+<p>For CSV tables, all cell values are strings. For Excel tables, cell values may be string, boolean or numeric values.</p>
+<p><strong>Example</strong>: Load a table from Excel file, and update or create a document for each row:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">hercules</span><span class="p">.</span><span class="nx">openFileDialog</span><span class="p">(</span><span class="s2">&quot;Load a table&quot;</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">var</span><span class="w"> </span><span class="nx">rows</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="nx">hercules</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">loadTableFromFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">);</span>
+<span class="w">   </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="nx">row</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">rows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="kd">var</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">row</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">];</span>
+<span class="w">       </span><span class="kd">var</span><span class="w"> </span><span class="nx">doc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">category</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;my_category&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">field1</span><span class="o">:</span><span class="w"> </span><span class="nx">row</span><span class="p">[</span><span class="s1">&#39;field1&#39;</span><span class="p">],</span>
+<span class="w">          </span><span class="nx">field2</span><span class="o">:</span><span class="w"> </span><span class="nx">row</span><span class="p">[</span><span class="s1">&#39;field2&#39;</span><span class="p">]</span>
+<span class="w">       </span><span class="p">};</span>
+<span class="w">       </span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">updateOrCreate</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">doc</span><span class="p">);</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="loadtextfromfile">
+<h2>loadTextFromFile<a class="headerlink" href="#loadtextfromfile" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">loadTextFromFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function loads text from the file. Returns the loaded string.</p>
+</section>
+<section id="savejsontofile">
+<h2>saveJsonToFile<a class="headerlink" href="#savejsontofile" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">saveJsonToFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span><span class="w"> </span><span class="nx">json</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Saves JSON to the file.</p>
+</section>
+<section id="savetabletofile">
+<h2>saveTableToFile<a class="headerlink" href="#savetabletofile" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">saveTableToFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span><span class="w"> </span><span class="nx">columns</span><span class="p">,</span><span class="w"> </span><span class="nx">rows</span><span class="p">[,</span><span class="w"> </span><span class="nx">options</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Saves a spreadsheet table to the file.</p>
+<ul class="simple">
+<li><p><em>filename</em> - target file name. Use “.xlxs” or “.xls” extensions for an Excel file, or “.csv” for a CSV file</p></li>
+<li><p><em>column</em> - list of table column names</p></li>
+<li><p><em>rows</em> - list of table rows</p></li>
+<li><p><em>options</em> - options</p></li>
+</ul>
+<p>Supported options:</p>
+<ul class="simple">
+<li><p><em>sheet</em> - Sheet name (default is <code class="docutils literal notranslate"><span class="pre">&quot;Sheet1&quot;</span></code>)</p></li>
+<li><p><em>open</em> - Open a spreadsheet after save if <em>open</em> is <code class="docutils literal notranslate"><span class="pre">true</span></code></p></li>
+</ul>
+<p>Each row may be either an array of cells or an object where keys are column names and values are cell values.</p>
+<p><strong>Example</strong>: Export all documents from category <code class="docutils literal notranslate"><span class="pre">my_category</span></code> to the table.
+The table will have 3 columns: <code class="docutils literal notranslate"><span class="pre">_id</span></code> containing document id, and <code class="docutils literal notranslate"><span class="pre">field1</span></code> and <code class="docutils literal notranslate"><span class="pre">field2</span></code> with corresponding document fields.
+The spreadsheet file is opened after export.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">hercules</span><span class="p">.</span><span class="nx">saveFileDialog</span><span class="p">(</span><span class="s2">&quot;Save a table&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;field1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;field2&#39;</span><span class="p">];</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">var</span><span class="w"> </span><span class="nx">rows</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">docsByCategory</span><span class="p">(</span><span class="s1">&#39;my_category&#39;</span><span class="p">);</span>
+<span class="w">   </span><span class="nx">hercules</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">saveTableToFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span><span class="w"> </span><span class="nx">columns</span><span class="p">,</span><span class="w"> </span><span class="nx">rows</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="nx">open</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="savetexttofile">
+<h2>saveTextToFile<a class="headerlink" href="#savetexttofile" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">saveTextToFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="p">[,</span><span class="w"> </span><span class="nx">encoding</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Saves text to the file.</p>
+<ul class="simple">
+<li><p><em>filename</em> - target file name</p></li>
+<li><p><em>text</em> - text to be stored</p></li>
+<li><p><em>encoding</em> - optional encoding, <code class="docutils literal notranslate"><span class="pre">utf-8</span></code> is used by default.</p></li>
+</ul>
+<p><strong>Example</strong>: Save JSON as utf-16 to the project repository file:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">targetText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">json</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;\t&#39;</span><span class="p">);</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">targetPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">hercules</span><span class="p">.</span><span class="nx">project</span><span class="p">.</span><span class="nx">rootFolder</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;\\Content\\Localization\\Game\\en\\Game.archive&quot;</span><span class="p">;</span>
+<span class="nx">hercules</span><span class="p">.</span><span class="nx">io</span><span class="p">.</span><span class="nx">saveTextToFile</span><span class="p">(</span><span class="nx">targetPath</span><span class="p">,</span><span class="w"> </span><span class="nx">targetText</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utf-16&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hercules.http.html" class="btn btn-neutral float-left" title="hercules.http" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hercules.json.html" class="btn btn-neutral float-right" title="hercules.json" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Toadman Interactive.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

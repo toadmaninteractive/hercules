@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
+        <AssemblyName>HerculesTests</AssemblyName>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Hercules</RootNamespace>
+     </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+      <PackageReference Include="Microsoft.Reactive.Testing" Version="4.4.1" />
+      <PackageReference Include="Moq" Version="4.16.1" />
+      <PackageReference Include="NUnit" Version="3.13.2" />
+      <PackageReference Include="NUnit3TestAdapter" Version="4.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Hercules\Hercules.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\**\*" />
+    </ItemGroup>
+</Project>

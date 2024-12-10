@@ -1,0 +1,149 @@
+﻿<UserControl x:Class="Hercules.Bookmarks.View.BookmarksBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:view="clr-namespace:Hercules.Bookmarks.View"
+             xmlns:bookmarks="clr-namespace:Hercules.Bookmarks"
+             xmlns:documents="clr-namespace:Hercules.Documents"
+             HorizontalAlignment="Stretch"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance bookmarks:BookmarksBar}"
+             d:DesignWidth="300">
+    <Menu
+        Focusable="True"
+        VerticalAlignment="Top"
+        AllowDrop="True"
+        DragOver="BookmarksBar_DragOver"
+        Drop="BookmarksBar_Drop"
+        ItemsSource="{Binding Root.Items}"
+        Visibility="{Binding Path=ViewBookmarksBar.Value, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}">
+        <Menu.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel MinHeight="22" />
+            </ItemsPanelTemplate>
+        </Menu.ItemsPanel>
+        <Menu.Resources>
+            <ContextMenu x:Key="BookmarkContextMenu">
+                <MenuItem
+                    Header="Remove Bookmark"
+                    Command="{Binding DataContext.RemoveBookmarkCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext}" />
+                <Separator />
+                <MenuItem
+                    Header="Remove All Bookmarks"
+                    Command="{Binding DataContext.RemoveAllBookmarksCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}" />
+                <MenuItem
+                    Header="Add Folder"
+                    Command="{Binding DataContext.AddFolderCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}" />
+                <MenuItem
+                    Header="Add Recent Documents"
+                    Command="{Binding DataContext.AddRecentDocumentsBookmarkCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}" />
+            </ContextMenu>
+            <ContextMenu x:Key="BookmarkFolderContextMenu">
+                <MenuItem
+                    Header="Rename Folder"
+                    Command="{Binding DataContext.RenameFolderCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext}" />
+                <MenuItem
+                    Header="Remove Folder"
+                    Command="{Binding DataContext.RemoveBookmarkCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext}" />
+                <Separator />
+                <MenuItem
+                    Header="Remove All Bookmarks"
+                    Command="{Binding DataContext.RemoveAllBookmarksCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}" />
+                <MenuItem
+                    Header="Add Folder"
+                    Command="{Binding DataContext.AddFolderCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}" />
+                <MenuItem
+                    Header="Add Recent Documents"
+                    Command="{Binding DataContext.AddRecentDocumentsBookmarkCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}" />
+            </ContextMenu>
+            <HierarchicalDataTemplate DataType="{x:Type bookmarks:BookmarkFolder}" ItemsSource="{Binding Items}" />
+            <HierarchicalDataTemplate DataType="{x:Type bookmarks:BookmarkShortcut}" ItemsSource="{Binding Items}" />
+        </Menu.Resources>
+        <Menu.ContextMenu>
+            <ContextMenu>
+                <MenuItem
+                    Header="Remove All Bookmarks"
+                    Command="{Binding RemoveAllBookmarksCommand}" />
+                <MenuItem
+                    Header="Add Folder"
+                    Command="{Binding AddFolderCommand}" />
+                <MenuItem
+                    Header="Add Recent Documents"
+                    Command="{Binding AddRecentDocumentsBookmarkCommand}" />
+            </ContextMenu>
+        </Menu.ContextMenu>
+        <Menu.ItemContainerStyleSelector>
+            <view:BookmarkItemContainerStyleSelector>
+                <view:BookmarkItemContainerStyleSelector.DocumentStyle>
+                    <Style TargetType="{x:Type MenuItem}">
+                        <d:Style.DataContext>
+                            <x:Type Type="documents:IDocument" />
+                        </d:Style.DataContext>
+                        <Setter Property="Header" Value="{Binding Path=DocumentId, Converter={StaticResource UnderscoreConverter}}" />
+                        <Setter Property="Padding" Value="5,1"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Command" Value="{Binding DataContext.EditDocumentCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}" />
+                        <Setter Property="CommandParameter" Value="{Binding}" />
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Bookmark_PreviewMouseLeftButtonDown" />
+                        <EventSetter Event="PreviewMouseMove" Handler="Bookmark_PreviewMouseMove" />
+                        <Setter Property="Icon" Value="{StaticResource image-fugue-blue-document}" />
+                    </Style>
+                </view:BookmarkItemContainerStyleSelector.DocumentStyle>
+                <view:BookmarkItemContainerStyleSelector.BookmarkStyle>
+                    <Style TargetType="{x:Type MenuItem}">
+                        <d:Style.DataContext>
+                            <x:Type Type="bookmarks:BookmarkShortcut" />
+                        </d:Style.DataContext>
+                        <Setter Property="Header" Value="{Binding Path=Name, Converter={StaticResource UnderscoreConverter}}" />
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Padding" Value="5,1"/>
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Bookmark_PreviewMouseLeftButtonDown" />
+                        <EventSetter Event="PreviewMouseMove" Handler="Bookmark_PreviewMouseMove" />
+                        <EventSetter Event="DragOver" Handler="BookmarksBar_DragOver" />
+                        <EventSetter Event="Drop" Handler="BookmarksBar_Drop" />
+                        <Setter Property="Command" Value="{Binding DataContext.OpenBookmarkCommand, RelativeSource={RelativeSource AncestorType=view:BookmarksBarView}}" />
+                        <Setter Property="CommandParameter" Value="{Binding}" />
+                        <Setter Property="ContextMenu" Value="{StaticResource BookmarkContextMenu}" />
+                        <Setter Property="Icon" Value="{Binding Icon, Converter={StaticResource FindResourceConverter}}" />
+                    </Style>
+                </view:BookmarkItemContainerStyleSelector.BookmarkStyle>
+                <view:BookmarkItemContainerStyleSelector.ShortcutFolderStyle>
+                    <Style TargetType="{x:Type MenuItem}">
+                        <d:Style.DataContext>
+                            <x:Type Type="bookmarks:BookmarkShortcut" />
+                        </d:Style.DataContext>
+                        <Setter Property="Header" Value="{Binding Path=Name, Converter={StaticResource UnderscoreConverter}}" />
+                        <Setter Property="Padding" Value="5,2,5,0"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Bookmark_PreviewMouseLeftButtonDown" />
+                        <EventSetter Event="PreviewMouseMove" Handler="Bookmark_PreviewMouseMove" />
+                        <EventSetter Event="DragOver" Handler="BookmarksBar_DragOver" />
+                        <EventSetter Event="Drop" Handler="BookmarksBar_Drop" />
+                        <Setter Property="ContextMenu" Value="{StaticResource BookmarkContextMenu}" />
+                        <Setter Property="Icon" Value="{Binding Icon, Converter={StaticResource FindResourceConverter}}" />
+                    </Style>
+                </view:BookmarkItemContainerStyleSelector.ShortcutFolderStyle>
+                <view:BookmarkItemContainerStyleSelector.BookmarkFolderStyle>
+                    <Style TargetType="{x:Type MenuItem}">
+                        <d:Style.DataContext>
+                            <x:Type Type="bookmarks:BookmarkFolder" />
+                        </d:Style.DataContext>
+                        <Setter Property="Header" Value="{Binding Path=Name, Converter={StaticResource UnderscoreConverter}}" />
+                        <Setter Property="Padding" Value="5,2,5,0"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Bookmark_PreviewMouseLeftButtonDown" />
+                        <EventSetter Event="PreviewMouseMove" Handler="Bookmark_PreviewMouseMove" />
+                        <EventSetter Event="DragOver" Handler="BookmarksBar_DragOver" />
+                        <EventSetter Event="Drop" Handler="BookmarksBar_Drop" />
+                        <Setter Property="ContextMenu" Value="{StaticResource BookmarkFolderContextMenu}" />
+                        <Setter Property="Icon" Value="{Binding Icon, Converter={StaticResource FindResourceConverter}}" />
+                    </Style>
+                </view:BookmarkItemContainerStyleSelector.BookmarkFolderStyle>
+            </view:BookmarkItemContainerStyleSelector>
+        </Menu.ItemContainerStyleSelector>
+    </Menu>
+</UserControl>

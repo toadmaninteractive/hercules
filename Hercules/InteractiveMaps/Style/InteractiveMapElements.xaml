@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:interactiveMaps="clr-namespace:Hercules.InteractiveMaps">
+    <DataTemplate DataType="{x:Type interactiveMaps:InteractiveMapElement}">
+        <StackPanel Orientation="Horizontal">
+            <Button FontFamily="Segoe" FontSize="11" Command="{Binding EditCommand}" Content="Edit" HorizontalAlignment="Left" Width="100" Margin="0,0,4,3" />
+            <CheckBox IsChecked="{Binding IsExpanded}" VerticalAlignment="Center" Style="{StaticResource Chevron}" />
+            <Label Foreground="Red" Content="{Binding ErrorMessage}" Visibility="{Binding HasError, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}" />
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

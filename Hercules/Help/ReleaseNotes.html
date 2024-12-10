@@ -1,0 +1,1180 @@
+﻿<body style='background-color: #e9ecfa;font-family:"Segoe UI"'>
+    <h2>2.3.1b</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>JavaScript API:</b> <i>hercules.debug</i>, <i>hercules.warning</i> and <i>hercules.error</i> logging functions.</li>
+        <li><b>Script Documents:</b> script editor in a separate tab.</li>
+        <li><b>Log Window:</b> filter by log level and content.</li>
+        <li><b>Script Editor:</b> auto complete for local identifiers.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Change time in time editors to be in 24 hours format.</li>
+        <li>Menu options added by <i>Script Documents</i> could introduce the same menu category twice.</li>
+        <li>Fix crash in <i>hercules.db.save</i>.</li>
+    </ul>
+
+    <h2>2.3.0</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>
+            <b>Remote Repositories:</b> Apart from local repository folders, Hercules now supports Gitlab repositories and HTTP storages for file browsing and image previews.
+            Repository can be configured in <i>Project Settings</i>.
+        </li>
+        <li><b>Tile View:</b> view documents as tiles with preview of document captions and images.</li>
+        <li><b>Batch Mode:</b> Hercules can be now used in batch mode as a part of continuous integration pipeline via <i>-batch</i> command line argument. See Help for details.</li>
+        <li><b>Text Editing:</b> the table of all localized texts in the game.</li>
+    </ul>
+
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Document Editor:</b> approval of localized text if <i>approved_text</i> field is available in <i>LocalizedString</i> structure.</li>
+        <li><b>Document Editor:</b> automatically detect color records and provide color editing UI.</li>
+        <li><b>Document Editor:</b> open calculator popup in number editors on <b>=</b> key.</li>
+        <li><b>Document Editor:</b> pan gesture using left mouse button dragging.</li>
+        <li><b>Document Editor:</b> hide preview image on empty asset path and show <i>No Image</i> thumbnail when image could not be loaded.</li>
+        <li><b>Document Source:</b> <i>Word Wrap</i> option in toolbar and context menu.</li>
+        <li><b>Run Script:</b> text search (<i>Find</i> command) in script editor.</li>
+        <li><b>Search in Documents:</b> also return documents with matching IDs.</li>
+        <li><b>Analytics:</b> collect UI/UX analytics events.</li>
+        <li><b>JavaScript API:</b> <i>hercules.getenv</i> get environment variable.</li>
+        <li><b>JavaScript API:</b> <i>hercules.isBatchMode</i> returns true if Hercules is running in batch mode.</li>
+        <li><b>JavaScript API:</b> <i>hercules.db.saveAll</i> saves all documents modified by the script.</li>
+    </ul>
+
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> support Unreal Engine 5 asset previews including JPEG previews.</li>
+    </ul>
+
+    <h2>2.2.8</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Category Graph:</b> new tool for analyzing schema and dependencies among document categories. Access it through <i>Data/Category Graph</i>.</li>
+    </ul>
+
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> fix layout of compact records.</li>
+        <li><b>Document Editor:</b> remove <i>Field Name Alignment</i> option as it never really worked well.</li>
+    </ul>
+
+    <h2>2.2.7</h2>
+    <p><b>Reference Graph</b> is the new tool for tracking dependencies among documents. Access it through <i>Document/Reference Graph</i> menu.</p>
+
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Document Editor:</b> support for custom fields in localized elements.</li>
+        <li><b>Document Editor:</b> <i>format</i> metadata for number elements.</li>
+        <li><b>Document Editor:</b> change representation of DateTime elements from installed ui culture to invariant yyyy-mm-dd.</li>
+        <li><b>Document Editor:</b> display card caption in document id pickers when <i>caption_path</i> attribute is present.</li>
+        <li><b>Document Editor:</b> add context menu to JSON source editor.</li>
+        <li><b>Run Script:</b> automatically load last script run for the project on start.</li>
+        <li><b>Run Script:</b> add context menu to script editor.</li>
+    </ul>
+
+    <h3>JavaScript API:</h3>
+    <ul>
+        <li><i>hercules.gapi</i> API for Google Spreadsheets.</li>
+        <li><i>hercules.http</i> API for HTTP requests.</li>
+        <li><i>hercules.json</i> API for JSON manipulation.</li>
+        <li><i>hercules.connections</i> provides the list of available database connections.</li>
+        <li><i>hercules.loadDatabase</i> allows to load another database. The returned object has the same API as <i>hercules.db</i>.</li>
+        <li><i>hercules.db.connection</i> provides access to database connection properties.</li>
+        <li><i>hercules.db.get</i> can now take document revision as the second argument.</li>
+        <li><i>hercules.db.getDocRevisions</i> returns the list of document revisions.</li>
+        <li><i>hercules.db.getHistory</i> returns database history for a given period.</li>
+        <li><i>hercules.project.username</i> provides current project user name.</li>
+        <li><i>hercules.view</i> allows to open arbitrary text or JSON in a separate tab page.</li>
+        <li><i>hercules.log</i> now accepts arbitrary JSON.</li>
+        <li><i>hercules.customDialog</i> now supports <i>date</i>, <i>time</i> and <i>datetime</i> field types.</li>
+        <li><i>hercules.io.getSheetNames</i> returns the list of workbook sheet names in an Excel file.</li>
+    </ul>
+
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Excel Import:</b> fix importing formula cells.</li>
+        <li><b>Excel Import:</b> last row could be skipped on import.</li>
+        <li><b>Database History:</b> when exporting to Excel, truncate cell values to 32767 characters Excel limit.</li>
+        <li><b>Document Editor:</b> ensure that default values of number fields are within schema min-max interval.</li>
+        <li><b>Document Editor:</b> optimize scrolling of big documents.</li>
+    </ul>
+
+    <h2>2.2.6</h2>
+    <h3>Script Documents:</h3>
+    <ul>
+        <li><i>Documents/New/New Script...</i> command allows to create a document containing a JavaScript script.</li>
+        <li>Scripts can be integrated into main menu and toolbar by providing related properties in the script document.</li>
+        <li>Script documents are shown under the <i>script</i> category in the Database Explorer.</li>
+    </ul>
+
+    <h3>JavaScript API:</h3>
+    <ul>
+        <li><i>hercules.customDialog</i> allows to show a dialog with an arbitrary set of input fields.</li>
+        <li><i>hercules.openFileDialog</i> and <i>hercules.saveFileDialog</i> now allow both default extension (starting with dot) or default filename as the second argument.</li>
+        <li><i>hercules.db.save</i> function allows to save the document immediately (instead of opening it for preview).</li>
+        <li><i>hercules.io.saveTableToFile</i> function allows to save a data table to a sheet (Excel or CSV).</li>
+        <li><i>hercules.io.loadTableFromFile</i> function allows to load a data table from a sheet (Excel or CSV).</li>
+        <li><i>hercules.xml.fromJson</i> function allows to convert JSON model to XML string.</li>
+        <li>Predefined <i>schema</i> variable is no longer available. Use <i>hercules.db.get('schema')</i> instead.</li>
+        <li><b>Scripting Reference:</b> show function names in the content index.</li>
+    </ul>
+
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Summary Table:</b> support for JSON element columns.</li>
+        <li><b>Summary Table:</b> allow to select import time zone.</li>
+        <li><b>Spreadsheet Settings:</b> separate spreadsheet settings from general settings.</li>
+        <li><b>Spreadsheet Settings:</b> allow to setup export time zone format.</li>
+        <li><b>Spreadsheet Settings:</b> customizable CSV separator.</li>
+        <li><b>Document Editor:</b> disallow using mouse wheel for editing of numeric and combobox elements to prevent accidental changes.</li>
+        <li><b>Document Editor:</b> support for multiselect elements.</li>
+        <li><b>Scripting:</b> update JavaScript syntax highlight with modern JavaScript features.</li>
+    </ul>
+
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Summary Table:</b> fix import, export and display of DateTime cells.</li>
+        <li><b>Document Editor:</b> setting values via paste, script or summary table now respects default schema values and does not emit unnecessary warnings.</li>
+        <li><b>Document Editor:</b> fix multiline strings occasionally incorrectly marked as modified.</li>
+        <li><b>Document Editor:</b> fix new list values marked as modified after Take Remote resolution.</li>
+    </ul>
+
+    <h2>2.2.5</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Synchronize Databases:</b> bulk partial selection.</li>
+        <li><b>Document Editor:</b> open document in background if Ctrl is pressed.</li>
+        <li><b>Document Editor:</b> allow to configure time zone for time pickers.</li>
+        <li><b>Scripting:</b> highlight all occurences of a selected identifier.</li>
+        <li><b>Scripting:</b> <i>Once for the whole database</i> is now the default script mode.</li>
+        <li><b>JavaScript API:</b> <i>hercules.db.getOrCreate</i> function.</li>
+        <li><b>JavaScript API:</b> <i>hercules.db.getAllDocs</i> and <i>hercules.db.getDocsByCategory</i> functions now return arrays.</li>
+    </ul>
+
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Summary Table:</b> allow to view dictionary values with Hercules enums (select string) keys.</li>
+        <li><b>Document Editor:</b> fix DateTime editor always marked as modified after document save.</li>
+        <li><b>Document Editor:</b> fix swapped red and green color channels in Unreal Engine asset previews.</li>
+        <li><b>Document Editor:</b> fix closing multiple documents taking a lot of time.</li>
+    </ul>
+
+    <h2>2.2.4</h2>
+    <p><b>New Hercules Manual.</b> Manual is no longer installed locally, but is only available online.</p>
+
+    <h3>New JavaScript API:</h3>
+    <ul>
+        <li><i>hercules.io</i> API for file IO.</li>
+        <li><i>hercules.project</i> API for accessing project settings.</li>
+        <li><i>hercules.xml</i> API for working with XML data.</li>
+        <li><i>hercules.alert</i>, <i>hercules.confirm</i> and <i>hercules.prompt</i> dialogs.</li>
+    </ul>
+
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Import table:</b> more flexible import scripting by introducing table variable.</li>
+        <li><b>Document Editor:</b> support XML syntax highlight in text fields.</li>
+    </ul>
+
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Trash Bin:</b> fix error on opening the tool.</li>
+        <li><b>Scripting:</b> fix utils functions to properly process nested variants.</li>
+    </ul>
+
+    <h2>2.2.3</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Database History:</b> summary information accumulating all changes for a document.</li>
+        <li><b>Document Editor:</b> preview for image file pickers, including UE4 uasset textures.</li>
+        <li><b>Document Editor:</b> support for editing Unreal Engine non-blueprint asset class paths.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Server Browser:</b> <i>Clone database</i> doesn't use replication anymore to prevent authentication issues.</li>
+        <li><b>Document Editor:</b> structs missing in the current document are now marked as modified.</li>
+    </ul>
+
+    <h2>2.2.2</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>Suggest to create a new connection when startup uri doesn't refer to a known connection.</li>
+        <li>Reduce keep-alive for CouchDB listening connection to avoid timeout errors.</li>
+        <li><b>Curve Editor:</b> display element path in the dialog title.</li>
+    </ul>
+
+    <h2>2.2.1</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Document Editor:</b> <i>step</i> and <i>slider.ticks</i> meta attributes to control slider appearance.</li>
+        <li><b>Documentation:</b> add documentation for meta attributes.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> integer dictionary keys were always marked as modified.</li>
+        <li><b>Property Editor:</b> path elements are now correctly displayed.</li>
+        <li><b>Database Explorer:</b> fix displayed letter case when document name is upper case and filter is lower case.</li>
+    </ul>
+
+    <h2>2.2.0</h2>
+    <p>Hercules is now a self-contained .NET Core application and doesn't depend on the .NET Framework version installed in the system. <br /> 32bit systems are no longer supported.</p>
+
+    <h3>Document Editor</h3>
+    <ul>
+        <li>
+            Previously, when the field value was missing or invalid in the document, Hercules would silently overwrite it with the default value.
+            A user could just not be aware of the fact that his document is actually invalid.
+            Now Hercules always marks values as modified in cases when keeping an existing or missing value would make a document invalid for client applications.<br />
+            See <a href="Manual/developers/dirty-documents.html">Manual</a> for details.
+        </li>
+        <li>Such documents with missing or invalid values are now reported by <i>Find Invalid Documents</i> command.</li>
+        <li>If you edit an element value and then edit it back manually (not with Undo), it is no longer marked as modified.</li>
+        <li>It is now possible to undo past document save. (But undo history is still cleared on schema updates.)</li>
+        <li><i>Revert</i> command in form element context menu.</li>
+        <li>Tab stop behaviour improved.</li>
+        <li>Support for editing Unreal Engine blueprint class paths, see <a href="Manual/developers/unreal.html">Manual</a> for details.</li>
+    </ul>
+
+    <h3>Inherited (Linked) Documents (Beta)</h3>
+    <ul>
+        <li>
+            Design of document inheritance has changed. Instead of a JSON patch, an inherited document now stores both its own JSON and base document's JSON.
+            When base document changes, the inherited document should be rebased over the newer version. This approach allows existing clients to use or modify Hercules data
+            without need to support JSON patches. For example, any game can start using document inheritance without any source code modifications.<br />
+            See <a href="Manual/developers/linked-documents.html">Manual</a> for details.
+        </li>
+        <li>Configurable behaviour for JSON rebasing, in particular atomic values and list item keys.</li>
+        <li>Inherited values are now displayed semi-transparently. Previously text color was used for this purpose, which made it impossible to find out the status of modified value (it would always be green).</li>
+        <li><i>Link to another document</i> document toolbar button allows to link an existing document to another document.</li>
+        <li><i>Revert to base document</i> command in form element context menu for inherited documents.</li>
+        <li>When inherited or based documents change category, documents are unlinked.</li>
+    </ul>
+
+    <h3>Diagrams</h3>
+    <ul>
+        <li><b>Property Editor:</b> support dictionaries.</li>
+        <li>Multiple bug fixes of Undo/Redo behaviour.</li>
+        <li>Multiple bug fixes of form-diagram synchronization.</li>
+        <li>Support for non-variant records as diagram blocks.</li>
+    </ul>
+
+    <h3>Curve Editor</h3>
+    <ul>
+        <li><b>Scale</b> tool.</li>
+        <li>Allow to setup axis labels.</li>
+        <li><b>Escape</b> now closes popup windows.</li>
+        <li>UI redesign.</li>
+    </ul>
+
+    <h3>Other Improvements</h3>
+    <ul>
+        <li>Optimize application startup time.</li>
+        <li>New <i>Development</i> application update channel for QA. Don't use it in production.</li>
+        <li>Split manual to two chapters: <b>Hercules for Designers</b> and <b>Hercules for Developers</b>.</li>
+        <li><b>Help/Online Help</b> menu option.</li>
+        <li><b>View Release Notes</b> link in application update dialog.</li>
+        <li><i>F2</i> hotkey for <b>Rename Document</b>.</li>
+        <li><i>Ctrl+E</i> hotkey for <b>Find in Database Explorer</b>.</li>
+        <li>Update JavaScript engine to partially support ECMAScript 6.0.</li>
+    </ul>
+
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Fix opening startup document urls.</li>
+        <li>Fix search in deeply nested variants.</li>
+    </ul>
+
+    <h2>2.1.4</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Schema:</b> support for <i>meta</i> information, that allows to provide custom attributes without extending schema.</li>
+        <li><b>Document Editor:</b> support for custom record titles and checkboxes through meta schema.</li>
+        <li><b>Bookmarks:</b> initial support for user folders.</li>
+        <li><b>Document Editor:</b> allow to drag documents from <b>Database Explorer</b> or <b>Bookmarks Bar</b> to lists of document keys or records containing document keys.</li>
+        <li><b>Document Editor:</b> support preview for plots.</li>
+        <li><b>Server Browser:</b> fix cloning database</li>
+        <li><b>Delete Document:</b> close the deleted document even if it's new, cause that is apparently a user's intention.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Fix renaming and cloning new documents.</li>
+        <li><b>Fauxton:</b> do not pass embedded credentials when opening the page, embedded credentials don't work anymore anyway.</li>
+        <li><b>Plot Editor:</b> fix errors when there're more than 70 points.</li>
+    </ul>
+    <h3>Changes:</h3>
+    <ul>
+        <li>Do not generate <i>scope</i> field anymore.</li>
+        <li><b>Edit in Futon/Fauxton:</b> drop support for CouchDB 1.x Futon web interface, support 2.x Fauxton only.</li>
+        <li>Remove <i>Copy Tiny Url</i> command.</li>
+    </ul>
+
+    <h2>2.1.3</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Curve Editor:</b> auto scale options for preview and editor.</li>
+        <li><b>Curve Editor:</b> allow to tweak preview width and height.</li>
+        <li><b>Curve Editor:</b> <i>Straighten All</i> and <i>Smooth All</i> commands.</li>
+        <li><b>Document Editor:</b> move <i>Convert Category</i>, <i>Add Attachement</i> and <i>Add Custom Field</i> commands from popup menu to toolbar.</li>
+        <li><b>Document Editor:</b> add <i>Expand Subtree</i> and <i>Collapse Subtree</i> commands to popup menu.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Curve Editor:</b> fix knot popup menu.</li>
+        <li><b>Curve Editor:</b> fix tangents on scaled curves.</li>
+    </ul>
+
+    <h2>2.1.2</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Curve Editor:</b> show curve preview in document editor.</li>
+        <li><b>Curve Editor:</b> show curve previews in presets dialog.</li>
+        <li><b>Curve Editor:</b> support smooth normals.</li>
+        <li><b>Curve Editor:</b> make curves compatible with Unreal Engine 4 curves.</li>
+        <li><b>Curve Editor:</b> display mouse coordinates.</li>
+        <li><b>Run Script:</b> support both per document and database scripts.</li>
+        <li><b>Run Script:</b> save and load scripts locally.</li>
+        <li><b>Run Script:</b> allow to import and export JSON.</li>
+        <li><b>Import Table:</b> allow to import JSON.</li>
+        <li><b>Document Editor:</b> improve tooltips.</li>
+        <li><b>Document Editor:</b> show slider for numbers if min and max limits are available.</li>
+        <li><b>Inherited Documents:</b> support for nested values inheritance.</li>
+    </ul>
+
+    <h2>2.1.1</h2>
+    <h3>Features:</h3>
+    <h4>Category groups in Database Explorer</h4>
+    <ul>
+        <li>Categories can be grouped for better user experience.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Composite elements no longer have negative margin in document editor.</li>
+        <li>First character is not removed from KeyElement on auto-complete.</li>
+    </ul>
+
+    <h2>2.1</h2>
+    <h3>Features:</h3>
+    <h4>New Document Form UI</h4>
+    <ul>
+        <li><b>Significant optimization of document loading times and memory footprint (at the cost of slight scrolling sluggishness).</b> This is possible due to UI element virtualization and pooling.</li>
+        <li>Expander UI has changed to make optimizations possible. It may have negative UX impact on large documents. We'll search for the way to compensate it.</li>
+        <li><i>Max nested value offset</i> setting allows to use horizontal space more efficiently for documents with high nestedness.</li>
+    </ul>
+    <h4>Inherited Documents (Alpha)</h4>
+    <ul>
+        <li>
+            This is the initial release of <b>inherited documents</b> feature. Inherited documents store the reference to the base document and the list of changes.
+            User libraries are supposed to apply those changes to the base document to generate the full document.
+        </li>
+        <li>Currently only root level field changes are supported. Any change in nested values will result in overwriting the root level field.</li>
+        <li>Overriden fields are marked with blue.</li>
+        <li>Use <i>Unlink Document</i> toolbar command to unlink inherited document from the base document.</li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>Update Hercules Manual.</li>
+        <li><b>Application Update:</b> show download progress in status bar.</li>
+        <li><b>Summary Table:</b> remove ReadOnly lock button, table is editable by default.</li>
+        <li><b>Document Editor:</b> support syntax highlight for multiline text fields.</li>
+    </ul>
+
+    <h2>2.0.1</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Scripting Reference:</b> use the same theme as <b>Manual</b>.</li>
+        <li><b>Document Editor:</b> fix <i>Whole Words</i> mode for <b>Find</b> command.</li>
+        <li><b>Document Source:</b> implement <b>Find</b> command.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Path editor:</b> fix missing the first character of the path.</li>
+        <li>Optimize and fix unresponsiveness during initial synchronization of big databases.</li>
+        <li>Optimize opening multiple documents at once.</li>
+    </ul>
+
+    <h2>2.0</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>New Hercules Manual.</li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>Support CouchDB 2.3.</li>
+        <li><b>Document Editor</b>: compact mode for records.</li>
+        <li><b>Document Editor</b>: allow to toggle visibility of unset optional fields.</li>
+        <li><b>Document Editor</b>: add toolbar.</li>
+        <li><b>Path editor</b> for string values that are file paths.</li>
+        <li><b>Connection/Project Settings</b> menu allows to specify project repository root folder for path editors.</li>
+        <li><b>Breadcrumbs</b> custom editor.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Import Table:</b> fix category selection.</li>
+        <li>Fix crash in <b>New Custom Editor</b> menu.</li>
+    </ul>
+
+    <h2>1.9.1</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>Support CouchDB 2.2.</li>
+        <li><b>Document Editor:</b> add <i>Summary Table</i> option to the field's context menu.</li>
+        <li><b>Document Editor:</b> valid/modified color indication for dropdowns.</li>
+        <li><b>Document Editor:</b> support typing in document selector dropdowns.</li>
+        <li><b>Curve Editor:</b> save and load presets.</li>
+        <li><b>New Connection/Edit Connection</b>: combo box for known urls.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Fix <i>Copy Hercules Url</i> command.</li>
+        <li><b>Trash Bin:</b> fix restoring deleted documents.</li>
+    </ul>
+
+    <h2>1.9</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Summary Table:</b> show modified flag on the tab header.</li>
+        <li><b>Search:</b> add <i>Opened documents only</i> checkbox.</li>
+        <li>A single <b>New Custom Editor:</b> menu command instead of separate new editor commands per type.</li>
+        <li><b>Curve Editor:</b> delete knots on double click.</li>
+        <li><b>Curve Editor:</b> allow manual coordinate edit.</li>
+        <li><b>Curve Editor:</b> knot context menu.</li>
+        <li><b>Curve Editor:</b> initial preset support (work in progress).</li>
+        <li><b>Diagram Editor:</b> improve block alignment.</li>
+        <li><b>Scripting Reference:</b> improve structure and style.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Search:</b> fix searching field names for variant children fields.</li>
+    </ul>
+
+    <h2>1.8.2</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>Interactive map custom editor with PlayFusion AR database export support.</li>
+        <li><b>Plot editor:</b> allow to delete knots.</li>
+        <li><b>Plot editor:</b> show knot count.</li>
+    </ul>
+
+    <h2>1.8.1</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>Curve and plot custom editors.</li>
+    </ul>
+
+    <h2>1.8</h2>
+    <h3>Features:</h3>
+    <h4>Attachments:</h4>
+    <ul>
+        <li>CouchDB attachments are arbitrary files that can be attached to any document.</li>
+        <li><b>Document Editor:</b> <i>Add Attachment</i> context menu.</li>
+        <li><b>Document Editor:</b> display the list of attachments. Allow to open, add, update and remove attachments.</li>
+        <li><b>Document Editor:</b> drag and drop for attachments.</li>
+        <li><b>Document History:</b> display attachments for document revisions.</li>
+        <li><b>Document History:</b> <i>Load Revision To Editor</i> now correctly loads attachments too.</li>
+        <li><b>Trash Bin:</b> allow to restore documents with attachments.</li>
+        <li><b>Synchronize Databases:</b> display and correctly synchronize attachment changes.</li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Property Editor:</b> display thumbnail for icon elements.</li>
+        <li><b>Icon Picker:</b> make icon picker an expandable dialog window.</li>
+        <li><b>Server Browser:</b> <i>New Database</i> toolbar button.</li>
+        <li><b>Server Browser:</b> <i>Reload</i> toolbar button.</li>
+        <li>Advanced <i>Document/New</i> menu that allows to create different kinds of documents.</li>
+    </ul>
+
+    <h2>1.7.7</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Synchronize Databases:</b> partial document import.</li>
+        <li>Remove old <b>Import Documents</b> tool deprecated by <b>Synchronize Databases</b>.</li>
+        <li><b>Settings:</b> <i>Field Name Alignment</i> setting for document editor.</li>
+        <li><b>Summary Table:</b> When importing table from clipboard or csv process empty strings as nulls.</li>
+        <li><b>Import Table:</b> Excel files support.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Delete old document revisions from cache when document has been deleted and created again by someone else.</li>
+    </ul>
+
+    <h2>1.7.6</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Property Editor:</b> support for more context menu commands, including Copy, Paste, Undo, Redo and others.</li>
+        <li><b>Document Editor:</b> <i>Copy full path</i> command copies path to current element including document name.</li>
+    </ul>
+
+    <h2>1.7.5</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Schema:</b> support for validating not-empty strings.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> expand localized element when navigating to one of translations (e.g. via search result).</li>
+        <li><b>Diagram Editor:</b> fix undoing link deleteion.</li>
+        <li><b>Diagram Editor:</b> do not mess up block left-to-right order when using auto layout.</li>
+        <li><b>Diagram Editor:</b> unset optional field when removing asset link from optional field.</li>
+    </ul>
+
+    <h2>1.7.4</h2>
+    <h3>Diagram Editor Improvements:</h3>
+    <ul>
+        <li>Suggest popup with available blocks when dragging connector to the empty place.</li>
+        <li>Schema: allow to specify slot category, so that only slots of the same category can be connected.</li>
+        <li>Use fugue icons instead of flat icons.</li>
+        <li>Customizable slot colors.</li>
+        <li>Several new block shapes.</li>
+        <li>Improve automatic layout.</li>
+    </ul>
+
+    <h2>1.7.3</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Property Editor:</b> improve visual style.</li>
+        <li><b>Property Editor:</b> support for records and collections.</li>
+        <li><b>Property Editor:</b> properly ignore diagram-specific fields.</li>
+        <li><b>Diagram Editor:</b> several new block shapes.</li>
+        <li><b>Diagram Editor:</b> new <i>Window</i> block archetype supports setting block icons and colors in schema.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Diagram Editor:</b> Fix occasional crash on diagram opening.</li>
+    </ul>
+
+    <h2>1.7.2</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Summary Table:</b> support for dictionaries with document keys.</li>
+        <li><b>Database Explorer</b> and various document tools now correctly work for databases with missing or invalid schema document.</li>
+        <li><b>Database Explorer:</b> when deleting multiple documents ask for confirmation only once, not for each document.</li>
+        <li><b>Database Explorer:</b> show CouchDB design documents.</li>
+        <li><b>Synchronize Databases:</b> show CouchDB design documents.</li>
+        <li><b>Diagram Editor:</b> add <i>AI Interceptor</i> block type.</li>
+        <li><b>Log:</b> highlight errors with red color.</li>
+        <li><b>Schema:</b> support generic types.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Summary Table:</b> inherited fields were not displayed.</li>
+        <li><b>Synchronize Databases:</b> introduce height limit for changes preview text to prevent slow loading.</li>
+        <li><b>Synchronize Databases:</b> fix local caching when synchronizing new documents.</li>
+    </ul>
+
+    <h2>1.7.1</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Application Update:</b> use silent installation.</li>
+        <li><b>Diagrams:</b> update diagram tools on diagram schema change.</li>
+        <li><b>Import Documents</b> now works for databases without schema document.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Java Script:</b> fix assignment of undefined values.</li>
+    </ul>
+
+    <h2>1.7</h2>
+    <h3>Features:</h3>
+    <h4>Dialog Editor:</h4>
+    <ul>
+        <li>First version of Hercules Dialog Editor.</li>
+    </ul>
+    <h4>Server Browser:</h4>
+    <ul>
+        <li>Use <b>Tools/Server Browser</b> to browse CouchDB server database list.</li>
+        <li>Clone existing database to create a new one.</li>
+        <li>Delete CouchDB database (use with caution).</li>
+        <li>Open and Create connection buttons.</li>
+    </ul>
+    <h4>Synchronize Databases:</h4>
+    <ul>
+        <li>Use <b>Data/Synchronize with Database</b> menu to open database synchronization page.</li>
+        <li>Filtering by document name and change type (add/modify/delete) is available.</li>
+        <li>Check changes to synchronize.</li>
+    </ul>
+    <h4>Hercules Database API:</h4>
+    <ul>
+        <li><b>hercules.db.get(id)</b> gets document by id.</li>
+        <li><b>hercules.db.update(document)</b> updates document.</li>
+        <li>Check <b>Help/Scripting Reference</b> for details and examples.</li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>New Connection:</b> automatically pick up username and password from existing connections on the same server.</li>
+        <li><b>New Connection:</b> suggest connection title from database name.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Rename Document:</b> fix renaming in dictionary keys.</li>
+        <li><b>Diagram Editor:</b> fix diagram and form desynchronization after schema update.</li>
+        <li><b>Localized Element:</b> fix locale validation.</li>
+        <li><b>Document History:</b> mark document as modified after <b>Load Revision</b>.</li>
+    </ul>
+
+    <h2>1.6.1</h2>
+    <h3>Features:</h3>
+    <h4>Custom Fields:</h4>
+    <ul>
+        <li>
+            Custom fields are fields that are not defined in document schema. A document can have an arbitrary number of custom fields.
+            Custom fields are usually artefacts related to schema changes, but may be also used for comments, todo notes, extra development info, etc.
+        </li>
+        <li><b>Document Editor:</b> show JSON editors for <b>custom fields</b>.</li>
+        <li><b>Document Editor:</b> remove custom field with a cross button near field name.</li>
+        <li><b>Document Editor:</b> remove all custom fields with <i>Remove All Custom Fields</i> popup menu command.</li>
+        <li><b>Document Editor:</b> add a new custom field with <i>Add Custom Field</i> popup menu command (<u>Alt+F</u>).</li>
+        <li><b>Source Editor:</b> custom fields are included into source.</li>
+        <li><b>JavaScript API:</b> <i>utils.getCustomFields(doc)</i> function returns the list of document custom field names.</li>
+    </ul>
+    <h4>Schemaless Documents:</h4>
+    <ul>
+        <li>Schemaless documents are documents without known category. Hercules doesn't know how to validate schemaless documents.</li>
+        <li><b>Database Explorer:</b> show <i>no category</i> group with schemaless documents.</li>
+        <li><b>Document Editor:</b> all fields of schemaless documents can be edited as custom.</li>
+        <li>Meta schema for form and diagram schemas (<i>schema</i> and <i>diagram_schema</i> documents) and icon editors.</li>
+    </ul>
+    <h4>Trash Bin:</h4>
+    <ul>
+        <li><b>Data/Trash Bin</b> menu item opens the list of deleted documents.</li>
+        <li>Documents are listed in order of removal, the most recent at the top.</li>
+        <li>Use <b>Restore</b> button to restore the recent version of the deleted document. Restored document is opened as the new one. Restoring old documents may fail.</li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Document Editor:</b> use popup menu <i>Convert Category</i> command to convert a document to another category.</li>
+        <li><b>Document Editor:</b> support JSON as element type: use <u>[schema editor=json]</u> igor attribute.</li>
+        <li><b>Document Editor:</b> group consecutive changes into a single Undo/Redo command.</li>
+        <li><b>Diagram Editor:</b> Undo/Redo support.</li>
+        <li><b>Diagram Editor:</b> allow to refine block positions with keyboard arrows.</li>
+        <li><b>Property Editor:</b> <i>Move To Form</i> and <i>Move To Source</i> popup menu commands.</li>
+        <li><b>Property Editor:</b> activate toolbar commands from the current page (e.g. <i>Save Document</i>).</li>
+        <li><b>JavaScript API:</b> <i>hercules.emit_search_result</i> function renamed to <i>hercules.addSearchResult</i>.</li>
+        <li><b>Rename Document:</b> check all occurrences by default.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Correctly handle category changes via script or source updates.</li>
+    </ul>
+
+    <h2>1.6</h2>
+    <h3>Features:</h3>
+    <h4>Database History:</h4>
+    <ul>
+        <li><b>Data/Database History</b> command (or clock toolbar button) opens recent history table.</li>
+        <li>By default history from yesterday is shown, choose another date and press <b>Refresh</b>.</li>
+        <li>Export to Excel is available.</li>
+        <li><b>Known issue:</b> history does not display removed documents yet.</li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Document History:</b> show tooltips with revision changes.</li>
+        <li><b>Document History:</b> show revision status icon.</li>
+        <li><b>Document Revision:</b> replace Script view with more human readable Changes view. This is a default view. (Make script commands are still available)</li>
+        <li><b>Document Revision:</b> show user name and time for the displayed revision in toolbar.</li>
+        <li><b>Diagram Editor:</b> synchronize form and diagram changes.</li>
+        <li><b>Diagram Editor:</b> highlight blocks containing invalid fields with red.</li>
+        <li><b>Diagram Editor:</b> new predefined AI block types.</li>
+        <li><b>Database Explorer:</b> <i>Delete</i> keyboard shortcut for deleting selected documents.</li>
+        <li><b>Database Explorer:</b> <i>Ctrl+D</i> keyboard shortcut for cloning a selected document.</li>
+        <li><b>Run Script:</b> optimize performance.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Edit Connection:</b> fix database name display and focusing issues.</li>
+        <li>Fix initial focus for all dialogs.</li>
+        <li>Fix loading of embedded HTML content on some systems.</li>
+        <li>Fix memory leak in document editor.</li>
+    </ul>
+
+    <h2>1.5.3</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Diagram Editor:</b> diverse visual styles for blocks.</li>
+        <li><b>Diagram Editor:</b> auto-center diagram on load.</li>
+        <li><b>Run Script:</b> optimize performance.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Summary Table:</b> fix crashes when column path cannot be traversed for the document.</li>
+        <li><b>CSV import:</b> application hanged when table header contained double quotes.</li>
+    </ul>
+
+    <h2>1.5.2</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Summary Table:</b> allow new documents checkbox when importing from spreadsheet or clipboard.</li>
+        <li><b>Diagram Editor:</b> block types for AI behaviour trees.</li>
+        <li><b>Toolbox:</b> hide blocks not applicable for the active diagram.</li>
+        <li><b>Schema:</b> variant records inheritance.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Summary Table:</b> fix crashes on submit when submitted path cannot be traversed for the document.</li>
+    </ul>
+
+    <h2>1.5.1</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>JavaScript and Json editors: better indentation strategy.</li>
+        <li><b>Diagram Editor:</b> improve automatic layout.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> numbers value changes are registered immediately on update, not on lost focus.</li>
+        <li><b>Document Editor:</b> fix multiline text new line conversion.</li>
+    </ul>
+
+    <h2>1.5</h2>
+    <h3>Features:</h3>
+    <h4>Diagram Editor:</h4>
+    <ul>
+        <li><b>Document Editor</b> has a <b>Diagram</b> tab that presents a diagram view of the document, if schema supports it.</li>
+        <li><b>Toolbox</b> tool window provides the diagram block palette.</li>
+        <li><b>Property Editor</b> tool window allows to edit block properties.</li>
+    </ul>
+
+    <h4>Summary Table:</h4>
+    <ul>
+        <li>Groupping and filtering.</li>
+        <li>Toggle <b>ReadOnly</b> button to enter editable mode. Edit cells (modified cells are marked green). </li>
+        <li>Click <b>Submit</b> button to apply changes (this will load modified documents), check changes and save them.</li>
+        <li><b>Refresh</b> command reverts user changes and updates values with the most recent version.</li>
+        <li>Use <b>Copy (Ctrl+C)</b> and <b>Paste (Ctrl+V)</b> commands to copy and paste current cell selection.</li>
+        <li><b>Copy table to clipboard</b> command copies the whole table (including headers), paste it into spreadsheet editor.</li>
+        <li><b>Paste table from clipboard</b> command pastes the whole table (including headers) from clipboard.</li>
+        <li><b>Open spreadsheet after export</b> setting allows to immediately open exported table document via default Office application.</li>
+        <li><b>Import Table</b> menu button allows to import Excel or CSV worksheets, previously exported via <b>Export Table</b> or having similar format.</li>
+        <li><b>Check All</b> and <b>Uncheck All</b> buttons in summary columns dialog.</li>
+    </ul>
+
+    <h4>Database Explorer:</h4>
+    <ul>
+        <li>Optimize loading time and performance.</li>
+        <li>Hide empty categories when filtering.</li>
+        <li>Context menu for categories with <b>New Document</b> and <b>Table Summary</b> commands.</li>
+        <li><b>Expand All</b> and <b>Collapse All</b> buttons.</li>
+    </ul>
+
+    <h3>Improvements:</h3>
+    <ul>
+        <li>New settings editor provides better option descriptions.</li>
+        <li>CSV import: auto detect delimiter.</li>
+        <li><b>-reset_layout</b> command line argument resets layout on application start.</li>
+    </ul>
+
+    <h2>1.4.1</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Document Editor:</b> support for an external list of options in string editors.</li>
+        <li><b>Document Editor:</b> datetime editor.</li>
+        <li><b>Document Editor:</b> variant children records now display parent fields.</li>
+    </ul>
+
+    <h2>1.4</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li><b>Help/Hercules Manual</b> menu opens Hercules Manual.</li>
+        <li><i>Help/Show in external browser</i> setting allows to use default external webbrowser for help content.</li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><i>Startup/Load last database on startup</i> setting allows to toggle loading of the most recent database on application startup.</li>
+        <li><b>Document Editor:</b> focus document key selector element after dragging document into it.</li>
+        <li>Local cache is automatically invalidated if remote database start time has changed.</li>
+    </ul>
+
+    <h2>1.3.3</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>
+            <b>Data/Compare Documents</b> menu command allows to compare two documents. <br />
+            Drag and drop documents from <i>Database Explorer</i> or <i>Bookmark Bar</i> to <i>Compare Documents</i> columns.
+        </li>
+        <li>
+            <b>Document revision viewer enhancements:</b>
+            <ul>
+                <li><b>View Diff</b> shows differences from the previous revision. Use <b>Previous Difference</b> and <b>Next Difference</b> buttons for navigation.</li>
+                <li><b>View Script</b> shows the JavaScript update from the previous revision.</li>
+                <li><b>Next Revision</b> and <b>Previous Revision</b> buttons allow to quickly switch among revisions.</li>
+                <li><b>Rever Changes</b> command reverts the changes made in this revision comparing with the previous one.</li>
+                <li><b>Apply Script</b> and <b>Revert Script</b> buttons open the update or revert script in the script editor. Then it can be applied to other documents.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>1.3.2</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>Window layout is saved on application exit.</li>
+        <li><b>Window/Reset Layout:</b> menu command restores default window layout.</li>
+        <li><b>Window/Close All Documents:</b> menu command closes all opened documents.</li>
+        <li><b>Document Editor: </b> <i>Sort enum values</i> setting allows to enable alphabetical sort of dropdown enum options.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Search:</b> Clicking search results doesn't focus found element when document isn't already active.</li>
+        <li><b>Search:</b> pressing Enter would switch to <b>Search in Documents</b> tool window (if opened).</li>
+        <li><b>Script:</b> Float fields were sometimes erroneusly marked as modified on source or script change due to the lost precision issues.</li>
+        <li><b>Document Editor:</b> Numpad minus now works in input fields.</li>
+    </ul>
+
+    <h2>1.3.1</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li><b>Localization:</b> store original text for each translated text, so that out-of-date entries can be found.</li>
+    </ul>
+    <h4>Hercules JavaScript API:</h4>
+    <ul>
+        <li><b>Help/Scripting Reference</b> menu command provides some basic API documentation.</li>
+        <li>Predefined <i>schema</i> variable contains database schema (as in schema CouchDB document).</li>
+        <li><i>utils.visit(doc, callback)</i> function can be used to go recursively through document fields. Consult <b>Scripting Reference</b> for details.</li>
+        <li><i>hercules.emit_search_result(docId, path, text)</i> function adds entry to the search results tool window.</li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Release Notes:</b> improve readability.</li>
+        <li>Log the name of the corrupted document on database cache loading errors.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Summary Table:</b> fix Excel export.</li>
+    </ul>
+
+    <h2>1.3</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>
+            New <b>Import Table</b> replaces the old Import Table Wizard feature. The main advantage of the new feature is scripting support.
+            Google doc support is removed due to authentication issues. You can always copy and paste the table instead.
+        </li>
+        <li><b>Edit/Find</b> command (Ctrl+F) searchs text inside the active document. Use F3 and Shift+F3 to repeat search forwards and backwards.</li>
+        <li><b>Data/Find Invalid Documents</b> command finds and opens documents containing invalid data.</li>
+        <li><b>History</b> tab in Document Editor allows to load and view previous revisions of the document.</li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Search in Documents:</b> Search in Field names option.</li>
+        <li><b>Import Documents:</b> Select All button.</li>
+        <li><b>Schema update type</b> setting allows to prevent silent schema update.</li>
+        <li><b>Always ask confirmation for modified documents</b> setting allows to toggle schema update confirmation for each modified document.</li>
+        <li><b>Json and Script Editors:</b> brace folding.</li>
+        <li><b>Json and Script Editors:</b> matching brackets highlighting.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Schema update application worked incorrectly for key editors.</li>
+        <li>Localized editor showed language strings only for default locale.</li>
+        <li>Localized strings were saved incorrectly for non-default locales.</li>
+        <li><b>Json:</b> fix backslash character handling.</li>
+    </ul>
+
+    <h2>1.2.3</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Open Connection:</b> Suggest to reset local database cache when loading cache ends with error.</li>
+        <li><b>Open Connection:</b> Optimize loading database cache.</li>
+        <li><b>Database Explorer:</b> Loading and runtime optimization.</li>
+        <li><b>Rename Document:</b> Show "No occurences found" instead of empty tree to prevent confusion.</li>
+        <li>Connection/Exit menu command now asks for confirmation if there's unsaved progress.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Fix prolonged freeze after initial database synchronization.</li>
+        <li><b>Document Editor:</b> Fix several memory leaks.</li>
+        <li><b>Settings Editor:</b> Some settings were not saved correctly (introduced in 1.2.2).</li>
+    </ul>
+
+    <h2>1.2.2</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>Schema update is now applied instantly. The popup confirmation is displayed for modified documents.</li>
+        <li><b>Notifications:</b> new compact notification style displayed on remote document changes and other occasions.</li>
+        <li><b>Settings:</b> suggest <i>Check for Updates</i> when switching update channel.</li>
+        <li><b>Icon picker:</b> scrolling down doesn't take close button out of view anymore.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> do not lose focus after deleting item or closing icon picker (Undo command got disabled).</li>
+    </ul>
+
+    <h2>1.2.1</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Database Explorer:</b> Document multi selection (use context menu for batch operations).</li>
+        <li><b>Bookmark Bar:</b> <i>Remove All</i> command allows to clear bookmark bar.</li>
+        <li><b>Search:</b> Clear button for category selector.</li>
+        <li><b>Run Script:</b> Clear button for category selector.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Crash when opening documents with localized fields containing improper data.</li>
+        <li>Show meaningful syntax error on duplicate key in JSON editor.</li>
+    </ul>
+
+    <h2>1.2</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>New application icon.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Crash when opening documents with non-existent localized fields.</li>
+    </ul>
+
+    <h2>1.1.9</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>
+            <b>Localization:</b> Specialized editor for localized text. By default it displays a text editor in default language.
+            When the globe button to the right is toggled, the complete localization info structure (project specific) is available.
+        </li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Database Explorer:</b> Add <i>Edit in Futon</i> and <i>Copy Document Name</i> commands to document context menu.</li>
+        <li>Add Databases list to application jump list (right click on task bar icon). The database will be opened as a new application instance.</li>
+        <li>User name is now included into the saved document metadata. This information will be used to display the history of changes in the upcoming Hercules updates.</li>
+        <li><b>Document Editor:</b> Key selection combobox is now wider.</li>
+        <li><b>Edit Connection:</b> Password input is now masked.</li>
+        <li><b>Summary:</b> Dictionaries with enum keys can now be expanded in column selection.</li>
+        <li><b>Hercules JavaScript API:</b> hercules.delete(documentId) function deletes the document. The user is always asked for confirmation via dialog.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Reset Local Cache no longer resets bookmarks.</li>
+    </ul>
+
+    <h2>1.1.8</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>
+            <b>Hercules JavaScript API:</b> In Run Script you can now use hercules API, accessible via "hercules" object.
+            <br /><i>hercules.open(documentId)</i> function opens the document editor. That allows to use Run Script for searching.
+            <br /><i>hercules.log(text)</i> function outputs text to console.
+            <br />Example: to find all documents satisfying some condition (in this example we search for expensive items) use the following script:
+            <br /><i>if (doc.price > 1000000) hercules.open(doc._id);</i>
+        </li>
+        <li>
+            <b>Rename Document:</b> Document/Rename Document menu and Database Explorer context menu commands provide the rename dialog that allows to automatically replace
+            all document references with the new name. The old document is deleted, so use with caution.
+        </li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Summary Table:</b> You can now use nested fields for the summary table columns.</li>
+        <li><b>Summary Table:</b> Excel 2007 and Excel 2003 export options (select the required filter in Save Dialog). Excel 2007 is now the default.</li>
+        <li><b>Summary Table:</b> Multiline cells are now correctly quoted in CSV. However Excel has troubles understanding them. Consider using Excel files in this case.</li>
+        <li>All warnings emitted during Paste or Run Script now include document name and open the related document editor on double click.</li>
+        <li><b>Run Script:</b> You can query the completion window with Ctrl+Space.</li>
+        <li><b>Run Script:</b> Make syntax highlighting more similar to Google Docs script editor.</li>
+        <li>Script and Json syntax highlighting schemes are now available in installation folder.</li>
+        <li>Database can now be opened from local cache even without internet connection. Hercules will continuously attempt to restore connection to CouchDB.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Run Script:</b> In rare cases optional records were not updated correctly.</li>
+        <li><b>Run Script:</b> Document changes were not applied if script ended with comment.</li>
+        <li><b>Run Script:</b> Do not suggest completion when entering numbers with dots (e.g. 1.5)</li>
+    </ul>
+
+    <h2>1.1.7</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>Yes to All and No to All options when closing multiple unsaved documents.</li>
+        <li><b>Log:</b> You can now open a document by double clicking related log entry.</li>
+        <li><b>Run Script:</b> Significally optimize script execution time.</li>
+        <li><b>Connections:</b> You can now sort connections in Edit Connections dialog.</li>
+        <li><b>Connections:</b> Connection title is now editable.</li>
+        <li><b>Connections:</b> Fetch the list of existing databases from the server when creating or editing a connection.</li>
+        <li><b>Connections:</b> Close Connection command.</li>
+        <li>Common style for all dialogs, including validation color markers and tooltips.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Switching connection or resetting cache was performed even if user refused to confirm loosing progress.</li>
+    </ul>
+
+    <h2>1.1.6</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li>Add Find References command to Document menu (previously was available via Database Explorer context menu only).</li>
+        <li><b>Search Window:</b> Pressing Enter button will start search.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> Take Remote Version was broken.</li>
+        <li>Hidden tool window couldn't be reopened.</li>
+        <li>Get rid of confusing red lines at the top and bottom of workspace.</li>
+        <li>Second running copy of Hercules could not load image atlas.</li>
+    </ul>
+
+    <h2>1.1.5</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li><b>Import Documents:</b> 'Data/Import Documents' menu command provides tool for importing documents from existing DB connections.</li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Open Document:</b> Document/Open Document menu command (Ctrl+O) provides a convenient autocomplete dialog for opening document via typing its name.</li>
+        <li><b>Document Editor:</b> "Expand opened document" setting allows to initially expand opened documents.</li>
+        <li><b>Search:</b> Support for search of numbers.</li>
+        <li><b>Log:</b> Log tool now supports multiple selection and copy selection.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> Context menu commands in Document Editor were sometimes applied to wrong targets.</li>
+        <li><b>Document Editor:</b> Notifications on remote document change sometimes couldn't be displayed.</li>
+    </ul>
+
+    <h2>1.1.4</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>
+            <b>Bookmarks Bar:</b> You can use bookmarks bar for quick access to favourite documents.
+            <br />Drag a document from Database Explorer to create a document bookmark. Drag a category from Database Explorer to create a category folder bookmark.
+            Use "Add Recent Documents Bookmark" Bookmarks Bar's context menu command to add Recent Documents bookmark folder.
+            <br />Use drag and drop to rearrange bookmarks at Bookmarks Bar. Use Remove context menu command to remove a bookmark from the bar.
+            <br />Toggle Bookmarks Bar visibility via View/Bookmarks Bar menu command.
+        </li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Appearance:</b> Appearance/Theme setting allows to select main visual theme. Default theme changed to Aero.</li>
+        <li><b>Layout:</b> Floating document windows now support Win+Arrows Windows shortcuts.</li>
+        <li><b>Layout:</b> Floating document windows now work with WinSplit Revolution Drag'N'Go feature.</li>
+        <li><b>Layout:</b> View/Toolbar main menu command to toggle toolbar visibility.</li>
+        <li><b>Layout:</b> View/Status Bar main menu command to toggle status bar visibility.</li>
+        <li><b>Database Explorer:</b> Category expanded or collapsed state is now saved between sessions.</li>
+        <li><b>Document Editor:</b> You can now set Document Key editor value by dragging a document from Database Explorer or Bookmarks Bar into document selection combobox.</li>
+        <li>Undo/Redo toolbar icons.</li>
+        <li><b>Schema:</b> Support for min and max number limits. Requires Igor 1.1.3.</li>
+        <li><b>Run Script:</b> Auto completion for quoted strings.</li>
+        <li><b>Run Script:</b> Script execution can be aborted.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> Elements were not selected as context command targets (Copy, Paste, etc.) when got focus via keyboard rather than mouse.</li>
+        <li><b>Document Editor:</b> Fix many focusing issues.</li>
+        <li><b>Import Table:</b> Imported document was marked as modified even if there were no changes.</li>
+        <li>Remove Modified status from status bar when undoing or reverting document.</li>
+        <li>Binary fields were always erroneusly marked as modified on any source or script change.</li>
+        <li>Float fields were sometimes erroneusly marked as modified on source or script change due to the lost precision issues.</li>
+    </ul>
+
+    <h2>1.1.3</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>
+            <b>Copy and Paste:</b> You can use Copy and Paste commands to copy and paste the whole element.
+            Commands can be used via Edit menu, context menu, toolbar or Ctrl+C/Ctrl+V shortcuts.<br />
+            Use Paste Child command to paste element as a collection (list or dictionary) child.
+        </li>
+        <li>
+            <b>Source Editor:</b> You can now edit document's JSON source. Use Syntax Check button to find syntax errors.
+            Use Submit button (or Ctrl+Enter shortcut) to submit your changes and switch to the form editor, where content is validated against schema.
+            Note that Submit doesn't save document to the backend.
+        </li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Document Editor:</b> Clear context menu command for collection editors (lists and dicts).</li>
+        <li><b>Document Editor:</b> Duplicate context menu command now works both for list and dictionary elements.</li>
+        <li><b>Document Editor:</b> Go To JSON context menu command (or F7 shortcut) switches to the selected element JSON source.</li>
+        <li><b>Document Editor:</b> Show number of items in list and dictionary collections.</li>
+        <li><b>Document Editor:</b> Mouse scroll over focused number editor will increment or decrement value.</li>
+        <li><b>Document Editor:</b> Up/down keyboard arrows pressed on focused number editor will increment or decrement value.</li>
+        <li><b>Document Editor:</b> Number Text Alignment setting in Tools/Settings allows to change text alignment for number editors.</li>
+        <li><b>Document Editor:</b> Show Spinner Buttons setting in Tools/Settings allows to show spinner (increment/decrement) buttons for number editors.</li>
+        <li><b>Document Editor:</b> Unset binary fields no longer default to empty binary, which made no sense. Instead they are invalid.</li>
+        <li><b>Document Editor:</b> You can now properly Undo/Redo Run Script and Import Table modifications.</li>
+        <li><b>Source/Script Editor:</b> Highlight current line.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> Fix list element order when undoing deleted list item.</li>
+        <li><b>Document Editor:</b> Dictionaries with duplicate keys are now correctly marked as invalid.</li>
+    </ul>
+
+    <h2>1.1.2</h2>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Source Editor:</b> Change editor font to Courier New.</li>
+        <li><b>Run Script:</b> Change editor font to Courier New.</li>
+        <li><b>Run Script:</b> Simple auto-completion.</li>
+        <li><b>Run Script:</b> Show line numbers.</li>
+        <li><b>Connections:</b> Add Open Connection button to toolbar to allow quick connection switch.</li>
+        <li><b>Split File menu to Connection and Document. Old name didn't make much sense.</b></li>
+        <li><b>Schema:</b> Support for document key selectors limited to documents implementing specific interface. Requires Igor 1.1.3.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> Error on adding new dictionary element.</li>
+    </ul>
+
+    <h2>1.1.1</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>
+            <b>Import Table:</b> Import Table Wizard (via Data/Import Table Wizard menu) allows to modify multiple documents by importing csv table (comma or tab delimited).
+            Supported sources are local file, Google Spreadsheet and clipboard (copy cells from your spreadsheet application).
+            Table should contain one column containing document names, and any number of field columns named after corresponding document fields containing field values.
+            Empty values and unrecognized columns will be ignored.
+        </li>
+    </ul>
+    <h3>Improvements:</h3>
+    <ul>
+        <li><b>Document Editor:</b> Highlight selected element.</li>
+        <li><b>Document Editor:</b> Context menu for selected element.</li>
+        <li><b>Document Editor:</b> Duplicate Element context menu command (Ctrl+D) creates the copy of the selected list item.</li>
+        <li><b>Document Editor:</b> Copy Path (Ctrl+P) in field context menu in document editor copies the path of selected element. This path can be used in templated text descriptions.</li>
+        <li><b>Document Editor:</b> Expand New Element setting (in Tools/Settings) controls if the created elements (new list and dict items) are initially expanded.</li>
+        <li><b>Document Editor:</b> Expand Selection / Collapse Selection (in Edit menu or +/- keypad shortcuts) expands or collapses subtree of currently selected item.</li>
+        <li><b>Search:</b> Click from Search Results window will select searched element and bring it into view.</li>
+        <li><b>Search:</b> Toolbar button and shortcut (Ctrl+Shift+F).</li>
+        <li><b>Summary Table:</b> Add Columns context menu command allow to alter columns for opened summary table.</li>
+        <li><b>Summary Table:</b> Toolbar button.</li>
+        <li><b>Run Script:</b> "Only Opened Documents" checkbox will make the script only run through opened documents.</li>
+        <li><b>Run Script:</b> Toolbar button.</li>
+        <li><b>Run Script:</b> Progress indicator.</li>
+        <li><b>Application Update:</b> Help/Check For Updates allows to manually check for updates.</li>
+        <li><b>Application Update:</b> Check for updates on launch setting (in Tools/Settings).</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li><b>Document Editor:</b> New list and dictionary elements are marked as changed.</li>
+        <li><b>Document Editor:</b> Fields modified by script are now marked as changed.</li>
+        <li><b>Application Update:</b> Update suggestion dialog box was automatically closed with splash window.</li>
+    </ul>
+
+    <h2>1.1.0</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>Settings editor (Tools/Settings or wrench toolbar icon).</li>
+        <li>Update Channel setting allows to switch between stable and beta channels. Stable is recommended. Beta can be used for testing new features.</li>
+        <li>Help/Release Notes opens this content.</li>
+        <li>Release Notes are opened automatically after installation or update.</li>
+        <li>Load and save buttons for binary field editor.</li>
+        <li>Log warning on missing schema document.</li>
+    </ul>
+    <h3>Bug Fixes:</h3>
+    <ul>
+        <li>Combo box for enums sometimes incorrectly showed empty value instead of existing value.</li>
+        <li>Fix exception on checking unset optional binaries. Empty binary is created by default.</li>
+        <li>Fix crash on opening documents with 0 fields.</li>
+    </ul>
+
+    <h2>1.0.1</h2>
+    <h3>Features:</h3>
+    <ul>
+        <li>Summary Table (Data/Summary Table).</li>
+        <li>Export summary table to CSV (in table's content context menu).</li>
+        <li>Copy Document Name to clipboard (File/Copy Document Name).</li>
+        <li>Copy Hercules URL to clipboard (File/Copy Hercules URL) - launching this URL will open Hercules editor for the current document.</li>
+        <li>Copy Tiny URL to clipboard (File/Copy Tiny URL) - copy HTTP tinyurl-encoded Hercules URL. Useful for sending via Skype which won't highlight custom protocol. The receiver can launch Hercules document editor by clicking the link and accepting webbrowser's confirmation.</li>
+        <li>Highlight changed fields with green.</li>
+        <li>Expand All/Collapse All commands in Edit menu.</li>
+        <li>New Icon Index editor allows to select icon from the atlas.</li>
+        <li>No longer restart program when selecting new connection.</li>
+    </ul>
+</body>

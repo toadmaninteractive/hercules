@@ -1,0 +1,62 @@
+﻿<Window x:Class="Hercules.Shell.View.PromptDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:hconv="clr-namespace:Hercules.Converters"
+        xmlns:hc="clr-namespace:Hercules.Controls"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:shell="clr-namespace:Hercules.Shell"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance shell:MessageBoxDialog}"
+        hc:ApWindow.EscapeClosesWindow="True"
+        Title="{Binding Title}" Height="200" Width="450"
+        Style="{StaticResource DialogWindow}"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.Resources>
+            <hconv:EnumToObjectConverter x:Key="Icons">
+                <ResourceDictionary>
+                    <BitmapImage x:Key="Exclamation" UriSource="/Resources/Dialogs/Exclamation.png" />
+                    <BitmapImage x:Key="Information" UriSource="/Resources/Dialogs/Information.png" />
+                    <BitmapImage x:Key="Question"       UriSource="/Resources/Dialogs/Question.png" />
+                    <BitmapImage x:Key="Error"       UriSource="/Resources/Dialogs/Error.png" />
+                    <BitmapImage x:Key="DatabaseError"       UriSource="/Resources/Dialogs/DatabaseError.png" />
+                    <BitmapImage x:Key="Smile"       UriSource="/Resources/Dialogs/Smile.png" />
+                </ResourceDictionary>
+            </hconv:EnumToObjectConverter>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="47" />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0">
+            <TextBlock Margin="80,-10,10,0" Text="{Binding Message}" TextAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap"
+                       FontStretch="Expanded" FontSize="14" />
+        </Border>
+        <TextBox Height="24" Margin="80, 50, 10, 0" Text="{Binding Value}" FontSize="14" />
+        <Image Source="{Binding Icon, Converter={StaticResource Icons}}" Width="48" Height="48" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,41,0,27" Stretch="UniformToFill" />
+        <Border Grid.Row="1" Focusable="False">
+            <ItemsControl ItemsSource="{Binding Buttons}" Focusable="False">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Margin="0,10,10,10" Width="90" Height="27"
+                                Command="{Binding DataContext.ResultCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">
+                            <Button.IsDefault>
+                                <MultiBinding Converter="{StaticResource EqualityMultiValueConverter}">
+                                    <Binding />
+                                    <Binding Path="DataContext.Default" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                                </MultiBinding>
+                            </Button.IsDefault>
+                            <TextBlock Text="{Binding Converter={StaticResource DialogButtonCaptionConverter}}" />
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+    </Grid>
+</Window>

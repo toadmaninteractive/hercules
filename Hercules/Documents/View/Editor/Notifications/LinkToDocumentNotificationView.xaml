@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="Hercules.Documents.View.Editor.LinkToDocumentNotificationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:documents="clr-namespace:Hercules.Documents.Editor"
+             mc:Ignorable="d"
+             Height="30"
+             d:DataContext="{d:DesignInstance documents:LinkToDocumentNotification}"
+             d:DesignHeight="30" d:DesignWidth="900">
+    <Border HorizontalAlignment="Stretch" BorderThickness="1" BorderBrush="Gainsboro" Background="Beige">
+        <DockPanel>
+            <Label Content="Link this document to another document:" VerticalAlignment="Center" />
+            <ComboBox
+                Width = "300"
+                Height = "20"
+                VerticalAlignment = "Center"
+                VerticalContentAlignment = "Center"
+                Padding = "5,0,5,0"
+                FontSize="13"
+                FontFamily="Consolas"
+                FontStretch="Normal"
+                FontWeight="Regular"
+                IsEditable = "False"
+                AllowDrop="True"
+                ItemsSource="{Binding Documents}"
+                DisplayMemberPath="DocumentId"
+                SelectedValue="{Binding Document}">
+            </ComboBox>
+            <Button
+                Content="Link"
+                Width="80"
+                HorizontalAlignment="Left"
+                Margin="5,3,5,3"
+                Command="{Binding LinkCommand}" />
+            <Button DockPanel.Dock="Right" Command="{Binding CloseCommand}" Template="{StaticResource ButtonCloseTemplate}" Cursor="Hand" HorizontalAlignment="Right" />
+        </DockPanel>
+    </Border>
+</UserControl>

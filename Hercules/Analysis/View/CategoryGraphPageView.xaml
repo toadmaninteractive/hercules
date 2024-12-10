@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Hercules.Analysis.View.CategoryGraphPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:graph="http://mlsagl"
+             xmlns:analysis="clr-namespace:Hercules.Analysis"
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             xmlns:hc="clr-namespace:Hercules.Controls"
+             d:DataContext="{d:DesignInstance analysis:ReferenceGraphPage}"
+             mc:Ignorable="d" 
+             Focusable="True"
+             hc:RoutedCommandBindings.CommandBindings="{Binding RoutedCommandBindings}"
+             FontFamily="Segoe UI" FontSize="10" FontStyle="Normal" FontWeight="Regular"
+             hc:EnhancedFocusScope.IsEnhancedFocusScope="True"
+             FocusManager.FocusedElement="{Binding ElementName=GraphPanel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <DockPanel LastChildFill="True" >
+        <ToolBar Padding="0" Margin="0" Focusable="False" DockPanel.Dock="Top">
+            <Button ToolTip="Refresh" Command="{Binding RefreshCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-arrow-circle-225-left}" />
+            </Button>
+        </ToolBar>
+        <ScrollViewer VerticalAlignment="Stretch" Width="200" Background="Beige" Margin="0,0,3,0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" Margin="8">
+                <TextBlock Text="Categories:"></TextBlock>
+                <ItemsControl ItemsSource="{Binding Categories}" Margin="0,8">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type analysis:ReferenceGraphCategory}">
+                            <DockPanel LastChildFill="True">
+                                <Rectangle Width="12" Height="12" Margin="0,0,4,0" Fill="{Binding Color}" Stroke="Black" ></Rectangle>
+                                <CheckBox IsChecked="{Binding Enabled}">
+                                    <TextBlock FontFamily="Segoe UI" FontSize="10" FontWeight="Regular" Text="{Binding Category.Name}" />
+                                </CheckBox>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel Orientation="Horizontal">
+                    <Button DockPanel.Dock="Left"  Width="75" Command="{Binding CheckAllCommand}">Check All</Button>
+                    <Button DockPanel.Dock="Left" Margin="10,0,0,0" Width="75" Command="{Binding UncheckAllCommand}">Uncheck All</Button>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+        <DockPanel x:Name="GraphPanel" Focusable="True" ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="AliceBlue" ></DockPanel>
+    </DockPanel>
+</UserControl>

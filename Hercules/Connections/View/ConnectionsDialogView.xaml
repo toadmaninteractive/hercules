@@ -1,0 +1,96 @@
+﻿<Window x:Class="Hercules.Connections.View.ConnectionsDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:hc="clr-namespace:Hercules.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:connections="clr-namespace:Hercules.Connections"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance connections:ConnectionsDialog}"
+    hc:ApWindow.EscapeClosesWindow="True"
+    MinHeight="350" Height="350" MinWidth="600" Width="600"
+    Title="{Binding Title}"
+    Style="{StaticResource DialogWindow}"
+    WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="450" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top">Connections:</Label>
+        <ListBox
+            Grid.Row="2"
+            Grid.Column="1"
+            HorizontalAlignment="Stretch"
+            Background="Linen"
+            Foreground="DarkSlateGray"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            Cursor="Hand"
+            ItemsSource="{Binding Connections.Items}"
+            SelectedItem="{Binding SelectedConnection}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:EventTrigger.Actions>
+                        <i:InvokeCommandAction Command="{Binding ConnectCommand}" CommandParameter="{Binding SelectedConnection}" />
+                    </i:EventTrigger.Actions>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="FontWeight" Value="Normal" />
+                                <Style.Triggers>
+                                    <DataTrigger Value="True">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource EqualityMultiValueConverter}">
+                                                <Binding />
+                                                <Binding Path="DataContext.Connections.ActiveConnection" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel Grid.Row="2" Grid.Column="3" VerticalAlignment="Stretch" LastChildFill="False">
+            <Button Height="25" DockPanel.Dock="Top" Command="{Binding NewCommand}">New...</Button>
+            <Button Height="25" DockPanel.Dock="Top" Margin="0,3,0,0" Command="{Binding EditCommand}" CommandParameter="{Binding SelectedConnection}">Edit</Button>
+            <Button Height="25" DockPanel.Dock="Top" Margin="0,3,0,0" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedConnection}">Delete</Button>
+            <Button Height="25" DockPanel.Dock="Top" Margin="0,3,0,0" Command="{Binding ConnectCommand}" CommandParameter="{Binding SelectedConnection}">Connect</Button>
+            <StackPanel Height="25" DockPanel.Dock="Top" Margin="0,3,0,0" Orientation="Horizontal">
+                <Button
+                    Style="{StaticResource ToolButton}"
+                    Command="{Binding UpCommand}" CommandParameter="{Binding SelectedConnection}">
+                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-arrow-090}" />
+                </Button>
+                <Button Margin="3,0,0,0"
+                    Style="{StaticResource ToolButton}"
+                    Command="{Binding DownCommand}" CommandParameter="{Binding SelectedConnection}">
+                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-arrow-270}" />
+                </Button>
+                <Button Margin="22,0,0,0"
+                    Style="{StaticResource ToolButton}"
+                    Command="{Binding SortCommand}">
+                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-sort-alphabet}" />
+                </Button>
+            </StackPanel>
+            <Button Margin="0,0,0,0" Height="25" DockPanel.Dock="Bottom" Command="{Binding OkCommand}">OK</Button>
+        </DockPanel>
+    </Grid>
+</Window>

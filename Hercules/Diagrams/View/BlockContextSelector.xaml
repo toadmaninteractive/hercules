@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="Hercules.Diagrams.BlockContextSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hd="clr-namespace:Hercules.Diagrams"
+             d:DataContext="{d:DesignInstance hd:BlockSelectorViewModel}"
+             mc:Ignorable="d"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             UseLayoutRounding="True" Height="300" MinWidth="300">
+
+    <UserControl.Resources>
+        <ResourceDictionary Source="../Templates/ToolBoxItemTemplate.xaml" />
+    </UserControl.Resources>
+
+    <Border
+        Background="White"
+        BorderBrush="Black"
+        BorderThickness="1">
+        <ListBox
+            Margin="3"
+            Name="ListBoxItems"
+            HorizontalContentAlignment="Stretch"
+            ItemTemplate="{StaticResource ToolBoxItemTemplate}"
+            ItemsSource="{Binding Path=ToolBoxItems}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderThickness" Value="0" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                    <i:InvokeCommandAction
+                        Command="{Binding Path=SelectCommand}"
+                        CommandParameter="{Binding ElementName=ListBoxItems, Path=SelectedItem}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ListBox>
+    </Border>
+</UserControl>

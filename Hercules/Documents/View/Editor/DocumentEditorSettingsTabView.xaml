@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Hercules.Documents.View.Editor.DocumentEditorSettingsTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             xmlns:hc="clr-namespace:Hercules.Controls"
+             xmlns:sw="clr-namespace:System.Windows;assembly=PresentationFramework"
+             xmlns:editor="clr-namespace:Hercules.Documents.Editor"
+             xmlns:forms="clr-namespace:Hercules.Forms"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance editor:DocumentEditorSettingsTab}"
+             d:DesignHeight="500" d:DesignWidth="300">
+    <StackPanel>
+        <TextBlock Margin="0,0,0,10" Text="Document Editor" FontWeight="Black" />
+        <TextBlock TextWrapping="Wrap" Margin="0,0,0,2" Text="Expand complex elements when the document is opened:" />
+        <ComboBox MinWidth="300" HorizontalAlignment="Left" ItemsSource="{hc:EnumDescriptions {x:Type forms:ExpandElementType}}" SelectedValuePath="Value" SelectedValue="{Binding Settings.ExpandNewDocument.Value}" />
+        <TextBlock TextWrapping="Wrap" Margin="0,8,0,2" Text="Expand newly created complex elements:" />
+        <ComboBox MinWidth="300" HorizontalAlignment="Left" ItemsSource="{hc:EnumDescriptions {x:Type forms:ExpandElementType}}" SelectedValuePath="Value" SelectedValue="{Binding Settings.ExpandNewElement.Value}" />
+        <StackPanel Margin="0,8,0,8" Orientation="Horizontal">
+            <TextBlock Text="Max nested value offset:" 
+                       VerticalAlignment="Center"/>
+            <telerik:RadNumericUpDown Margin="14,0,0,0" 
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Center"
+                                      Width="100" 
+                                      ShowButtons="False" 
+                                      Value="{Binding Settings.MaxStructFieldLabelSize.Value}" 
+                                      IsInteger="True"  Minimum="20" Maximum="200"/>
+        </StackPanel>
+        <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+            <TextBlock Text="Number alignment:" />
+            <RadioButton Margin="10,0,0,0" Content="Left" IsChecked="{Binding Settings.NumberTextAlignment.Value, Mode=TwoWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static sw:HorizontalAlignment.Left}}" />
+            <RadioButton Margin="8,0,0,0" Content="Right" IsChecked="{Binding Settings.NumberTextAlignment.Value, Mode=TwoWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static sw:HorizontalAlignment.Right}}" />
+        </StackPanel>
+        <telerik:RadExpander Margin="0,10,0,0" Header="Enumeration Editor" IsExpanded="True">
+            <StackPanel Margin="20,0,0,0">
+                <TextBlock Margin="0,0,0,2" Text="Example:" FontStyle="Italic" />
+                <ComboBox HorizontalAlignment="Left" Width="100">
+                    <ComboBoxItem IsSelected="True" Content="Item 1" />
+                    <ComboBoxItem Content="Item 2" />
+                    <ComboBoxItem Content="Item 3" />
+                </ComboBox>
+                <CheckBox Margin="0,8,0,0" Content="Sort options alphabetically" IsChecked="{Binding Settings.SortEnumValues.Value}" />
+            </StackPanel>
+        </telerik:RadExpander>
+        <TextBlock Margin="0,10,0,0">Display time zone: <Hyperlink Command="{Binding Settings.SetLocalTimeZoneCommand}">local</Hyperlink> | <Hyperlink Command="{Binding Settings.SetUtcTimeZoneCommand}">UTC</Hyperlink></TextBlock>
+        <ComboBox HorizontalAlignment="Left" Margin="0,4,0,0" Name="TimeZonePicker" Width="400" SelectedValue="{Binding Settings.TimeZone.Value}" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,34 @@
+﻿<Window
+    x:Class="Hercules.Documents.View.Dialogs.MultiCloneDocumentDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:hc="clr-namespace:Hercules.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dialogs="clr-namespace:Hercules.Documents.Dialogs"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance dialogs:MultiCloneDocumentDialog}"
+    hc:ApWindow.EscapeClosesWindow="True"
+    Style="{StaticResource DialogWindow}"
+    SizeToContent="Height"
+    Title="{Binding Title}"
+    MinWidth="550" Width="550" MinHeight="420" Height="420"
+    WindowStartupLocation="CenterScreen"
+    FocusManager.FocusedElement="{Binding ElementName=DocumentsTextBox}">
+    <StackPanel Margin="20,20,20,20">
+        <TextBlock FontSize="13" Text="Enter new document names, one per line:" Margin="0,0,0,12" />
+        <TextBox
+            Name="DocumentsTextBox"
+                HorizontalAlignment="Stretch"
+                FontSize="16" FontWeight="Bold" VerticalContentAlignment="Top" Margin="0,0,0,10"
+                Height="250"
+                AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                Style="{StaticResource ValidatedTextBox}"
+                Text="{Binding Path=DocumentNames, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+        <TextBlock 
+            HorizontalAlignment="Left"
+            TextWrapping="Wrap" 
+            Text="{Binding Path=DocumentNamesError}" Foreground="IndianRed"/>
+        <Button HorizontalAlignment="Right" Width="75" Height="24" IsDefault="True" Command="{Binding OkCommand}">OK</Button>
+    </StackPanel>
+</Window>

@@ -1,0 +1,55 @@
+{
+    "custom_types": {
+        "ScriptScope": {
+            "kind": "enum",
+            "values": [
+                "script"
+            ]
+        },
+        "ScriptDocument": {
+            "kind": "record",
+            "fields": {
+                "scope": {
+                    "kind": "enum",
+                    "optional": false,
+                    "name": "ScriptScope",
+                    "default": "script"
+                },
+                "name": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "icon": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "menu_category": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "show_in_toolbar": {
+                    "kind": "bool",
+                    "optional": true
+                },
+                "script": {
+                    "kind": "string",
+                    "optional": false,
+                    "multiline": true,
+                    "not_empty": false,
+                    "syntax": "JavaScript"
+                }
+            },
+            "interfaces": [
+                
+            ]
+        }
+    },
+    "document_type": "ScriptDocument",
+    "version": "1.1"
+}

@@ -1,0 +1,23 @@
+# To learn more about .editorconfig see https://aka.ms/editorconfigdocs
+root = true
+
+# All files
+[*]
+indent_style = space
+
+# Xml files
+
+# CA1062: Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = none
+
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = none
+
+# CA1716: Identifiers should not match keywords
+dotnet_diagnostic.CA1716.severity = none
+
+# CA1707: Remove the underscores from member name
+dotnet_diagnostic.CA1707.severity = none
+
+[*.xml]
+indent_size = 2

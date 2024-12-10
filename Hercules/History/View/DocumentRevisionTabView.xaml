@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Hercules.History.View.DocumentRevisionTabView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:ae="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
+    xmlns:h="clr-namespace:Hercules"
+    xmlns:hc="clr-namespace:Hercules.Controls"
+    xmlns:history="clr-namespace:Hercules.History"
+    Loaded="UserControl_Loaded"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance history:DocumentRevisionTab}"
+    d:DesignHeight="300" d:DesignWidth="500">
+    <DockPanel LastChildFill="True" Focusable="False">
+        <ToolBar Padding="0" Margin="0" Focusable="False" DockPanel.Dock="Top">
+            <ToggleButton IsChecked="{Binding Mode, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter=0}" ToolTip="View Source" Command="{Binding SourceCommand}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-document-text}" />
+            </ToggleButton>
+            <ToggleButton IsChecked="{Binding Mode, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter=1}" ToolTip="View Diff" Command="{Binding DiffCommand}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-document-insert}" />
+            </ToggleButton>
+            <ToggleButton IsChecked="{Binding Mode, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter=2}" ToolTip="View Changes" Command="{Binding DiffChangesCommand}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-edit-diff}" />
+            </ToggleButton>
+            <Separator />
+            <Button ToolTip="Previous Difference" Command="{Binding PreviousDifferenceCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-arrow-skip-090}" />
+            </Button>
+            <Button ToolTip="Next Difference" Command="{Binding NextDifferenceCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-arrow-skip-270}" />
+            </Button>
+            <Separator />
+            <Button ToolTip="Previous Revision" Command="{Binding PreviousRevisionCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-control-180}" />
+            </Button>
+            <Button ToolTip="Next Revision" Command="{Binding NextRevisionCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-control}" />
+            </Button>
+            <Separator />
+            <Button ToolTip="Load to Editor" Command="{x:Static h:RoutedCommands.LoadRevision}" CommandParameter="{Binding Revision}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-document-import}" />
+            </Button>
+            <Button ToolTip="Revert Changes" Command="{Binding RevertCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-arrow-return-180-left}" />
+            </Button>
+            <Separator />
+            <Button ToolTip="Make Apply Script" Command="{Binding ApplyScriptCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-script--plus}" />
+            </Button>
+            <Button ToolTip="Make Revert Script" Command="{Binding RevertScriptCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-script--minus}" />
+            </Button>
+            <Separator />
+            <TextBlock Text="{Binding Revision.User}" VerticalAlignment="Center" Foreground="DarkSlateGray" Margin="5,0,5,0" FontStyle="Normal" />
+            <Separator />
+            <TextBlock Text="{Binding Revision.Time, StringFormat='dd-MM-yyyy HH:mm'}" VerticalAlignment="Center" Foreground="DarkSlateGray" Margin="5,0,5,0" FontStyle="Normal" />
+        </ToolBar>
+        <ae:TextEditor
+                FontFamily="Courier New"
+                Name="SourceEditor"
+                IsReadOnly="True"
+                ShowLineNumbers="True"
+                Document="{Binding JsonEditor}"
+                VerticalScrollBarVisibility="Visible">
+            <i:Interaction.Behaviors>
+                <hc:SyntaxHighlightBehavior Syntax="{Binding Syntax}" />
+                <hc:FoldingBehavior />
+                <hc:BracketHighlightBehavior />
+                <hc:DiffHighlightBehavior DiffMarker="True" DiffLines="{Binding DiffLines}" />
+                <hc:AvalonEditBehavior CurrentLine="{Binding Line, Mode=TwoWay}" />
+            </i:Interaction.Behaviors>
+            <ae:TextEditor.Options>
+                <ae:TextEditorOptions ConvertTabsToSpaces="True" EnableImeSupport="False" HighlightCurrentLine="True" />
+            </ae:TextEditor.Options>
+        </ae:TextEditor>
+    </DockPanel>
+</UserControl>

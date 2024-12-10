@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="Hercules.Cards.View.CardViewPageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:hc="clr-namespace:Hercules.Controls"
+    xmlns:cards="clr-namespace:Hercules.Cards"
+    d:DataContext="{d:DesignInstance cards:CardViewPage}"
+    hc:RoutedCommandBindings.CommandBindings="{Binding RoutedCommandBindings}"
+    mc:Ignorable="d"
+    d:DesignHeight="300" d:DesignWidth="400">
+    <DockPanel LastChildFill="True">
+        <ToolBar DockPanel.Dock="Top">
+            <TextBlock VerticalAlignment="Center" Foreground="DarkSlateGray" Text="Tile Size:" Margin="3,0,3,0"></TextBlock>
+            <Slider VerticalAlignment="Center" Width="100" Minimum="100" Maximum="500" Value="{Binding TileSize}"></Slider>
+        </ToolBar>
+        <ListBox ItemsSource="{Binding Cards, IsAsync=True}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 Background="WhiteSmoke"
+                 x:Name="TileListBox"
+                 FontFamily="Segoe UI">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <i:Interaction.Behaviors>
+                <hc:ContextMenuBehavior Provider="{Binding}" Style="{StaticResource WorkspaceContextMenu}" />
+                <hc:ListBoxBehavior SelectedItems="{Binding SelectedItems, Mode=OneWayToSource}" />
+            </i:Interaction.Behaviors>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="hc:MouseBehavior.DoubleClickCommand" Value="{Binding OpenCommand}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border>
+                        <DockPanel Width="{Binding DataContext.SmoothTileSize, ElementName=TileListBox}" Height="{Binding DataContext.SmoothTileSize, ElementName=TileListBox}" LastChildFill="True">
+                            <Viewbox StretchDirection="DownOnly" Margin="0,3,0,3" HorizontalAlignment="Left" DockPanel.Dock="Top" >
+                                <TextBlock Text="{Binding Document.DocumentId}" HorizontalAlignment="Left" />
+                            </Viewbox>
+                            <TextBlock DockPanel.Dock="Top" Text="{Binding Document.Preview.Caption}" FontSize="11.5" FontStyle="Normal" FontWeight="Regular" TextWrapping="WrapWithOverflow" Margin="0,0,0,3" />
+                            <Image HorizontalAlignment="Left" VerticalAlignment="Top" Source="{Binding Image.Value, IsAsync=True}" Stretch="Uniform" StretchDirection="DownOnly" />
+                        </DockPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</UserControl>

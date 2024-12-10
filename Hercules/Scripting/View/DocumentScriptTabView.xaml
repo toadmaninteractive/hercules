@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="Hercules.Scripting.View.DocumentScriptTabView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:ae="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:hc="clr-namespace:Hercules.Controls"
+    xmlns:scripting="clr-namespace:Hercules.Scripting"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance scripting:DocumentScriptPage}"
+    hc:RoutedCommandBindings.CommandBindings="{Binding RoutedCommandBindings}"
+    d:DesignHeight="300" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/View/Controls/AvalonEdit/AvalonEditResources.xaml" />
+    </UserControl.Resources>
+
+    <telerik:RadBusyIndicator IsBusy="{Binding Job.IsBusy}" IsIndeterminate="True" Name="BusyIndicator">
+        <telerik:RadBusyIndicator.BusyContentTemplate>
+            <DataTemplate>
+                <StackPanel Margin="4" Width="300" DataContext="{Binding DataContext, ElementName=BusyIndicator}" Orientation="Vertical">
+                    <TextBlock Text="{Binding Job.Status}" />
+                    <Button Width="100" Content="Abort" HorizontalAlignment="Right" Margin="0,6,2,0" Command="{Binding Job.Abort}" />
+                </StackPanel>
+            </DataTemplate>
+        </telerik:RadBusyIndicator.BusyContentTemplate>
+        <Border>
+            <DockPanel LastChildFill="True">
+                <ToolBar Padding="0" Margin="0" Focusable="False" DockPanel.Dock="Top">
+                    <Button ToolTip="Run Script" Command="{Binding RunScriptCommand}" Style="{StaticResource ToolButton}" Visibility="{Binding Editor.IsScript, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}">
+                        <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-control}" />
+                    </Button>
+                </ToolBar>
+
+                <ItemsControl
+                    Focusable="False"
+                    DockPanel.Dock="Top"
+                    ItemTemplateSelector="{StaticResource ViewModelTemplateSelector}"
+                    ItemsSource="{Binding Notifications.Items}" />
+
+                <Grid Background="#ffe9ecfa">
+                    <Border
+                        BorderThickness="1"
+                        BorderBrush="Gray">
+                        <ae:TextEditor
+                            Name="TextEditor"
+                            FontFamily="Courier New"
+                            Document="{Binding Script}"
+                            ShowLineNumbers="True"
+                            VerticalScrollBarVisibility="Visible">
+                            <i:Interaction.Behaviors>
+                                <hc:CodeCompletionBehavior Strategy="{Binding CodeCompletionStrategy}" />
+                                <hc:SyntaxHighlightBehavior Syntax="SyntaxHighlight\\JavaScript.xshd" />
+                                <hc:IndentationBehavior />
+                                <hc:FoldingBehavior />
+                                <hc:BracketHighlightBehavior />
+                                <hc:HighlightSelectedIdentifierBehaviour />
+                                <hc:AvalonEditSearchBehavior SearchTarget="{Binding SearchTarget, Mode=OneWayToSource}" />
+                            </i:Interaction.Behaviors>
+                            <ae:TextEditor.Options>
+                                <ae:TextEditorOptions EnableImeSupport="False" HighlightCurrentLine="True" ConvertTabsToSpaces="True" />
+                            </ae:TextEditor.Options>
+                            <ae:TextEditor.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{x:Static ApplicationCommands.Copy}" />
+                                    <MenuItem Command="{x:Static ApplicationCommands.Cut}" />
+                                    <MenuItem Command="{x:Static ApplicationCommands.Paste}" />
+                                    <MenuItem Command="{x:Static ApplicationCommands.Delete}" />
+                                    <MenuItem Command="{x:Static ApplicationCommands.SelectAll}" />
+                                </ContextMenu>
+                            </ae:TextEditor.ContextMenu>
+                        </ae:TextEditor>
+                    </Border>
+                </Grid>
+            </DockPanel>
+        </Border>
+    </telerik:RadBusyIndicator>
+</UserControl>

@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="Hercules.Shell.View.AppearanceSettingsTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:shell="clr-namespace:Hercules.Shell"
+             xmlns:hc="clr-namespace:Hercules.Controls"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance shell:AppearanceSettingsTab}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel>
+        <TextBlock Margin="0,0,0,10" Text="Appearance" FontWeight="Black" />
+        <TextBlock TextWrapping="Wrap" Margin="0,0,0,2" Text="Visual theme:" />
+        <ComboBox MinWidth="300" HorizontalAlignment="Left" ItemsSource="{hc:EnumDescriptions {x:Type shell:VisualTheme}}" SelectedValuePath="Value" SelectedValue="{Binding Theme.Value}" />
+    </StackPanel>
+</UserControl>

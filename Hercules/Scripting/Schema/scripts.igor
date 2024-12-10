@@ -1,0 +1,24 @@
+[csharp json.enabled list_implementation=readonly dict_implementation=readonly]
+[csharp namespace="Hercules.Scripting"]
+[schema enabled]
+module ScriptsSchema
+{
+    enum ScriptScope
+    {
+        script;
+    }
+
+    [schema root]
+    record ScriptDocument
+    {
+        ScriptScope scope = script;
+        
+        ?string name;
+        ?string icon;
+        ?string menu_category;
+        ?bool show_in_toolbar;
+
+        [schema multiline syntax="JavaScript"]
+        string script;
+    }
+}

@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="Hercules.Diagrams.View.ToolBoxToolView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             xmlns:hd="clr-namespace:Hercules.Diagrams"
+             xmlns:hc="clr-namespace:Hercules.Controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             d:DataContext="{d:DesignInstance hd:ToolBoxTool}">
+
+    <UserControl.Resources>
+        <CollectionViewSource
+            x:Key="CvsToolBoxItems"
+            Filter="ToolBoxItemsFilter"
+            Source="{Binding Path=ToolBoxItems}" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <ResourceDictionary Source="../Templates/ToolBoxItemTemplate.xaml" />
+        </Grid.Resources>
+
+        <TextBox
+            Grid.Row="0"
+            x:Name="TbxFilter"
+            VerticalAlignment="Center"
+            Height="20"
+            Margin="5,0"
+            TextChanged="TextBoxTextChanged" />
+        <Button
+            Grid.ZIndex="1"
+            Grid.Row="0"
+            Margin="5,5,10,5"
+            VerticalAlignment="Center"
+            Cursor="Hand"
+            Style="{StaticResource ClearText}"
+            Click="ClearFilter" />
+
+        <ListBox
+            x:Name="ToolBox"
+            Grid.Row="1"
+            HorizontalContentAlignment="Stretch"
+            ItemsSource="{Binding Source={StaticResource CvsToolBoxItems}}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="BorderThickness" Value="0" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <ContentPresenter ContentTemplate="{StaticResource ToolBoxItemTemplate}">
+                        <i:Interaction.Behaviors>
+                            <hc:DragSourceBehavior Data="{Binding}" />
+                        </i:Interaction.Behaviors>
+                    </ContentPresenter>
+                </DataTemplate>                
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Synchronization &mdash; Hercules Manual 2.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/hercules_theme.css?v=547657ed" />
+
+  
+    <link rel="shortcut icon" href="../_static/hercules.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=67b02a41"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hercules Administration" href="hercules-administration.html" />
+    <link rel="prev" title="Document Version Control" href="document-version-control.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Hercules Manual
+              <img src="../_static/hercules_64x64.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="designers-index.html">Hercules For Designers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html">Quick Start: Sample Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connections.html">Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html">Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="document-version-control.html">Document Version Control</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Data Synchronization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#loading-unsynced-data-to-the-synchronization-form">Loading Unsynced Data to the Synchronization form</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filtering-unsynced-data">Filtering Unsynced Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#viewing-modification-details">Viewing Modification Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#selecting-data-for-synchronization">Selecting Data for Synchronization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-synchronization">Running Synchronization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hercules-administration.html">Hercules Administration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="layout.html">Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules-settings.html">Hercules Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/developers-index.html">Hercules For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripting/scripting-index.html">Scripting Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Hercules Manual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="designers-index.html">Hercules For Designers</a></li>
+      <li class="breadcrumb-item active">Data Synchronization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-synchronization">
+<h1>Data Synchronization<a class="headerlink" href="#data-synchronization" title="Link to this heading"></a></h1>
+<p>You can force Hercules to synchronize data between databases. This allows you to keep different branches of a product (i.e., dev, beta, stable, live).</p>
+<p>To understand the basic synchronization process, consider two databases:</p>
+<ul class="simple">
+<li><p>A <strong>target database</strong>. This is the database <strong>to</strong> which data is <strong>imported</strong>.</p></li>
+<li><p>A <strong>source database</strong>. This is the database <strong>from</strong> which data is <strong>exported</strong>.</p></li>
+</ul>
+<p>Data is considered unsynced when:</p>
+<ul class="simple">
+<li><p>the <strong>source database lacks</strong> a document that exists in the target database</p></li>
+<li><p>the <strong>target database lacks</strong> a document that exists in the source database</p></li>
+<li><p><strong>different versions</strong> of the same document exist in the databases.</p></li>
+</ul>
+<p>Hercules imports unsynced data from the source and target databases to the synchronization form and then exports selected data from the synchronization form to the target database.</p>
+<p>Hercules allows you to update a target database with documents from a source database by</p>
+<ul class="simple">
+<li><p>importing all unsynced documents</p></li>
+<li><p>importing only specific fields from one document or several documents.</p></li>
+</ul>
+<section id="loading-unsynced-data-to-the-synchronization-form">
+<h2>Loading Unsynced Data to the Synchronization form<a class="headerlink" href="#loading-unsynced-data-to-the-synchronization-form" title="Link to this heading"></a></h2>
+<p>This is how you load unsynced data to a synchronization form:</p>
+<ol class="arabic simple">
+<li><p>Go through <strong>Data</strong> &gt; <strong>Synchronize With Database</strong>.</p></li>
+<li><p>From the <strong>Source</strong> list, select your preferred source database.</p></li>
+<li><p>Click <img alt="Test" src="../_images/image59.png" />.</p></li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You can select the source database only from existing connections available on the <strong>Source</strong> list. If your preferred source database is missing from the list, you have to set up a connection to this database first (see <a class="reference internal" href="connections.html#new-connection"><span class="std std-ref">Setting Up a New Connection</span></a>).</p>
+</div>
+<figure class="align-default">
+<img alt="../_images/image60.png" src="../_images/image60.png" />
+</figure>
+<p>A list of all unsynced changes between the source and target (the one you are currently connected to) database is displayed.</p>
+<figure class="align-default">
+<img alt="../_images/image61.png" src="../_images/image61.png" />
+</figure>
+<ul>
+<li><p><strong>Change</strong> indicates the type of change</p></li>
+<li><p><strong>Select</strong> selects the entire document for synchronization</p></li>
+<li><div class="line-block">
+<div class="line"><strong>Document</strong> displays the name and ID of the document</div>
+</div>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><strong>Time [Database Name]</strong> is the time and date of the last change in the target database</div>
+<div class="line"><strong>User [Database Name]</strong> is the name of the user that made the last change in the target database</div>
+<div class="line"><strong>Time [Database Name]</strong> is the time and date of the last change in the source database</div>
+<div class="line"><strong>User [Database Name]</strong> is the name user who made the last change in the source database.</div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="filtering-unsynced-data">
+<h2>Filtering Unsynced Data<a class="headerlink" href="#filtering-unsynced-data" title="Link to this heading"></a></h2>
+<p>Using the filter in the synchronization form, you can find and analyze specific changes quickly. You can filter data based on:</p>
+<ul class="simple">
+<li><p>document name/id and/or</p></li>
+<li><p>the type of change.</p></li>
+</ul>
+<p>When you add a filter, only documents that meet the specified criteria are shown.</p>
+<p>To filter data by document name/ID, type in a string that matches any part of the document name or ID.</p>
+<figure class="align-default">
+<img alt="../_images/image62.png" src="../_images/image62.png" />
+</figure>
+<p>To filter data by type of change, use the buttons to the right of the filter box:</p>
+<p><img alt="Plus" src="../_images/image63.png" /> (green plus sign) - displays added documents</p>
+<p><img alt="Minus" src="../_images/image64.png" /> (red minus sign) - displays deleted documents</p>
+<p><img alt="Asterix" src="../_images/image65.png" /> (yellow asterisk sign) - displays modified documents</p>
+<figure class="align-default">
+<img alt="../_images/image66.png" src="../_images/image66.png" />
+</figure>
+<p>When you use multiple filtering options, Hercules displays documents that match all of them.</p>
+<figure class="align-default">
+<img alt="../_images/image67.png" src="../_images/image67.png" />
+</figure>
+</section>
+<section id="viewing-modification-details">
+<h2>Viewing Modification Details<a class="headerlink" href="#viewing-modification-details" title="Link to this heading"></a></h2>
+<p>In modified documents, the highlight color indicates the type of change:</p>
+<ul class="simple">
+<li><p><strong>Green:</strong> Added</p></li>
+<li><p><strong>Red:</strong> Removed</p></li>
+</ul>
+<figure class="align-default">
+<img alt="../_images/image68.png" src="../_images/image68.png" />
+</figure>
+</section>
+<section id="selecting-data-for-synchronization">
+<h2>Selecting Data for Synchronization<a class="headerlink" href="#selecting-data-for-synchronization" title="Link to this heading"></a></h2>
+<p>To select data for synchronization, tick the checkboxes close to documents’ names.</p>
+<ul class="simple">
+<li><p>When you select a document marked as added, Hercules creates a copy of this document in the target database.</p></li>
+<li><p>When you select a document marked as removed, Hercules deletes the document from the target database.</p></li>
+<li><p>Modified documents are synced with their source counterparts.</p></li>
+</ul>
+<p>To select or deselect all documents in a list, use the <strong>Check all</strong> or <strong>Uncheck all</strong> buttons on the toolbar (under the <strong>Synchronize Database</strong> tab).</p>
+<p>The highlight color indicates the type of selected unsynced change:</p>
+<ul class="simple">
+<li><p><strong>Yellow:</strong> Modified</p></li>
+<li><p><strong>Green:</strong> Added</p></li>
+<li><p><strong>Red:</strong> Removed</p></li>
+</ul>
+<figure class="align-default">
+<img alt="../_images/image69.png" src="../_images/image69.png" />
+</figure>
+<p>Documents that have been modified may be partially imported this way: Expand the document selection by clicking the plus sign close to the document name. Hercules then displays a comparison view showing document modifications in detail (similar to versioning).</p>
+<p>Here, you can specify individual fields that Hercules must synchronize. The specified fields will be imported. The rest of the document will remain untouched. Partially selected documents acquire the black square symbol on the select column.</p>
+<figure class="align-default">
+<img alt="../_images/image70.gif" src="../_images/image70.gif" />
+</figure>
+</section>
+<section id="running-synchronization">
+<h2>Running Synchronization<a class="headerlink" href="#running-synchronization" title="Link to this heading"></a></h2>
+<p>You can run synchronization through any of these methods:</p>
+<ul class="simple">
+<li><p><strong>Import and Edit</strong> (you then have to save changes).</p></li>
+<li><p><strong>Import and Save.</strong></p></li>
+</ul>
+<p>When unsynced data contain documents marked as removed, you are prompted to confirm the deletion.</p>
+<figure class="align-center">
+<img alt="../_images/image71.png" src="../_images/image71.png" />
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="document-version-control.html" class="btn btn-neutral float-left" title="Document Version Control" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hercules-administration.html" class="btn btn-neutral float-right" title="Hercules Administration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Toadman Interactive.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

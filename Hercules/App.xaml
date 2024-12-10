@@ -1,0 +1,26 @@
+﻿<Application x:Class="Hercules.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:shellView="clr-namespace:Hercules.Shell.View"
+    StartupUri="View/Main/WindowMain.xaml"
+    DispatcherUnhandledException="Application_DispatcherUnhandledException"
+    Startup="Application_Startup">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/FugueIcons;component/Icons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FugueIcons;component/Images.xaml" />
+                <ResourceDictionary Source="View/Converters/Converters.xaml" />
+                <ResourceDictionary Source="View/Controls/Tree/Tree.xaml" />
+                <ResourceDictionary Source="View/Style/Buttons.xaml" />
+                <ResourceDictionary Source="View/Style/Dialogs.xaml" />
+                <ResourceDictionary Source="View/Style/UiOptions.xaml" />
+                <ResourceDictionary Source="Diagrams/Style/Styles.xaml" />
+                <ResourceDictionary>
+                    <shellView:ViewModelTemplateSelector x:Key="ViewModelTemplateSelector" />
+                </ResourceDictionary>
+                <ResourceDictionary Source="Connections/View/Connections.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

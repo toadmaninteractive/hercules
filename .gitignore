@@ -1,0 +1,7 @@
+bin
+/*.suo
+*.user
+/.vs
+*.db
+*.opendb
+/Setup/Output

@@ -1,0 +1,775 @@
+{
+    "custom_types": {
+        "DescriptorKind": {
+            "kind": "enum",
+            "values": [
+                "bool",
+                "int",
+                "float",
+                "string",
+                "binary",
+                "list",
+                "dict",
+                "enum",
+                "record",
+                "union",
+                "key",
+                "localized",
+                "datetime",
+                "json",
+                "custom",
+                "generic_instance",
+                "generic_argument"
+            ]
+        },
+        "Descriptor": {
+            "kind": "variant",
+            "fields": {
+                "kind": {
+                    "kind": "enum",
+                    "optional": false,
+                    "name": "DescriptorKind"
+                },
+                "optional": {
+                    "kind": "bool",
+                    "optional": false,
+                    "default": false
+                },
+                "help": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "editor_key": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false,
+                    "low_cardinality": true
+                },
+                "meta": {
+                    "kind": "dict",
+                    "optional": true,
+                    "key": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    },
+                    "value": {
+                        "kind": "json",
+                        "optional": false
+                    }
+                }
+            },
+            "interfaces": [
+                
+            ],
+            "tag": "kind",
+            "children": {
+                "bool": "BoolDescriptor",
+                "int": "IntDescriptor",
+                "float": "FloatDescriptor",
+                "string": "StringDescriptor",
+                "binary": "BinaryDescriptor",
+                "list": "ListDescriptor",
+                "dict": "DictDescriptor",
+                "enum": "EnumDescriptor",
+                "record": "RecordDescriptor",
+                "union": "UnionDescriptor",
+                "key": "KeyDescriptor",
+                "localized": "LocalizedDescriptor",
+                "datetime": "DateTimeDescriptor",
+                "json": "JsonDescriptor",
+                "custom": "CustomDescriptor",
+                "generic_instance": "GenericInstanceDescriptor",
+                "generic_argument": "GenericArgumentDescriptor"
+            }
+        },
+        "BoolDescriptor": {
+            "kind": "record",
+            "fields": {
+                "default": {
+                    "kind": "bool",
+                    "optional": true
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "IntTypeName": {
+            "kind": "enum",
+            "values": [
+                "int8",
+                "uint8",
+                "int16",
+                "uint16",
+                "int32",
+                "uint32",
+                "int64",
+                "uint64"
+            ]
+        },
+        "IntDescriptor": {
+            "kind": "record",
+            "fields": {
+                "default": {
+                    "kind": "int",
+                    "optional": true,
+                    "type": "int32"
+                },
+                "min": {
+                    "kind": "int",
+                    "optional": true,
+                    "type": "int32"
+                },
+                "max": {
+                    "kind": "int",
+                    "optional": true,
+                    "type": "int32"
+                },
+                "type": {
+                    "kind": "enum",
+                    "optional": true,
+                    "name": "IntTypeName"
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "FloatTypeName": {
+            "kind": "enum",
+            "values": [
+                "float32",
+                "float64"
+            ]
+        },
+        "FloatDescriptor": {
+            "kind": "record",
+            "fields": {
+                "default": {
+                    "kind": "float",
+                    "optional": true,
+                    "type": "float64"
+                },
+                "min": {
+                    "kind": "float",
+                    "optional": true,
+                    "type": "float64"
+                },
+                "max": {
+                    "kind": "float",
+                    "optional": true,
+                    "type": "float64"
+                },
+                "type": {
+                    "kind": "enum",
+                    "optional": true,
+                    "name": "FloatTypeName"
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "PathOptions": {
+            "kind": "record",
+            "fields": {
+                "root": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "default_path": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "extension": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "include_extension": {
+                    "kind": "bool",
+                    "optional": true
+                }
+            },
+            "interfaces": [
+                
+            ]
+        },
+        "StringDescriptor": {
+            "kind": "record",
+            "fields": {
+                "default": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "multiline": {
+                    "kind": "bool",
+                    "optional": false,
+                    "default": false
+                },
+                "not_empty": {
+                    "kind": "bool",
+                    "optional": false,
+                    "default": false
+                },
+                "low_cardinality": {
+                    "kind": "bool",
+                    "optional": true
+                },
+                "source": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "path": {
+                    "kind": "record",
+                    "optional": true,
+                    "name": "PathOptions",
+                    "compact": false
+                },
+                "syntax": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "BinaryDescriptor": {
+            "kind": "record",
+            "fields": {
+                
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "ListDescriptor": {
+            "kind": "record",
+            "fields": {
+                "element": {
+                    "kind": "record",
+                    "optional": false,
+                    "name": "Descriptor",
+                    "compact": false
+                },
+                "default": {
+                    "kind": "json",
+                    "optional": true
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "DictDescriptor": {
+            "kind": "record",
+            "fields": {
+                "key": {
+                    "kind": "record",
+                    "optional": false,
+                    "name": "Descriptor",
+                    "compact": false
+                },
+                "value": {
+                    "kind": "record",
+                    "optional": false,
+                    "name": "Descriptor",
+                    "compact": false
+                },
+                "keys": {
+                    "kind": "dict",
+                    "optional": true,
+                    "key": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    },
+                    "value": {
+                        "kind": "record",
+                        "optional": false,
+                        "name": "Descriptor",
+                        "compact": false
+                    }
+                },
+                "default": {
+                    "kind": "json",
+                    "optional": true
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "EnumDescriptor": {
+            "kind": "record",
+            "fields": {
+                "name": {
+                    "kind": "string",
+                    "optional": false,
+                    "meta": {
+                        "reference.id": "custom_type_name"
+                    },
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "default": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "RecordDescriptor": {
+            "kind": "record",
+            "fields": {
+                "name": {
+                    "kind": "string",
+                    "optional": false,
+                    "meta": {
+                        "reference.id": "custom_type_name"
+                    },
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "compact": {
+                    "kind": "bool",
+                    "optional": false,
+                    "default": false
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "UnionDescriptor": {
+            "kind": "record",
+            "fields": {
+                "name": {
+                    "kind": "string",
+                    "optional": false,
+                    "meta": {
+                        "reference.id": "custom_type_name"
+                    },
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "compact": {
+                    "kind": "bool",
+                    "optional": false,
+                    "default": false
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "KeyDescriptor": {
+            "kind": "record",
+            "fields": {
+                "category": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "interface": {
+                    "kind": "string",
+                    "optional": true,
+                    "meta": {
+                        "reference.id": "interface_name"
+                    },
+                    "multiline": false,
+                    "not_empty": false
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "LocalizedDescriptor": {
+            "kind": "record",
+            "fields": {
+                "name": {
+                    "kind": "string",
+                    "optional": false,
+                    "meta": {
+                        "reference.id": "custom_type_name"
+                    },
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "multiline": {
+                    "kind": "bool",
+                    "optional": false,
+                    "default": false
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "DateTimeDescriptor": {
+            "kind": "record",
+            "fields": {
+                
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "JsonDescriptor": {
+            "kind": "record",
+            "fields": {
+                
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "CustomDescriptor": {
+            "kind": "record",
+            "fields": {
+                
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "GenericInstanceDescriptor": {
+            "kind": "record",
+            "fields": {
+                "prototype": {
+                    "kind": "string",
+                    "optional": false,
+                    "meta": {
+                        "reference.id": "custom_type_name"
+                    },
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "arguments": {
+                    "kind": "list",
+                    "optional": false,
+                    "element": {
+                        "kind": "record",
+                        "optional": false,
+                        "name": "Descriptor",
+                        "compact": false
+                    }
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "GenericArgumentDescriptor": {
+            "kind": "record",
+            "fields": {
+                "name": {
+                    "kind": "string",
+                    "optional": false,
+                    "multiline": false,
+                    "not_empty": false
+                }
+            },
+            "parent": "Descriptor",
+            "interfaces": [
+                
+            ]
+        },
+        "CustomTypeKind": {
+            "kind": "enum",
+            "values": [
+                "record",
+                "variant",
+                "enum",
+                "union"
+            ]
+        },
+        "CustomType": {
+            "kind": "variant",
+            "fields": {
+                "kind": {
+                    "kind": "enum",
+                    "optional": false,
+                    "name": "CustomTypeKind"
+                },
+                "meta": {
+                    "kind": "dict",
+                    "optional": true,
+                    "key": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    },
+                    "value": {
+                        "kind": "json",
+                        "optional": false
+                    }
+                }
+            },
+            "interfaces": [
+                
+            ],
+            "tag": "kind",
+            "children": {
+                "record": "RecordCustomType",
+                "variant": "VariantCustomType",
+                "enum": "EnumCustomType",
+                "union": "UnionCustomType"
+            }
+        },
+        "StructCustomType": {
+            "kind": "variant",
+            "fields": {
+                "fields": {
+                    "kind": "dict",
+                    "optional": false,
+                    "key": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    },
+                    "value": {
+                        "kind": "record",
+                        "optional": false,
+                        "name": "Descriptor",
+                        "compact": false
+                    }
+                },
+                "parent": {
+                    "kind": "string",
+                    "optional": true,
+                    "meta": {
+                        "reference.id": "custom_type_name"
+                    },
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "interfaces": {
+                    "kind": "list",
+                    "optional": false,
+                    "element": {
+                        "kind": "string",
+                        "optional": false,
+                        "meta": {
+                            "reference.id": "interface_name",
+                            "reference.source": true
+                        },
+                        "multiline": false,
+                        "not_empty": false
+                    }
+                }
+            },
+            "parent": "CustomType",
+            "interfaces": [
+                
+            ],
+            "tag": "kind",
+            "children": {
+                "record": "RecordCustomType",
+                "variant": "VariantCustomType"
+            }
+        },
+        "RecordCustomType": {
+            "kind": "record",
+            "fields": {
+                "generic_arguments": {
+                    "kind": "list",
+                    "optional": true,
+                    "element": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    }
+                },
+                "group": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                }
+            },
+            "parent": "StructCustomType",
+            "interfaces": [
+                
+            ]
+        },
+        "VariantCustomType": {
+            "kind": "record",
+            "fields": {
+                "tag": {
+                    "kind": "string",
+                    "optional": false,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "children": {
+                    "kind": "dict",
+                    "optional": false,
+                    "key": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    },
+                    "value": {
+                        "kind": "string",
+                        "optional": false,
+                        "meta": {
+                            "reference.id": "custom_type_name"
+                        },
+                        "multiline": false,
+                        "not_empty": false
+                    }
+                }
+            },
+            "parent": "StructCustomType",
+            "interfaces": [
+                
+            ]
+        },
+        "EnumCustomType": {
+            "kind": "record",
+            "fields": {
+                "values": {
+                    "kind": "list",
+                    "optional": false,
+                    "element": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    }
+                }
+            },
+            "parent": "CustomType",
+            "interfaces": [
+                
+            ]
+        },
+        "UnionCustomType": {
+            "kind": "record",
+            "fields": {
+                "clauses": {
+                    "kind": "dict",
+                    "optional": false,
+                    "key": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    },
+                    "value": {
+                        "kind": "record",
+                        "optional": true,
+                        "name": "Descriptor",
+                        "compact": false
+                    }
+                },
+                "generic_arguments": {
+                    "kind": "list",
+                    "optional": true,
+                    "element": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    }
+                }
+            },
+            "parent": "CustomType",
+            "interfaces": [
+                
+            ]
+        },
+        "Schema": {
+            "kind": "record",
+            "fields": {
+                "custom_types": {
+                    "kind": "dict",
+                    "optional": false,
+                    "key": {
+                        "kind": "string",
+                        "optional": false,
+                        "meta": {
+                            "reference.id": "custom_type_name",
+                            "reference.source": true,
+                            "reference.unique": true
+                        },
+                        "multiline": false,
+                        "not_empty": false
+                    },
+                    "value": {
+                        "kind": "record",
+                        "optional": false,
+                        "name": "CustomType",
+                        "compact": false
+                    }
+                },
+                "document_type": {
+                    "kind": "string",
+                    "optional": false,
+                    "meta": {
+                        "reference.id": "custom_type_name"
+                    },
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "version": {
+                    "kind": "string",
+                    "optional": false,
+                    "default": "1.0",
+                    "multiline": false,
+                    "not_empty": false
+                }
+            },
+            "interfaces": [
+                
+            ]
+        }
+    },
+    "document_type": "Schema",
+    "version": "1.1"
+}

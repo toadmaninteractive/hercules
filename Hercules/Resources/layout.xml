@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayoutRoot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <RootPanel Orientation="Horizontal">
+    <LayoutAnchorablePane Id="e70f4c51-07be-41d2-b4bd-6318bef47ab5" DockWidth="256" DockHeight="367" FloatingWidth="200" FloatingHeight="745" FloatingLeft="-75" FloatingTop="472">
+      <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Database Explorer" IsSelected="True" ContentId="{DatabaseExplorer}" FloatingLeft="-75" FloatingTop="472" FloatingWidth="200" FloatingHeight="745" LastActivationTimeStamp="09/29/2015 18:19:32" />
+    </LayoutAnchorablePane>
+    <LayoutPanel Orientation="Vertical">
+      <LayoutPanel Orientation="Horizontal">
+        <LayoutDocumentPane />
+        <LayoutAnchorablePaneGroup Orientation="Horizontal" DockWidth="192" FloatingWidth="200" FloatingHeight="745" FloatingLeft="923" FloatingTop="343">
+          <LayoutAnchorablePane Id="497ef1fe-4a99-4ac1-9044-459458953b29" DockHeight="367" FloatingWidth="200" FloatingHeight="745" FloatingLeft="923" FloatingTop="343" />
+        </LayoutAnchorablePaneGroup>
+      </LayoutPanel>
+      <LayoutAnchorablePaneGroup Orientation="Horizontal" DockWidth="200" DockHeight="217" FloatingWidth="200" FloatingHeight="745" FloatingLeft="709" FloatingTop="813">
+        <LayoutAnchorablePane Id="735f7d47-0596-450d-9772-00974ebd7b03" DockHeight="217" FloatingWidth="200" FloatingHeight="745" FloatingLeft="709" FloatingTop="813">
+          <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Log" IsSelected="True" ContentId="{LogViewer}" FloatingLeft="709" FloatingTop="813" FloatingWidth="200" FloatingHeight="745" LastActivationTimeStamp="09/29/2015 18:12:10" />
+          <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Tasks" ContentId="{Jobs}" FloatingLeft="865" FloatingTop="704" FloatingWidth="200" FloatingHeight="745" LastActivationTimeStamp="01/28/2015 01:27:42" />
+        </LayoutAnchorablePane>
+      </LayoutAnchorablePaneGroup>
+    </LayoutPanel>
+    <LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="270" DockHeight="367">
+      <LayoutAnchorablePane Id="d7647b78-4d8b-40bf-b259-80bcf622d166" DockWidth="221" FloatingWidth="200" FloatingHeight="745" FloatingLeft="1569" FloatingTop="546" />
+      <LayoutAnchorablePaneGroup Orientation="Horizontal" FloatingWidth="200" FloatingHeight="745" FloatingLeft="1481" FloatingTop="586">
+        <LayoutAnchorablePane Id="45b8d414-c8c8-4bb3-ac89-563e229f9483" DockHeight="217" FloatingWidth="200" FloatingHeight="745" FloatingLeft="1481" FloatingTop="586" />
+      </LayoutAnchorablePaneGroup>
+    </LayoutAnchorablePaneGroup>
+  </RootPanel>
+  <TopSide />
+  <RightSide />
+  <LeftSide />
+  <BottomSide />
+  <FloatingWindows />
+  <Hidden>
+    <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Search Results" IsSelected="True" ContentId="{SearchResults}" FloatingLeft="791" FloatingTop="706" FloatingWidth="200" FloatingHeight="745" LastActivationTimeStamp="09/29/2015 18:20:26" PreviousContainerId="735f7d47-0596-450d-9772-00974ebd7b03" PreviousContainerIndex="2" />
+    <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Property Editor" ContentId="{PropertyEditor}" FloatingLeft="1483" FloatingTop="325" FloatingWidth="200" FloatingHeight="745" LastActivationTimeStamp="09/29/2015 18:20:38" PreviousContainerId="d7647b78-4d8b-40bf-b259-80bcf622d166" PreviousContainerIndex="0" />
+    <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Search" ContentId="{Search}" FloatingLeft="1569" FloatingTop="546" FloatingWidth="200" FloatingHeight="745" LastActivationTimeStamp="09/29/2015 18:20:43" PreviousContainerId="d7647b78-4d8b-40bf-b259-80bcf622d166" PreviousContainerIndex="0" />
+    <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Toolbox" ContentId="{Toolbox}" FloatingLeft="1481" FloatingTop="586" FloatingWidth="200" FloatingHeight="745" LastActivationTimeStamp="09/29/2015 18:20:36" PreviousContainerId="45b8d414-c8c8-4bb3-ac89-563e229f9483" PreviousContainerIndex="0" />
+  </Hidden>
+</LayoutRoot>

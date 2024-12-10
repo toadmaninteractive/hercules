@@ -1,0 +1,81 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hercules", "Hercules\Hercules.csproj", "{8EDB2397-0C68-429E-8E47-4DD8C4C87B0B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{E10A2697-B3C9-4EFE-B952-BB7D17AA2149}"
+	ProjectSection(SolutionItems) = preProject
+		Setup\Hercules.iss = Setup\Hercules.iss
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HerculesTests", "HerculesTests\HerculesTests.csproj", "{B8BE7417-031D-4DEE-A400-9B40895B807A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CB8D6D96-608C-4B47-8C68-F038A2B0FF8A}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FugueIcons", "FugueIcons\FugueIcons.csproj", "{B2227882-6D0A-487F-9022-E200068A974D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AvalonDock", "AvalonDock", "{5E7BDE5B-F61A-41AA-8DC1-998CA400EF52}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvalonDock", "AvalonDock\source\Components\AvalonDock\AvalonDock.csproj", "{847BEE4A-B2D0-484A-8CBF-64C9A1B97332}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvalonDock.Themes.Aero", "AvalonDock\source\Components\AvalonDock.Themes.Aero\AvalonDock.Themes.Aero.csproj", "{09CF8F38-1E07-4BD2-A329-88F91C939D3E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvalonDock.Themes.Metro", "AvalonDock\source\Components\AvalonDock.Themes.Metro\AvalonDock.Themes.Metro.csproj", "{2430B980-FD72-479C-85B7-C0BF3091AC92}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvalonDock.Themes.VS2010", "AvalonDock\source\Components\AvalonDock.Themes.VS2010\AvalonDock.Themes.VS2010.csproj", "{A135E0DF-25DB-49D8-8F5F-E8D6DD6168A4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EDB2397-0C68-429E-8E47-4DD8C4C87B0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EDB2397-0C68-429E-8E47-4DD8C4C87B0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EDB2397-0C68-429E-8E47-4DD8C4C87B0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EDB2397-0C68-429E-8E47-4DD8C4C87B0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8BE7417-031D-4DEE-A400-9B40895B807A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8BE7417-031D-4DEE-A400-9B40895B807A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8BE7417-031D-4DEE-A400-9B40895B807A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8BE7417-031D-4DEE-A400-9B40895B807A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2227882-6D0A-487F-9022-E200068A974D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2227882-6D0A-487F-9022-E200068A974D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2227882-6D0A-487F-9022-E200068A974D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2227882-6D0A-487F-9022-E200068A974D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{847BEE4A-B2D0-484A-8CBF-64C9A1B97332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{847BEE4A-B2D0-484A-8CBF-64C9A1B97332}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{847BEE4A-B2D0-484A-8CBF-64C9A1B97332}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{847BEE4A-B2D0-484A-8CBF-64C9A1B97332}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09CF8F38-1E07-4BD2-A329-88F91C939D3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09CF8F38-1E07-4BD2-A329-88F91C939D3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09CF8F38-1E07-4BD2-A329-88F91C939D3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09CF8F38-1E07-4BD2-A329-88F91C939D3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2430B980-FD72-479C-85B7-C0BF3091AC92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2430B980-FD72-479C-85B7-C0BF3091AC92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2430B980-FD72-479C-85B7-C0BF3091AC92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2430B980-FD72-479C-85B7-C0BF3091AC92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A135E0DF-25DB-49D8-8F5F-E8D6DD6168A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A135E0DF-25DB-49D8-8F5F-E8D6DD6168A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A135E0DF-25DB-49D8-8F5F-E8D6DD6168A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A135E0DF-25DB-49D8-8F5F-E8D6DD6168A4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{847BEE4A-B2D0-484A-8CBF-64C9A1B97332} = {5E7BDE5B-F61A-41AA-8DC1-998CA400EF52}
+		{09CF8F38-1E07-4BD2-A329-88F91C939D3E} = {5E7BDE5B-F61A-41AA-8DC1-998CA400EF52}
+		{2430B980-FD72-479C-85B7-C0BF3091AC92} = {5E7BDE5B-F61A-41AA-8DC1-998CA400EF52}
+		{A135E0DF-25DB-49D8-8F5F-E8D6DD6168A4} = {5E7BDE5B-F61A-41AA-8DC1-998CA400EF52}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A1F5AE82-1185-48DC-BF8D-AE89D8402A62}
+	EndGlobalSection
+EndGlobal

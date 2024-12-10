@@ -1,0 +1,48 @@
+[csharp json.enabled list_implementation=readonly dict_implementation=readonly]
+[csharp namespace="Igor.Schema"]
+[schema enabled]
+module DiagramSchema
+{
+    enum ConnectorType
+    {
+        in;
+        out;
+        property;
+        asset;
+    }
+    
+    [csharp immutable]
+    record Connector
+    {
+        string name;
+        ConnectorType type;
+        string position;
+        ?string field;
+        ?string color;
+        ?string caption;
+        ?string category;
+    }
+
+    [csharp immutable]
+    record Prototype
+    {
+        string name;
+        string custom_type;
+        string archetype;
+        ?string icon;
+        ?string color;
+        ?string caption;
+        ?bool show_icon;
+        dict<string, string> special_fields = [];
+        list<Connector> connectors = [];
+    }
+ 
+    [schema root]
+    [csharp immutable]
+    record DiagramSchema
+    {
+        list<Prototype> prototypes = [];
+        list<string> diagram_tags = [];
+        string version = "1.0";
+    }
+}

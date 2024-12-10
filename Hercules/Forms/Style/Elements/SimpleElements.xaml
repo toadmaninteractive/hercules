@@ -1,0 +1,745 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+                    xmlns:h="clr-namespace:Hercules"
+                    xmlns:hc="clr-namespace:Hercules.Controls"
+                    xmlns:elements="clr-namespace:Hercules.Forms.Elements"
+                    xmlns:presentation="clr-namespace:Hercules.Forms.Presentation"
+                    xmlns:shortcuts="clr-namespace:Hercules.Shortcuts"
+                    xmlns:ae="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
+                    xmlns:documents="clr-namespace:Hercules.Documents">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Common.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    
+    <DataTemplate DataType="{x:Type elements:InvalidElement}">
+        <TextBlock Text="Invalid" Foreground="IndianRed" ToolTip="{Binding Json}" Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:BoolElement}">
+        <CheckBox
+            Style="{StaticResource BooleanElement}"
+            Margin="0,2,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            IsChecked="{Binding Value}" 
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:IntElement}" x:Key="IntElementPreview">
+        <Border
+            Cursor="IBeam"
+            Style="{StaticResource FocusableElementBorder}"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            Height="20" 
+            Padding="2,0,2,0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment = "Top">
+            <TextBlock
+                Style="{StaticResource ElementText}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                TextAlignment="{Binding Form.Settings.NumberTextAlignment.Value, Converter={StaticResource HorizontalToTextAlignmentConverter}}"
+                Text="{Binding DisplayValue}" />
+        </Border>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:IntElement}" x:Key="IntElementEditor" >
+        <TextBox
+            ContextMenu="{StaticResource DefaultContextMenu}"
+            BorderBrush="Transparent"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="1,0,1,0"
+            Height="20" MaxHeight="20" MinHeight="20"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch"
+            VerticalContentAlignment="Center"
+            TextAlignment="{Binding Form.Settings.NumberTextAlignment.Value, Converter={StaticResource HorizontalToTextAlignmentConverter}}"
+            FontSize="{StaticResource ElementFontSize}"
+            FontFamily="{StaticResource ElementFont}"
+            FontStretch="Normal"
+            FontWeight="Regular" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:IntElement}" x:Key="IntElementSlider">
+        <telerik:RadSlider
+            Margin="10,0,0,0"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left"
+            FontSize="13"
+            Width="200"
+            FontFamily="Consolas"
+            FontStretch="Normal"
+            FontWeight="Regular"
+            Value="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+            Minimum="{Binding SimpleType.MinValue}"
+            Maximum="{Binding SimpleType.MaxValue}" 
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:FloatElement}" x:Key="FloatElementPreview">
+        <Border
+            Cursor="IBeam"
+            Style="{StaticResource FocusableElementBorder}"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            Height="20"
+            Padding="2 0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment = "Top">
+            <TextBlock
+                Style="{StaticResource ElementText}"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Stretch"
+                TextAlignment="{Binding Form.Settings.NumberTextAlignment.Value, Converter={StaticResource HorizontalToTextAlignmentConverter}}"
+                Text="{Binding DisplayValue}" />
+        </Border>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:FloatElement}" x:Key="FloatElementEditor">
+        <TextBox
+            ContextMenu="{StaticResource DefaultContextMenu}"
+            BorderBrush="Transparent"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="1,0,1,0"
+            Height="20" MaxHeight="20" MinHeight="20"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch"
+            VerticalContentAlignment="Center"
+            TextAlignment="{Binding Form.Settings.NumberTextAlignment.Value, Converter={StaticResource HorizontalToTextAlignmentConverter}}"
+            FontSize="{StaticResource ElementFontSize}"
+            FontFamily="{StaticResource ElementFont}"
+            FontStretch="Normal"
+            FontWeight="Regular" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:FloatElement}" x:Key="FloatElementSlider">
+        <telerik:RadSlider
+            Margin="10,0,0,0"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left"
+            FontSize="13"
+            Width="200"
+            FontFamily="Consolas"
+            FontStretch="Normal"
+            FontWeight="Regular"
+            Value="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+            Minimum="{Binding SimpleType.MinValue}"
+            Maximum="{Binding SimpleType.MaxValue}" 
+            IsMoveToPointEnabled="{Binding SimpleType.SliderTicks, Converter={StaticResource NotConverter}}"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}" >
+            <telerik:RadSlider.Style>
+                <Style TargetType="{x:Type telerik:RadSlider}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SimpleType.SliderTicks}" Value="True">
+                            <Setter Property="TickFrequency" Value="{Binding SimpleType.Step.Value}" />
+                            <Setter Property="TickPlacement" Value="BottomRight" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SimpleType.Step.HasValue}" Value="True">
+                            <Setter Property="LargeChange" Value="{Binding SimpleType.Step.Value}" />
+                            <Setter Property="SmallChange" Value="{Binding SimpleType.Step.Value}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </telerik:RadSlider.Style>
+        </telerik:RadSlider>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:StringElement}" x:Key="StringElementPreview">
+        <Border
+            Height="20" MaxHeight="20" MinHeight="20"
+            Cursor="IBeam"
+            Style="{StaticResource FocusableElementBorder}"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch">
+            <TextBlock
+                Style="{StaticResource ElementText}"
+                Margin="2,2,2,0"
+                Height="20"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Stretch"
+                Text="{Binding Value}" />
+        </Border>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:StringElement}" x:Key="StringElementEditor">
+        <TextBox
+            ContextMenu="{StaticResource DefaultContextMenu}"
+            BorderBrush="Transparent"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="1,0,0,0"
+            Height="20" MaxHeight="20" MinHeight="20"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch"
+            VerticalContentAlignment="Center"
+            FontSize="{StaticResource ElementFontSize}"
+            FontFamily="{StaticResource ElementFont}"
+            FontStretch="Normal"
+            FontWeight="Regular"
+            Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:PathElement}" x:Key="PathElementButton">
+        <Button Margin="4,2,2,0"
+                VerticalAlignment="Top"
+            Style="{StaticResource OpenFile}" 
+            Command="{Binding OpenFileCommand}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:PathElement}" x:Key="PathElementPreview" >
+        <Image
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            Width="{Binding PreviewWidth}"
+            Height="{Binding PreviewHeight}"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="0,2,0,0"
+            Stretch="Uniform"
+            Source="{Binding Image.Value}"
+            hc:MouseBehavior.LeftButtonUpCommand="{Binding OpenFileCommand}"
+            Cursor="Hand" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:TextElement}">
+        <Grid
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            MinHeight="40"
+            Height="{Binding EditorHeight, Mode=TwoWay}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch">
+            <Border Style="{StaticResource FocusableElementBorder}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TextBox
+                    Padding="1 0"
+                    BorderBrush="Transparent"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    ContextMenu="{StaticResource DefaultContextMenu}"
+                    Name="MultilineTextEditor"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    FontSize="{StaticResource ElementFontSize}"
+                    FontFamily="{StaticResource ElementFont}"
+                    FontStretch="Normal"
+                    FontWeight="Regular"
+                    AcceptsReturn="True"
+                    TextWrapping="Wrap"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+            </Border>
+            <hc:ControlResizeGrip Grid.ZIndex="1" />
+        </Grid>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:AvalonTextElement}">
+        <Grid
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            MinHeight="40"
+            Height="{Binding EditorHeight, Mode=TwoWay}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch">
+            <Border Style="{StaticResource FocusableElementBorder}" >
+                <ae:TextEditor
+                Name="MultilineTextEditor"
+                MinHeight="22"
+                Padding="2"
+                    Background="Transparent"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                FontFamily="Courier New"
+                WordWrap="True"
+                Document="{Binding Document}"
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Hidden">
+                    <i:Interaction.Behaviors>
+                        <hc:SyntaxHighlightBehavior Syntax="{Binding SimpleType.SyntaxFile}" />
+                        <hc:BracketHighlightBehavior />
+                        <hc:IndentationBehavior />
+                    </i:Interaction.Behaviors>
+                    <ae:TextEditor.Options>
+                        <ae:TextEditorOptions InheritWordWrapIndentation="False" ConvertTabsToSpaces="True" EnableImeSupport="False" HighlightCurrentLine="False" />
+                    </ae:TextEditor.Options>
+                </ae:TextEditor>
+            </Border>
+            <hc:ControlResizeGrip Grid.ZIndex="2" />
+        </Grid>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:BinaryElement}">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+            <TextBlock
+                Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+                Margin ="0"
+                Padding="0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontSize="11.5"
+                FontFamily="Arial"
+                FontWeight="Regular"
+                FontStretch="UltraExpanded"
+                FontStyle="Normal"
+                Text = "{Binding Caption}"
+                ToolTip = "[Binary data]">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="Black" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsModified}" Value="True">
+                                <Setter Property="Foreground" Value="Green" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=IsValid}" Value="False">
+                                <Setter Property="Foreground" Value="IndianRed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <Button
+                Margin="4,0,0,0"
+                Padding="0"
+                ToolTip="Load From File"
+                BorderThickness = "1"
+                Command="{Binding LoadCommand}"
+                Width="20"
+                Height="20">
+                <Image
+                    Stretch = "Uniform"
+                    Source = "{StaticResource fugue-application-import}"
+                    ToolTip="Load From File" />
+            </Button>
+            <Button
+                Margin="4,0,0,0"
+                Padding="0"
+                ToolTip="Save To File"
+                BorderThickness = "1"
+                Command="{Binding SaveCommand}"
+                Width="20"
+                Height="20">
+                <Image
+                    Stretch = "Uniform"
+                    Source = "{StaticResource fugue-application-export}"
+                    ToolTip="Save To File" />
+            </Button>
+        </StackPanel>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:EnumElement}" x:Key="EnumElementPreview">
+        <Border
+            Height="20" MaxHeight="20" MinHeight="20"
+            Cursor="IBeam"
+            Style="{StaticResource FocusableElementBorder}"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource ElementText}"
+                    Margin="2,2,2,0"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding Value}" />
+                <Border Grid.Column="1" BorderThickness="0" IsHitTestVisible="True" Width="16" Height="20" Cursor="Arrow"
+                        hc:MouseBehavior.LeftButtonDownCommand="{Binding Path=(presentation:AutoCompleteBehavior.ToggleDropDownCommand), RelativeSource={RelativeSource Self}}">
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource ElementHoverBorderBrush}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <telerik:RadGlyph Glyph="&#xe015;" Foreground="DarkSlateGray" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </Grid>
+        </Border>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:EnumElement}" x:Key="EnumElementPopup">
+        <ListBox 
+            MaxHeight="200" 
+            HorizontalAlignment="Stretch"
+            ScrollViewer.CanContentScroll="True"
+            ItemsSource="{Binding Path=(presentation:AutoCompleteBehavior.Items), RelativeSource={RelativeSource Self}}"
+            SnapsToDevicePixels="True"
+            FontFamily="{StaticResource ElementFont}"
+            FontSize="{StaticResource ElementFontSize}"
+            FontStretch="Normal"
+            FontWeight="Regular"
+            Padding="0"
+            IsSynchronizedWithCurrentItem="True">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="hc:MouseBehavior.PreviewLeftButtonDownCommand" 
+                            Value="{Binding Path=(presentation:AutoCompleteBehavior.SubmitCommand), RelativeSource={RelativeSource AncestorType=ListBox}}" />
+                    <Setter Property="hc:MouseBehavior.CommandParameter" Value="{Binding}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:EnumElement}" x:Key="EnumElementEditor">
+        <TextBox
+            ContextMenu="{StaticResource DefaultContextMenu}"
+            Height="20" MaxHeight="20" MinHeight="20" VerticalAlignment="Top" HorizontalAlignment="Stretch"
+            BorderBrush="{x:Null}"
+            Background="Transparent"
+            BorderThickness="0"
+            Margin="1,0,20,0"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            VerticalContentAlignment="Center"
+            FontSize="{StaticResource ElementFontSize}"
+            FontFamily="{StaticResource ElementFont}"
+            FontStretch="Normal"
+            FontWeight="Regular"
+            Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" >
+        </TextBox>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:KeyElement}" x:Key="KeyElementPreview">
+        <Border
+            Height="20" MaxHeight="20" MinHeight="20"
+            Cursor="IBeam"
+            AllowDrop="True"
+            Style="{StaticResource FocusableElementBorder}"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource ElementText}"
+                    Margin="2,2,2,0"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding Value}" />
+                <Border Grid.Column="1" BorderThickness="0" IsHitTestVisible="True" Width="16" Height="20" Cursor="Arrow"
+                        hc:MouseBehavior.LeftButtonDownCommand="{Binding Path=(presentation:AutoCompleteBehavior.ToggleDropDownCommand), RelativeSource={RelativeSource Self}}">
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource ElementHoverBorderBrush}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <telerik:RadGlyph Glyph="&#xe015;" Foreground="DarkSlateGray" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </Grid>
+            <i:Interaction.Behaviors>
+                <hc:DropTargetBehavior DropCommand="{Binding DropCommand}" />
+            </i:Interaction.Behaviors>
+        </Border>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:KeyElement}" x:Key="KeyElementPopup">
+        <ListBox 
+            HorizontalAlignment="Stretch"
+            MaxHeight="200" 
+            ScrollViewer.CanContentScroll="True"
+            ItemsSource="{Binding Path=(presentation:AutoCompleteBehavior.Items), RelativeSource={RelativeSource Self}}"
+            SnapsToDevicePixels="True"
+            FontFamily="{StaticResource ElementFont}"
+            FontSize="{StaticResource ElementFontSize}"
+            FontStretch="Normal"
+            FontWeight="Regular"
+            Padding="0"
+            IsSynchronizedWithCurrentItem="True">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="hc:MouseBehavior.PreviewLeftButtonDownCommand" 
+                            Value="{Binding Path=(presentation:AutoCompleteBehavior.SubmitCommand), RelativeSource={RelativeSource AncestorType=ListBox}}" />
+                    <Setter Property="hc:MouseBehavior.CommandParameter" Value="{Binding}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type documents:IDocument}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                        <TextBlock Foreground="{StaticResource ElementPopupTextBrush}" Text="{Binding DocumentId}"/>
+                        <TextBlock Text=" → " Foreground="Silver" Visibility="{Binding Preview.Caption, Converter={StaticResource NullToVisibilityConverter}}" />
+                        <TextBlock Foreground="{StaticResource ElementPopupTextBrush}" FontWeight="Medium" Text="{Binding Preview.Caption}" Visibility="{Binding Preview.Caption, Converter={StaticResource NullToVisibilityConverter}}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:KeyElement}" x:Key="KeyElementHint">
+        <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Top" 
+                    Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}">
+            <Button
+                VerticalAlignment="Top"
+                Focusable="False"
+                Margin="4,1,4,0"
+                ToolTip="Open document"
+                BorderThickness = "1"
+                Style="{StaticResource Flat}"
+                Command="{x:Static h:RoutedCommands.OpenShortcut}"
+                CommandParameter="{Binding Document.Shortcut}"
+                IsEnabled="{Binding IsValid}"
+                Cursor="Hand"
+                Width="16"
+                Height="16">
+                <Image Stretch = "None" Source = "{StaticResource fugue-shortcut}" />
+            </Button>
+            <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" Text="{Binding Document.Value.Preview.Caption}" FontFamily = "{StaticResource ElementHintFont}"
+                       FontSize="{StaticResource ElementHintFontSize}" FontStyle = "Normal" FontWeight="Regular" 
+                       Visibility="{Binding Document.Value.Preview.Caption, Converter={StaticResource NullToVisibilityConverter}}" />
+        </StackPanel>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:MultiSelectElement}">
+        <telerik:RadComboBox
+            Style="{StaticResource RadComboBoxElement}"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            Height = "20"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch"
+            VerticalContentAlignment = "Center"
+            Padding = "5,0,5,0"
+            FontSize="{StaticResource ElementFontSize}"
+            FontFamily="{StaticResource ElementFont}"
+            FontStretch="Normal"
+            FontWeight="Regular"
+            AllowDrop="True"
+            ItemsSource="{Binding Items}"
+            AllowMultipleSelection="True"
+            IsEditable="False">
+            <i:Interaction.Behaviors>
+                <hc:RadComboBoxMultiSelectElementBehavior SelectedItems="{Binding Value, Mode=TwoWay}"/>
+            </i:Interaction.Behaviors>
+        </telerik:RadComboBox>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:DateTimeElement}" x:Key="DateTimeElementPreview">
+        <Border
+            Style="{StaticResource ElementBorder}"
+            Height="20" MaxHeight="20" MinHeight="20"
+            Cursor="IBeam"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch">
+            <TextBlock
+                Style="{StaticResource ElementText}"
+                Margin="2,2,2,0"
+                Height="20"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Stretch">
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource DateTimeWithZoneConverter}" >
+                        <Binding Path="Value" />
+                        <Binding Path="SimpleType.TimeZone.Value" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </Border>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:DateTimeElement}" x:Key="DateTimeElementEditor">
+        <telerik:RadDateTimePicker
+            Style="{StaticResource DateTimeElement}"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            MinHeight="20"
+            Height="20"
+            MaxHeight="20"
+            FontSize="{StaticResource ElementFontSize}"
+            FontFamily="{StaticResource ElementFont}"
+            DisplayFormat="Long"
+            Padding="0,0,0,0"
+            HorizontalAlignment="Stretch"
+            InputMode="DateTimePicker">
+            <i:Interaction.Behaviors>
+                <hc:DateTimeBehavior TimeZone="{Binding SimpleType.TimeZone.Value}" UtcValue="{Binding Value, Mode=TwoWay}" />
+            </i:Interaction.Behaviors>
+        </telerik:RadDateTimePicker>
+    </DataTemplate>    
+    <DataTemplate DataType="{x:Type elements:DateTimeElement}" x:Key="DateTimeElementTimeZone">
+        <StackPanel Orientation="Horizontal" Height="20" VerticalAlignment="Top" Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}">
+            <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Text="{Binding SimpleType.TimeZone.Value.Id}" FontFamily = "{StaticResource ElementHintFont}"
+                       FontSize="{StaticResource ElementHintFontSize}" FontStyle = "Normal" FontWeight="Regular" ToolTip="{Binding SimpleType.TimeZone.Value}" />
+            <Button
+                VerticalAlignment="Top"
+                Margin="0,1,0,0"
+                Focusable="False"
+                ToolTip="Configure time zone"
+                BorderThickness = "1"
+                Style="{StaticResource Flat}"
+                Command="{x:Static h:RoutedCommands.OpenShortcut}"
+                CommandParameter="{x:Static shortcuts:SettingsShortcut.DocumentEditor}"
+                Cursor="Hand"
+                Width="16"
+                Height="16">
+                <Image Stretch = "None" Source = "{StaticResource fugue-gear-small}" />
+            </Button>
+        </StackPanel>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:JsonElement}">
+        <Border Style="{StaticResource FocusableElementBorder}" Height="{Binding Height}" VerticalAlignment="Top">
+            <ae:TextEditor
+                Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+                MinHeight="20"
+                MaxHeight="300"
+                Padding="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                FontFamily="Courier New"
+                WordWrap="True"
+                Background="Transparent"
+                Document="{Binding Document}"
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Hidden">
+                <i:Interaction.Behaviors>
+                    <hc:SyntaxHighlightBehavior Syntax="SyntaxHighlight\\Json.xshd" />
+                    <hc:BracketHighlightBehavior />
+                    <hc:IndentationBehavior />
+                </i:Interaction.Behaviors>
+                <ae:TextEditor.Options>
+                    <ae:TextEditorOptions InheritWordWrapIndentation="False" ConvertTabsToSpaces="True" EnableImeSupport="False" HighlightCurrentLine="False" />
+                </ae:TextEditor.Options>
+            </ae:TextEditor>
+        </Border>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type elements:LocalizedElement}" x:Key="LocalizedElement">
+        <ToggleButton IsChecked="{Binding RecordView}" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" DockPanel.Dock="Right" Margin="4,0,0,0" IsTabStop="False"
+                        Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}">
+            <Image
+                Stretch = "Uniform"
+                SnapsToDevicePixels="True"
+                UseLayoutRounding="True"
+                Margin = "0,0,0,0"
+                Width="14" Height="14"
+                HorizontalAlignment = "Center"
+                VerticalAlignment = "Center"
+                Source ="/Resources/Icons/Localized.png"
+                ToolTip="Advanced" />
+        </ToggleButton>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type elements:LocalizedElement}" x:Key="ApprovedElement">
+        <Button Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" DockPanel.Dock="Right" Margin="4,0,0,0" IsTabStop="False"
+                Command="{Binding ApproveCommand}"
+                IsEnabled="{Binding IsApproved, Converter={StaticResource NotConverter}}"
+                Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}">
+            <Image
+                Stretch = "Uniform"
+                SnapsToDevicePixels="True"
+                UseLayoutRounding="True"
+                Margin = "0,0,0,0"
+                Width="14" Height="14"
+                HorizontalAlignment = "Center"
+                VerticalAlignment = "Center"
+                ToolTip="Approve" >
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Setter Property="Source" Value="{StaticResource fugue-flag}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsApproved}" Value="True">
+                                <Setter Property="Source" Value="{StaticResource fugue-flag-green}"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Button>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type elements:IconElement}">
+        <Image
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            Width="{Binding CustomType.IconWidth}"
+            Height="{Binding CustomType.IconHeight}"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="0,2,0,0"
+            Stretch="Fill"
+            Cursor="Hand"
+            hc:MouseBehavior.LeftButtonUpCommand="{Binding ShowPopupCommand}">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CustomType.Atlas.IsLoaded}" Value="True">
+                            <Setter Property="Source" Value="{Binding Image}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type elements:BreadcrumbsElement}">
+        <telerik:RadBreadcrumb 
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            Height="22"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Stretch"
+            PathSeparator="."
+            HeaderMemberPath="Name"
+            HierarchicalItemsSource="Items" 
+            HierarchicalMemberPath="Name" 
+            ItemsSource="{Binding Items}" 
+            TextModePath="Name" >
+            <i:Interaction.Behaviors>
+                <hc:BreadcrubmsSetItemBehavior/>
+            </i:Interaction.Behaviors>
+        </telerik:RadBreadcrumb>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type elements:RecordElement}" x:Key="ColorElement" >
+        <Border Width="32" Height="16" Margin="1,2,0,0" 
+                Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+                Background="{StaticResource TransparentBackgroundBrush}" x:Name="Border" Cursor="Hand">
+            <Rectangle Stroke="Black">
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="{Binding Path=(presentation:ColorEditorBehavior.Color), ElementName=Border}" />
+                </Rectangle.Fill>
+            </Rectangle>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <i:EventTrigger.Actions>
+                        <i:InvokeCommandAction Command="{Binding Path=(presentation:ColorEditorBehavior.ToggleDropDownCommand), ElementName=Border}"/>
+                    </i:EventTrigger.Actions>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type elements:RecordElement}" x:Key="ColorElementPopup">
+        <Grid MinWidth="400" Width="400">
+            <telerik:RadColorEditor Background="Beige" 
+                                    x:Name="ColorEditor"
+                                    Height="240"
+                                FontFamily="{StaticResource ElementFont}"
+                                FontWeight="Regular"
+                                InitialColor="{Binding Path=(presentation:ColorEditorBehavior.Color), RelativeSource={RelativeSource Self}}"
+                                    SelectedColor="{Binding Path=(presentation:ColorEditorBehavior.Color), RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
+            <Button Content="Apply"
+                    FontFamily="{StaticResource ElementFont}"
+                    FontWeight="Regular"
+                    Width="100"
+                    Height="22"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="20"
+                    Command="{Binding Path=(presentation:ColorEditorBehavior.SubmitCommand), RelativeSource={RelativeSource Self}}"
+                    CommandParameter="{Binding ElementName=ColorEditor, Path=SelectedColor}"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type elements:IntElement}" x:Key="NumberElementPopup">
+        <telerik:RadCalculator Width="200" Background="Beige" Focusable="True" Value="{Binding Value, Mode=TwoWay}" />
+    </DataTemplate>
+</ResourceDictionary>

@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="Hercules.Summary.View.DocumentSummaryPageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:hc="clr-namespace:Hercules.Controls"
+    xmlns:summary="clr-namespace:Hercules.Summary"
+    d:DataContext="{d:DesignInstance summary:DocumentSummaryPage}"
+    DataContextChanged="UserControl_DataContextChanged"
+    hc:RoutedCommandBindings.CommandBindings="{Binding RoutedCommandBindings}"
+    mc:Ignorable="d"
+    d:DesignHeight="300" d:DesignWidth="400">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/Summary/Style/Cells.xaml" />
+    </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <hc:DataEventTrigger Source="{Binding}" EventName="OnReset">
+            <hc:CallMethod MethodName="ResetTable" />
+        </hc:DataEventTrigger>
+    </i:Interaction.Triggers>
+    <DockPanel LastChildFill="True">
+        <ToolBar DockPanel.Dock="Top" Padding="0" Margin="0" Focusable="False">
+            <Button Command="{Binding AddColumnsCommand}" ToolTip="Add/Remove Columns" Focusable="False">
+                <Image Source="{StaticResource fugue-table-insert-column}" Style="{StaticResource MenuIcon}" />
+            </Button>
+            <Button Command="{Binding RefreshCommand}" ToolTip="Refresh" Focusable="False">
+                <Image Source="{StaticResource fugue-arrow-circle-225-left}" Style="{StaticResource MenuIcon}" />
+            </Button>
+            <!--<ToggleButton ToolTip="Read Only" IsChecked="{Binding IsReadOnly}" IsTabStop="False">
+                <Image Source="{StaticResource fugue-lock}" Style="{StaticResource MenuIcon}" />
+            </ToggleButton>-->
+            <Separator />
+            <TextBlock Text="Export" VerticalAlignment="Center" Foreground="DarkSlateGray" Margin="5,0,5,0" FontStyle="Normal" />
+            <Button Command="{Binding ExportTableCommand}" ToolTip="Export Table" Focusable="False">
+                <Image Source="{StaticResource fugue-table-export}" Style="{StaticResource MenuIcon}" />
+            </Button>
+            <Button Command="{Binding CopyAllToClipboardCommand}" ToolTip="Copy Table to Clipboard" Focusable="False">
+                <Image Source="{StaticResource fugue-clipboard-sign-out}" Style="{StaticResource MenuIcon}" />
+            </Button>
+            <Separator />
+            <TextBlock Text="Import" VerticalAlignment="Center" Foreground="DarkSlateGray" Margin="5,0,5,0" FontStyle="Normal" />
+            <Button Command="{Binding ImportTableCommand}" ToolTip="Import Table" Focusable="False">
+                <Image Source="{StaticResource fugue-table-import}" Style="{StaticResource MenuIcon}" />
+            </Button>
+            <Button Command="{Binding ImportClipboardCommand}" ToolTip="Paste Table from Clipboard" Focusable="False">
+                <Image Source="{StaticResource fugue-clipboard-sign}" Style="{StaticResource MenuIcon}" />
+            </Button>
+            <Separator />
+            <TextBlock Text="Apply" VerticalAlignment="Center" Foreground="DarkSlateGray" Margin="5,0,5,0" FontStyle="Normal" />
+            <Button ToolTip="Submit" Command="{Binding SubmitCommand}" Focusable="False">
+                <Image Source="{StaticResource fugue-stamp--arrow}" Style="{StaticResource MenuIcon}" />
+            </Button>
+        </ToolBar>
+        <telerik:RadGridView
+            MouseDoubleClick="DataGrid_MouseDoubleClick"
+            ClipboardCopyMode="Cells"
+            ClipboardPasteMode="Cells,AllSelectedCells,OverwriteWithEmptyValues"
+            Name="DataGrid"
+            SelectionMode="Extended"
+            SelectionUnit="Mixed"
+            ShowColumnFooters="True"
+            IsReadOnly="{Binding IsReadOnly}"
+            AutoGenerateColumns="False"
+            AlternationCount="2"
+            RowIndicatorVisibility="Collapsed"
+            ItemsSource="{Binding Path=Table.Rows}">
+            <i:Interaction.Behaviors>
+                <summary:SummaryGridViewBehavior />
+            </i:Interaction.Behaviors>
+        </telerik:RadGridView>
+    </DockPanel>
+</UserControl>

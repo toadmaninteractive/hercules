@@ -1,0 +1,82 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:hc="clr-namespace:Hercules.Controls"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                    mc:Ignorable="d"
+                    xmlns:connections="clr-namespace:Hercules.Connections">
+    <DataTemplate x:Key="OpenConnectionOptionToolbarTemplateKey" DataType="{x:Type connections:OpenConnectionOption}">
+        <Button
+                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                Width="32" Height="24"
+                Focusable="False"
+                IsEnabled="{Binding Path=Connections.Items.Count, Converter={StaticResource BooleanConverter}}"
+                ToolTip="Open Connection">
+            <i:Interaction.Behaviors>
+                <hc:DropDownButtonBehavior>
+                    <hc:DropDownButtonBehavior.DropDownMenu>
+                        <ContextMenu ItemsSource="{Binding Connections.Items}">
+                            <ContextMenu.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <d:Style.DataContext>
+                                        <x:Type Type="connections:DbConnection" />
+                                    </d:Style.DataContext>
+                                    <Setter Property="Header" Value="{Binding Title, Converter={StaticResource UnderscoreConverter}}" />
+                                    <Setter Property="Command" Value="{Binding DataContext.LoadConnectionCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" />
+                                    <Setter Property="CommandParameter" Value="{Binding}" />
+                                    <Setter Property="FontWeight" Value="Normal" />
+                                    <Style.Triggers>
+                                        <DataTrigger Value="True">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource EqualityMultiValueConverter}">
+                                                    <Binding Path="" />
+                                                    <Binding Path="DataContext.Connections.ActiveConnection" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}" />
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter Property="FontWeight" Value="Bold" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContextMenu.ItemContainerStyle>
+                        </ContextMenu>
+                    </hc:DropDownButtonBehavior.DropDownMenu>
+                </hc:DropDownButtonBehavior>
+            </i:Interaction.Behaviors>
+            <StackPanel Orientation="Horizontal">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-database}" />
+                <Path Style="{StaticResource ArrowDownPathStyle}" />
+            </StackPanel>
+        </Button>
+    </DataTemplate>
+
+    <ItemContainerTemplate x:Key="OpenConnectionOptionItemContainerTemplateKey" DataType="{x:Type connections:OpenConnectionOption}">
+        <MenuItem
+            ItemsSource="{Binding Connections.Items}"
+            Header="Open Connection"
+            IsEnabled="{Binding Connections.Items.Count, Converter={StaticResource BooleanConverter}}"
+            Icon="{StaticResource image-fugue-database}"
+            UsesItemContainerTemplate="False">
+            <MenuItem.ItemContainerStyle>
+                <Style TargetType="{x:Type MenuItem}">
+                    <Setter Property="Header" Value="{Binding Title, Converter={StaticResource UnderscoreConverter}}" />
+                    <Setter Property="Tag" Value="{Binding}" />
+                    <Setter Property="Command" Value="{Binding DataContext.LoadConnectionCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=MenuItem}}" />
+                    <Setter Property="CommandParameter" Value="{Binding}" />
+                    <Setter Property="FontWeight" Value="Normal" />
+                    <Style.Triggers>
+                        <DataTrigger Value="True">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource EqualityMultiValueConverter}">
+                                    <Binding Path="" />
+                                    <Binding Path="DataContext.Connections.ActiveConnection" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=MenuItem}" />
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </MenuItem.ItemContainerStyle>
+        </MenuItem>
+    </ItemContainerTemplate>
+</ResourceDictionary>

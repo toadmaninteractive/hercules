@@ -1,0 +1,125 @@
+[csharp json.enabled list_implementation=readonly dict_implementation=readonly]
+[csharp namespace="Hercules.Forms.Schema.Custom"]
+[schema enabled]
+module Editors
+{
+    [csharp struct alias="System.Windows.Point" field_notation=upper_camel setup_ctor]
+    record Vector
+    {
+        double x;
+        double y;
+    }
+
+    [csharp struct alias="System.Windows.Rect" field_notation=upper_camel setup_ctor]
+    record Rect
+    {
+        double x;
+        double y;
+        double width;
+        double height;
+    }
+
+    enum EditorType
+    {
+        icon;
+        curve;
+        plot;
+        interactive_map;
+        breadcrumbs;
+    }
+
+    enum EditorScope
+    {
+        editor;
+    }
+
+    [schema root]
+    variant Editor
+    {
+        tag EditorType editor_type;
+        EditorScope scope = editor;
+    }
+
+    record Editor.EditorIcon[icon]
+    {
+        string atlas = "";
+        int icon_width;
+        int icon_height;
+        int default;
+    }
+
+    [csharp immutable]
+    record EditorCurveKnot
+    {
+        Vector position;
+        double tangent_in;
+        double tangent_out;
+    }
+
+    [csharp equals immutable]
+    record EditorCurveData
+    {
+        list<EditorCurveKnot> knots = [];
+    }
+
+    [csharp setup_ctor default_ctor=false]
+    record EditorCurvePreset
+    {
+        [csharp readonly]
+        string name;
+        EditorCurveData curve_data;
+    }
+
+    record Editor.EditorCurve[curve]
+    {
+        Rect default_viewport;
+        bool auto_scale_preview_x = false;
+        bool auto_scale_preview_y = false;
+        bool auto_scale_editor = false;
+        float preview_width = 200;
+        float preview_height = 200;
+        ?string axis_x_label;
+        ?string axis_y_label;
+        [csharp list_implementation=list]
+        list<EditorCurvePreset> presets = [];
+    }
+
+    enum PlotType
+    {
+        points;
+    }
+
+    [csharp equals immutable]
+    record EditorPlotData
+    {
+        list<Vector> points = [];
+    }
+
+    record Editor.EditorPlot[plot]
+    {
+        Rect default_viewport;
+        PlotType plot_type;
+        bool auto_scale_preview_x = false;
+        bool auto_scale_preview_y = false;
+        bool auto_scale_editor = false;
+        float preview_width = 200;
+        float preview_height = 200;
+    }
+
+    record Editor.EditorInteractiveMap[interactive_map]
+    {
+        string title = "";
+    }
+
+    [csharp immutable]
+    record BreadcrumbsData
+    {
+        string name;
+        ?list<BreadcrumbsData> items;
+    }
+
+    record Editor.EditorBreadcrumbs[breadcrumbs]
+    {
+        list<BreadcrumbsData> items = [];
+    }
+}

@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="Hercules.Documents.View.Editor.DocumentChangedNotificationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             Height="30"
+             mc:Ignorable="d">
+
+    <Border HorizontalAlignment="Stretch" BorderThickness="1" BorderBrush="Gainsboro" Background="Beige">
+        <StackPanel Orientation="Horizontal">
+            <Label Content="This document has been changed by another user" VerticalAlignment="Center" />
+            <Button Content="Take mine" ToolTip="Take my version of the document and discard changes of another user." Width="120" HorizontalAlignment="Left" Margin="5,3,5,3" Cursor="Hand" Command="{Binding TakeMineCommand}" />
+            <Button Content="Take remote" ToolTip="Take the updated version of the document and discard my own changes." Width="120" HorizontalAlignment="Left" Margin="5,3,5,3" Cursor="Hand" Command="{Binding TakeRemoteCommand}" />
+        </StackPanel>
+    </Border>
+</UserControl>

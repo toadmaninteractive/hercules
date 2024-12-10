@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hercules.db &mdash; Hercules Manual 2.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/hercules_theme.css?v=547657ed" />
+
+  
+    <link rel="shortcut icon" href="../_static/hercules.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=67b02a41"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="hercules.gapi" href="hercules.gapi.html" />
+    <link rel="prev" title="hercules" href="hercules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Hercules Manual
+              <img src="../_static/hercules_64x64.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../designers/designers-index.html">Hercules For Designers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/developers-index.html">Hercules For Developers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="scripting-index.html">Scripting Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="doc.html">doc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.html">hercules</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">hercules.db</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create">create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connection">connection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docsbycategory">docsByCategory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getalldocs">getAllDocs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getdocrevisions">getDocRevisions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gethistory">getHistory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getorcreate">getOrCreate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#idsbycategory">idsByCategory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#save">save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#saveall">saveAll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#update">update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#updateorcreate">updateOrCreate</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.gapi.html">hercules.gapi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.http.html">hercules.http</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.io.html">hercules.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.json.html">hercules.json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.project.html">hercules.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hercules.xml.html">hercules.xml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Hercules Manual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="scripting-index.html">Scripting Reference</a></li>
+      <li class="breadcrumb-item active">hercules.db</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hercules-db">
+<span id="scripting-hercules-db"></span><h1>hercules.db<a class="headerlink" href="#hercules-db" title="Link to this heading"></a></h1>
+<p>The <strong>hercules.db</strong> variable provides access to the current database API.</p>
+<section id="create">
+<h2>create<a class="headerlink" href="#create" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nb">document</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function creates a new document with a specified id and content.</p>
+<p>The created document is not saved, but will be opened for validation after script finishes.</p>
+</section>
+<section id="connection">
+<h2>connection<a class="headerlink" href="#connection" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">connection</span>
+</pre></div>
+</div>
+<p>Contains the connection properties for the given database. See <a class="reference internal" href="hercules.html#scripting-hercules-connections"><span class="std std-ref">hercules.connections</span></a> for details.</p>
+</section>
+<section id="delete">
+<h2>delete<a class="headerlink" href="#delete" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="nx">docId</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function deletes a document through its docId. When you use this function, a confirmation dialog comes up.</p>
+<ul class="simple">
+<li><p>docId - document id</p></li>
+</ul>
+<p><strong>Example:</strong> Write a function that deletes all the documents whose ids contain the substring “<em>test</em>”.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">doc</span><span class="p">.</span><span class="nx">_id</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">hercules</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="nx">doc</span><span class="p">.</span><span class="nx">_id</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="docsbycategory">
+<h2>docsByCategory<a class="headerlink" href="#docsbycategory" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">docsByCategory</span><span class="p">(</span><span class="nx">category</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function returns an array of all documents under a specific category
+when the category id is passed as a parameter.</p>
+</section>
+<section id="get">
+<h2>get<a class="headerlink" href="#get" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">[,</span><span class="w"> </span><span class="nx">rev</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This function gets a document through its <em>id</em> and optional <em>rev</em>.</p>
+</section>
+<section id="getalldocs">
+<h2>getAllDocs<a class="headerlink" href="#getalldocs" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">getAllDocs</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This function returns an array of all documents for all categories in a database.</p>
+</section>
+<section id="getdocrevisions">
+<h2>getDocRevisions<a class="headerlink" href="#getdocrevisions" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">getDocRevisions</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function returns an array of documents revisions by its <em>id</em>, ordered from the latest to the oldest.
+<em>hercules.db.get</em> function can be then used to fetch document JSON for a specific revision.</p>
+</section>
+<section id="gethistory">
+<h2>getHistory<a class="headerlink" href="#gethistory" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">getHistory</span><span class="p">(</span><span class="nx">since</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function returns an array of database changes since the specified time. Time should be passed as the Date object.</p>
+<p>Each change is an object with the following properties:</p>
+<ul class="simple">
+<li><p><em>id</em> - document ID</p></li>
+<li><p><em>rev</em> - document revision introduced with this change</p></li>
+<li><p><em>prevRev</em> - previous document revision</p></li>
+<li><p><em>time</em> - time of the change as a Date object</p></li>
+<li><p><em>user</em> - author username</p></li>
+</ul>
+<p><strong>Example:</strong> Get history since 2022-10-07</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">history</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">getHistory</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="mf">2022</span><span class="p">,</span><span class="w"> </span><span class="mf">10</span><span class="p">,</span><span class="w"> </span><span class="mf">7</span><span class="p">));</span>
+</pre></div>
+</div>
+</section>
+<section id="getorcreate">
+<h2>getOrCreate<a class="headerlink" href="#getorcreate" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">getOrCreate</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">defaultJson</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function gets a document through its <em>id</em> or creates and returns a new one with the <em>defaultJson</em> content.</p>
+<p>The created document is not saved, but will be opened for validation after script finishes.</p>
+</section>
+<section id="idsbycategory">
+<h2>idsByCategory<a class="headerlink" href="#idsbycategory" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">idsByCategory</span><span class="p">(</span><span class="nx">category</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function returns an array of ids of all documents under a specific category
+when the category’s id is passed as a parameter.</p>
+</section>
+<section id="save">
+<h2>save<a class="headerlink" href="#save" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">json</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function saves an existing or a new document. <em>json</em> is the content to save.</p>
+</section>
+<section id="saveall">
+<h2>saveAll<a class="headerlink" href="#saveall" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">saveAll</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This function saves all documents previously modified or created by the script.</p>
+</section>
+<section id="update">
+<h2>update<a class="headerlink" href="#update" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nb">document</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function updates an existing document.</p>
+<p>The updated document is not saved, but will be opened for validation after script finishes.</p>
+<p><strong>Example:</strong> Write a code that gets and updates a document by its id</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">cdoc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;constants&quot;</span><span class="p">);</span>
+<span class="nx">cdoc</span><span class="p">.</span><span class="nx">code_delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5</span><span class="p">;</span>
+<span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">cdoc</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="updateorcreate">
+<h2>updateOrCreate<a class="headerlink" href="#updateorcreate" title="Link to this heading"></a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">hercules</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">updateOrCreate</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">json</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function updates an existing document or creates a new one with a <em>json</em> content. The updated or created document is returned.</p>
+<p>The document is not saved, but will be opened for validation after script finishes.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hercules.html" class="btn btn-neutral float-left" title="hercules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hercules.gapi.html" class="btn btn-neutral float-right" title="hercules.gapi" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Toadman Interactive.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

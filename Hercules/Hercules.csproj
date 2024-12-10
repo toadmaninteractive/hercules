@@ -1,0 +1,139 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Hercules</RootNamespace>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <ApplicationIcon>hercules.ico</ApplicationIcon>
+    <StartupObject>Hercules.App</StartupObject>
+    <Company>Toadman Interactive</Company>
+    <Copyright>Toadman Interactive © 2012 - 2023</Copyright>
+    <Description>Design document editor</Description>
+    <BuildNumber>0</BuildNumber>
+    <Branch>none</Branch>
+    <AssemblyVersion>2.3.1.$(BuildNumber)</AssemblyVersion>
+    <FileVersion>2.3.1.$(BuildNumber)</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+    <AllowedReferenceRelatedFileExtensions>
+      <!-- Prevent default XML and PDB files copied to output in RELEASE. 
+           Only *.allowedextension files will be included, which doesn't exist.-->
+      .allowedextension
+    </AllowedReferenceRelatedFileExtensions>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="Hercules.ApplicationBranchAttribute">
+      <_Parameter1>$(Branch)</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Artplant.Json" Version="1.0.4" />
+    <PackageReference Include="AutomaticGraphLayout" Version="1.1.12" />
+    <PackageReference Include="AutomaticGraphLayout.WpfGraphControl" Version="1.1.12" />
+    <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+    <PackageReference Include="Jint" Version="3.0.0-beta-2052" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="MimeMapping" Version="2.0.0" />
+    <PackageReference Include="NPOI" Version="2.5.5" />
+    <PackageReference Include="Pfim" Version="0.10.3" />
+    <PackageReference Include="System.Reactive" Version="4.4.1" />
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.60.0.2909" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AvalonDock\source\Components\AvalonDock.Themes.Aero\AvalonDock.Themes.Aero.csproj" />
+    <ProjectReference Include="..\AvalonDock\source\Components\AvalonDock.Themes.Metro\AvalonDock.Themes.Metro.csproj" />
+    <ProjectReference Include="..\AvalonDock\source\Components\AvalonDock.Themes.VS2010\AvalonDock.Themes.VS2010.csproj" />
+    <ProjectReference Include="..\AvalonDock\source\Components\AvalonDock\AvalonDock.csproj" />
+    <ProjectReference Include="..\FugueIcons\FugueIcons.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Telerik.Windows.Controls">
+      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Diagrams">
+      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.Diagrams.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Diagrams.Extensions">
+      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.Diagrams.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.GridView">
+      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.GridView.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Input">
+      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Navigation">
+      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.Navigation.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Data">
+      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Diagrams.Core">
+      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Diagrams.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Igor.Runtime">
+      <HintPath>..\Library\Igor.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+      <Resource Include="hercules.ico" />
+      <Resource Include="Resources\Dialogs\*.png" />
+      <Resource Include="Resources\Misc\*.png" />
+      <Resource Include="Resources\Icons\*.png" />
+      <EmbeddedResource Include="Resources\Schema\*.json" />
+      <Compile Remove="Plots\CustomTypes\**" />
+      <Compile Remove="Plots\Elements\**" />
+      <EmbeddedResource Remove="Plots\CustomTypes\**" />
+      <EmbeddedResource Remove="Plots\Elements\**" />
+      <None Remove="Plots\CustomTypes\**" />
+      <None Remove="Plots\Elements\**" />
+      <Page Remove="Plots\CustomTypes\**" />
+      <Page Remove="Plots\Elements\**" />
+      <None Remove="Resources\Misc\NoImage.png" />
+      <EmbeddedResource Include="Resources\layout.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SyntaxHighlight\*.xshd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="JavaScript\*.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Help\ReleaseNotes.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Documents\View\Editor\Notifications\RebaseDocumentNotificationView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Forms\Style\Elements\ElementProperties.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Shell\View\SpreadsheetSettingsTabView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,51 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:elements="clr-namespace:Hercules.Forms.Elements">
+    <DataTemplate DataType="{x:Type elements:OptionalElement}" x:Key="OptionalElement">
+        <Button Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+                Width="13"
+                    Margin = "0,3,4,0"
+                    Padding="0,0,0,0"
+                    Style="{StaticResource Flat}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment = "Top"
+                    Command="{Binding ToggleCommand}">
+                <Image
+                        Stretch = "Uniform"
+                        Width="13" Height="13"
+                        Cursor="Hand"
+                        ToolTip="Optional field (click to toggle)"
+                        HorizontalAlignment = "Left"
+                        VerticalAlignment = "Top">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=IsSet}" Value="True">
+                                    <Setter Property="Source" Value="/Resources/Icons/OptionalEnabled.png" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=IsSet}" Value="False">
+                                    <Setter Property="Source" Value="/Resources/Icons/Optional.png" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Button>
+    </DataTemplate>
+    <DataTemplate x:Key="RequiredElement" DataType="{x:Type elements:Element}">
+        <Image Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+                    Stretch = "Uniform"
+                    Margin = "0,3,4,0"
+                    Width="13" Height="13"
+                    HorizontalAlignment = "Left"
+                    VerticalAlignment = "Top"
+                    Source ="/Resources/Icons/RequiredYellow.png"
+                    ToolTip="Required field" />
+    </DataTemplate>
+    <DataTemplate x:Key="EditableProxy">
+        <StackPanel Orientation="Horizontal" Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}" Height="22">
+            <Button FontFamily="Segoe" FontSize="11" Command="{Binding EditCommand}" Content="Edit" HorizontalAlignment="Left" Width="100" Margin="0,0,4,3" />
+            <CheckBox IsChecked="{Binding IsExpanded}" VerticalAlignment="Center" Style="{StaticResource Chevron}" />
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

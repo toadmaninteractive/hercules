@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <Company>Toadman Interactive</Company>
+        <Description>Fugue Icons library</Description>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+    <ItemGroup>
+      <Resource Include="Icons\*.png" />
+    </ItemGroup>
+</Project>

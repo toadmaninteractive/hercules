@@ -1,0 +1,305 @@
+﻿<Window x:Class="Hercules.Plots.View.CurveDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:hc="clr-namespace:Hercules.Controls"
+        xmlns:plots="clr-namespace:Hercules.Plots"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:global="clr-namespace:System.Globalization;assembly=System.Runtime"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        Style="{StaticResource DialogWindow}"
+        MinHeight="200" MinWidth="300"
+        d:DataContext="{d:DesignInstance plots:CurveDialog}"
+        Title="{Binding Title}" Height="600" Width="700">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding DeleteCommand}" Key="Delete" />
+        <KeyBinding Command="{Binding CancelCommand}" Key="Escape" />
+    </Window.InputBindings>
+    <Window.Resources>
+        <Style TargetType="telerik:RadNumericUpDown">
+            <Setter Property="Background" Value="WhiteSmoke" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Padding" Value="5,0,5,0" />
+            <Setter Property="ShowButtons" Value="False" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="NumberDecimalDigits" Value="10" />
+            <Setter Property="HideTrailingZeros" Value="True" />
+            <Setter Property="UpdateValueEvent" Value="PropertyChanged" />
+            <Setter Property="NumberFormatInfo">
+                <Setter.Value>
+                    <global:NumberFormatInfo NumberDecimalDigits="10" NumberGroupSeparator="" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <DockPanel LastChildFill="True">
+        <Popup
+                    IsOpen="{Binding Path=IsScalePopupOpened}"
+                    StaysOpen="False"
+                    Placement="Mouse"
+                    PopupAnimation="None"
+                    AllowsTransparency="True">
+            <Border BorderBrush="LightBlue" BorderThickness="2" Background="White">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="70" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="27" />
+                        <RowDefinition Height="27" />
+                        <RowDefinition Height="27" />
+                        <RowDefinition Height="27" />
+                        <RowDefinition Height="27" />
+                        <RowDefinition Height="27" />
+                        <RowDefinition Height="35" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Pivot:" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="X" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Y" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <telerik:RadNumericUpDown
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Value="{Binding Scaler.PivotX}" />
+                    <telerik:RadNumericUpDown
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Value="{Binding Scaler.PivotY}" />
+                    <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Scale:" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="X" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Y" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <telerik:RadNumericUpDown
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Value="{Binding Scaler.ScaleX}" />
+                    <telerik:RadNumericUpDown
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        Value="{Binding Scaler.ScaleY}" />
+                    <Button
+                                Margin="5"
+                                Grid.Row="6"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Content="Apply"
+                                Command="{Binding Path=ApplyScaleCommand}" />
+                </Grid>
+            </Border>
+        </Popup>
+        <ToolBar DockPanel.Dock="Top">
+            <Button
+                ToolTip="Auto fit" 
+                Click="AutoScaleButtonClick"
+                Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-magnifier-zoom-fit}" />
+            </Button>
+            <Separator />
+            <Button
+                ToolTip="Straighten All"
+                Style="{StaticResource ToolButton}"
+                Command="{Binding LinearCommand}" >
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-layer-shape-polyline}" />
+            </Button>
+            <Button
+                ToolTip="Smooth All"
+                Style="{StaticResource ToolButton}"
+                Command="{Binding CatmullRomCommand}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-layer-shape-curve}" />
+            </Button>
+            <Separator />
+            <Button
+                ToolTip="Scale"
+                Style="{StaticResource ToolButton}"
+                Command="{Binding ScaleCommand}" >
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-ui-panel-resize}" />
+            </Button>
+            <Button
+                ToolTip="Clear"
+                Style="{StaticResource ToolButton}"
+                Command="{Binding ClearCommand}" >
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-eraser}" />
+            </Button>
+            <Separator />
+            <Button
+                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                Focusable="False">
+                <i:Interaction.Behaviors>
+                    <hc:DropDownButtonBehavior>
+                        <hc:DropDownButtonBehavior.DropDownMenu>
+                            <ContextMenu>
+                                <MenuItem
+                                    CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                    Command="{Binding AddPresetCommand}"
+                                    Header="Save as Preset">
+                                </MenuItem>
+                                <MenuItem
+                                    CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                    Command="{Binding LoadPresetCommand}"
+                                    Header="Load Preset" />
+                            </ContextMenu>
+                        </hc:DropDownButtonBehavior.DropDownMenu>
+                    </hc:DropDownButtonBehavior>
+                </i:Interaction.Behaviors>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Presets" VerticalAlignment="Center" />
+                    <Path Style="{StaticResource ArrowDownPathStyle}" />
+                </StackPanel>
+            </Button>
+        </ToolBar>
+        <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" HorizontalAlignment="Left">
+                <TextBlock Margin="20,0,0,0" VerticalAlignment="Center" Width="100">
+                    <Run Text="X: "/>
+                    <Run Name="TextX" Foreground="Brown" />
+                </TextBlock>
+                <TextBlock VerticalAlignment="Center">
+                    <Run Text="Y: "/>
+                    <Run Name="TextY" Foreground="Brown" Text="" />
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                <Button
+                    Width="100"
+                    Height="30"
+                    Margin="5"
+                    Command="{Binding CancelCommand}"
+                    Content="Cancel" />
+                <Button
+                    Width="100"
+                    Height="30"
+                    Margin="5"
+                    Command="{Binding OkCommand}"
+                    Content="Apply" />
+            </StackPanel>
+        </DockPanel>
+        <TextBlock Height="18" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+            <Run Text="{Binding AxisXLabel, Mode=OneTime}" />
+            <Run Text="🠞"/>
+        </TextBlock>
+        <TextBlock Height="18" DockPanel.Dock="Left" VerticalAlignment="Top" >
+            <TextBlock.LayoutTransform>
+                <RotateTransform Angle="-90" />
+            </TextBlock.LayoutTransform>
+            <Run Text="{Binding AxisYLabel, Mode=OneTime}" />
+            <Run Text="🠞"/>
+        </TextBlock>
+        <Border BorderThickness="1" BorderBrush="Black">
+            <hc:CartesianPanel
+                CanPan="True"
+                CanZoom="True"
+                x:Name="CartesianPanel"
+                Viewport="{Binding Viewport}"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                ClipToBounds="True"
+                PreviewMouseMove="CartesianPanel_PreviewMouseMove"
+                PanMouseButton="Middle">
+                <hc:CartesianPanel.Resources>
+                    <Style TargetType="{x:Type hc:CartesianThumb}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type hc:CartesianThumb}">
+                                    <Rectangle
+                                        Fill="{Binding Path=IsSelected, Converter={StaticResource CurveKnotColorConverter}}"
+                                        Margin="-4"
+                                        Width="8"
+                                        Height="8" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <Style TargetType="{x:Type hc:CartesianTangent}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type hc:CartesianTangent}">
+                                    <Ellipse Fill="LightSteelBlue" Margin="-4" Width="8" Height="8" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </hc:CartesianPanel.Resources>
+                <hc:CartesianGrid Stroke="DarkOliveGreen"
+                                  DoubleClickCommand="{Binding AddKnotCommand}"
+                                  ClickCommand="{Binding Path=HidePopupCommand}" />
+                <hc:CartesianAxisLabels Foreground="Green" />
+                <hc:CartesianAnimationCurve
+                    Knots="{Binding Knots}" Stroke="Blue">
+                    <hc:CartesianAnimationCurve.KnotStyle>
+                        <Style TargetType="{x:Type hc:CartesianAnimationCurveKnot}">
+                            <Setter Property="Position" Value="{Binding Position, Mode=TwoWay}" />
+                            <Setter Property="TangentIn" Value="{Binding TangentIn, Mode=TwoWay}" />
+                            <Setter Property="TangentOut" Value="{Binding TangentOut, Mode=TwoWay}" />
+                            <Setter Property="SingleRightClickCommand" Value="{Binding Path=Dialog.PopupKnotCommand}" />
+                            <Setter Property="SingleClickCommand" Value="{Binding Path=Dialog.SelectKnotCommand}" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type hc:CartesianAnimationCurveKnot}">
+                                        <Canvas>
+                                            <hc:CartesianTangent Mode="RightSlope" Stroke="LightSteelBlue" Tangent="{Binding TangentIn, Mode=TwoWay}" />
+                                            <hc:CartesianTangent Mode="LeftSlope" Stroke="LightSteelBlue" Tangent="{Binding TangentOut, Mode=TwoWay}" />
+                                            <hc:CartesianThumb />
+                                        </Canvas>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </hc:CartesianAnimationCurve.KnotStyle>
+                </hc:CartesianAnimationCurve>
+                <Popup
+                    IsOpen="{Binding Path=IsOpenKnotEditor}"
+                    StaysOpen="False"
+                    Placement="Mouse"
+                    PopupAnimation="None"
+                    AllowsTransparency="True">
+                    <Border BorderBrush="LightBlue" BorderThickness="2" Background="White">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="75" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="27" />
+                                <RowDefinition Height="27" />
+                                <RowDefinition Height="18" />
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="35" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="X" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <TextBlock Text="Y" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" />
+                            <TextBox
+                                Margin="5,3"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Text="{Binding Path=FocusedKnot.X, UpdateSourceTrigger=PropertyChanged}">
+                            </TextBox>
+                            <TextBox
+                                Margin="5,3"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="{Binding Path=FocusedKnot.Y, UpdateSourceTrigger=PropertyChanged}">
+                            </TextBox>
+                            <CheckBox Grid.Row="2" Margin="2" Grid.ColumnSpan="2" Content="Smooth" IsChecked="{Binding FocusedKnot.Smooth, Mode=TwoWay}" />
+                            <Button
+                                Margin="5"
+                                Grid.Row="3"
+                                Grid.ColumnSpan="2"
+                                Content="Remove"
+                                Command="{Binding Path=RemoveKnotCommand}" />
+                            <Button
+                                Margin="5"
+                                Grid.Row="4"
+                                Grid.ColumnSpan="2"
+                                Content="Straighten"
+                                Command="{Binding Path=StraighteningCommand}" />
+                        </Grid>
+                    </Border>
+                </Popup>
+            </hc:CartesianPanel>
+        </Border>
+    </DockPanel>
+</Window>

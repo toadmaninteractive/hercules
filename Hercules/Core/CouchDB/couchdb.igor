@@ -1,0 +1,292 @@
+[csharp namespace="CouchDB.Api" list_implementation=readonly dict_implementation=readonly]
+[* binary.enabled=false]
+[* json.enabled=true]
+module CdbApi
+{
+    [csharp immutable]
+    record CdbVendor
+    {
+        string name;
+        ?string version;
+    }
+
+    [csharp immutable]
+    record CdbInstanceInfo
+    {
+        string couchdb;
+        string version;
+        CdbVendor vendor;
+    }
+    
+    [csharp immutable]
+    record CdbDatabaseInfo
+    {
+        // The name of the database
+        string db_name;
+        // A count of the documents in the specified database
+        int doc_count;
+        // Number of deleted documents
+        int doc_del_count;
+        // The current number of updates to the database (int for 1.6, string for 2.x)
+        json update_seq;
+        // The number of purge operations on the database
+        json purge_seq;
+        // Set to true if the database compaction routine is operating on this database
+        bool compact_running;
+        // Size in bytes of the data as stored on the disk. Views indexes are not included in the calculation
+        int disk_size;
+        // Actual data size in bytes of the database data
+        int data_size;
+        // Timestamp of when the database was opened, expressed in microseconds since the epoch
+        string instance_start_time;
+        // The version of the physical format used for the data when it is stored on disk
+        int disk_format_version;
+    }
+    
+    [csharp immutable]
+    record CdbChangeLeaf
+    {
+        string rev;
+    }
+    
+    [csharp immutable]
+    record CdbChange
+    {
+        // Document ID
+        string id;
+        // Update sequence number
+        json seq;
+        // List of document`s leafs with single field rev
+        list<CdbChangeLeaf> changes;
+        bool deleted = false;
+        ?json doc;
+    }
+    
+    [csharp immutable]
+    record CdbChanges
+    {
+        // Last change sequence number
+        json last_seq;
+        // Changes made to a database
+        list<CdbChange> results;
+    }
+    
+    [csharp immutable]
+    record CdbDocRowValue
+    {
+        string rev;
+    }
+    
+    [csharp immutable]
+    record CdbDocRow
+    {
+        string id;
+        string key;
+        CdbDocRowValue value;
+        ?json doc;
+    }
+    
+    [csharp immutable]
+    record CdbAllDocs
+    {
+        // Number of documents in the database/view.
+        // Note that this is not the number of rows returned in the actual query
+        int total_rows;
+        //  where the document list started
+        int offset;
+        // Array of view row objects. 
+        // By default the information returned contains only the document ID and revision
+        list<CdbDocRow> rows;
+    }
+    
+    [csharp immutable]
+    record CdbDocumentOperationResponse
+    {
+        // Document ID
+        string id;
+        // Operation status
+        bool ok;
+        // Revision MVCC token
+        string rev;
+    }
+    
+    record CdbAttachment
+    {
+        //  Attachment MIME type
+        ?string content_type;
+        // Base64-encoded content. Available if attachment content is requested by using the following query parameters:
+        //   attachments=true when querying a document
+        //   attachments=true&include_docs=true when querying a changes feed or a view
+        //   atts_since.
+        ?binary data;
+        // Content hash digest. It starts with prefix which announce hash type (md5-) and continues with Base64-encoded hash digest
+        ?string digest;
+        // Compressed attachment size in bytes. Available if content_type is in list of compressible types when the attachment was added and the following query parameters are specified:
+        //   att_encoding_info=true when querying a document
+        //   att_encoding_info=true&include_docs=true when querying a changes feed or a view
+        ?int encoded_length;
+        // Compression codec. Available if content_type is in list of compressible types when the attachment was added and the following query parameters are specified:
+        //   att_encoding_info=true when querying a document
+        //   att_encoding_info=true&include_docs=true when querying a changes feed or a view
+        ?string encoding;
+        // Real attachment size in bytes. Not available if attachment content requested
+        ?int length;
+        // Revision number when attachment was added
+        ?int revpos;
+        // Has true value if object contains stub info and no content. Otherwise omitted in response
+        ?bool stub;
+        // Creating Multiple Attachments: when true, the subsequent MIME bodies are the attachments.
+        ?bool follows;
+    }
+    
+    [csharp immutable]
+    record CdbDocumentRevisions
+    {
+        // Array of valid revision IDs, in reverse order (latest first)
+        list<string> ids;
+        // Prefix number for the latest revision
+        int start;
+    }
+    
+    [csharp immutable]
+    enum CdbRevisionStatus
+    {
+        // Revision is available for retrieving with rev query parameter
+        available;
+        // Revision is not available
+        missing;
+        // Revision belongs to deleted document
+        deleted;
+    }
+    
+    [csharp immutable]
+    record CdbRevisionInfo
+    {
+        // Full revision string
+        string rev;
+        // Status of the revision
+        CdbRevisionStatus status;
+    }
+    
+    [csharp immutable]
+    record CdbDocumentInfo
+    {
+        // Document ID
+        string _id;
+        // Revision MVCC token
+        string _rev;
+        // Deletion flag. Available if document was removed
+        ?bool deleted;
+        // Attachment�s stubs. Available if document has any attachments
+        ?dict<string, CdbAttachment> _attachments;
+        // List of conflicted revisions. Available if requested with conflicts=true query parameter
+        ?json _conflicts;
+        // List of deleted conflicted revisions. Available if requested with deleted_conflicts=true query parameter
+        ?json _deleted_conflicts;
+        // Document�s sequence number in current database. Available if requested with local_seq=true query parameter
+        ?int _local_seq;
+        // List of objects with information about local revisions and their status. Available if requested with open_revs query parameter
+        ?list<CdbRevisionInfo> _revs_info;
+        // List of local revision tokens without. Available if requested with revs=true query parameter
+        ?CdbDocumentRevisions _revisions;
+    }
+    
+    [csharp immutable]
+    record CdbViewSpec
+    {
+        string map;
+        ?string reduce;
+    }
+    
+    [csharp immutable]
+    record CdbViewResultRow
+    {
+        string id;
+        json key;
+        json value;
+    }
+    
+    [csharp immutable]
+    record CdbViewResult
+    {
+        // Offset where the document list started
+        int offset;
+        // Array of view row objects. By default the information returned contains only the document ID and revision
+        list<CdbViewResultRow> rows;
+        // Number of documents in the database/view
+        int total_rows;
+        // Current update sequence for the database
+        ?int update_seq;        
+    }
+
+    [csharp alias="System.Uri" json.serializer="CouchDB.Api.UriJsonSerializer.Instance"]
+    define Uri string;
+
+    [csharp immutable]
+    record CdbReplicationDatabase
+    {
+        Uri url;
+        dict<string, string> headers = [];
+    }
+
+    [csharp immutable]
+    record CdbReplicationRequest
+    {
+        // Source database
+        CdbReplicationDatabase source;
+        // Target database
+        CdbReplicationDatabase target;
+        // Cancels the replication
+        ?bool cancel;
+        // Configure the replication to be continuous
+        ?bool continuous;
+        // Creates the target database. Required administrator’s privileges on target server.
+        ?bool create_target;
+        // Array of document IDs to be synchronized
+        ?list<string> doc_ids;
+        // Address of a proxy server through which replication should occur (protocol can be “http” or “socks5”)
+        ?string proxy;
+    }
+
+    [csharp immutable]
+    record CdbReplicationResult
+    {
+        // Replication history
+        list<CdbReplicationHistory> history;
+        // Replication status
+        bool ok;
+        // Replication protocol version
+        int replication_id_version;
+        // Unique session ID
+        string session_id;
+        // Last sequence number read from source database
+        json source_last_seq;
+    }
+
+    [csharp immutable]
+    record CdbReplicationHistory
+    {
+        // Number of document write failures
+        int doc_write_failures;
+        // Number of documents read
+        int docs_read;
+        // Number of documents written to target
+        int docs_written;
+        // Last sequence number in changes stream
+        json end_last_seq;
+        // Date/Time replication operation completed in RFC 2822 format
+        string end_time;
+        // Number of missing documents checked;
+        int missing_checked;
+        // Number of missing documents found
+        int missing_found;
+        // Last recorded sequence number
+        json recorded_seq;
+        // Session ID for this replication operation
+        string session_id;
+        // First sequence number in changes stream
+        int start_last_seq;
+        // Date/Time replication operation started in RFC 2822 format
+        string start_time;
+    }
+}

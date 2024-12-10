@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <SolidColorBrush Color="Silver" x:Key="ElementBorderBrush" />
+    <SolidColorBrush Color="MediumSeaGreen" x:Key="ElementModifiedBorderBrush" />
+    <SolidColorBrush Color="IndianRed" x:Key="ElementInvalidBorderBrush" />
+    <SolidColorBrush Color="LightBlue" x:Key="ElementHoverBorderBrush" />
+    <SolidColorBrush Color="Blue" x:Key="ElementFocusedBorderBrush" />
+    <SolidColorBrush Color="White" x:Key="ElementFocusedBackgroundBrush" />
+    <SolidColorBrush Color="WhiteSmoke" x:Key="ElementPreviewBackgroundBrush" />
+    <SolidColorBrush Color="Azure" x:Key="ElementModifiedBackgroundBrush" />
+    <SolidColorBrush Color="PeachPuff" x:Key="ElementInvalidBackgroundBrush" />
+    <SolidColorBrush Color="DarkBlue" x:Key="ElementPopupTextBrush" />
+
+    <FontFamily x:Key="ElementFont">Segoe UI</FontFamily>
+    <FontFamily x:Key="ElementFieldFont">Arial</FontFamily>
+    <sys:Double x:Key="ElementFontSize">13</sys:Double>
+    <FontFamily x:Key="ElementHintFont">Arial</FontFamily>
+    <sys:Double x:Key="ElementHintFontSize">10</sys:Double>
+
+</ResourceDictionary>

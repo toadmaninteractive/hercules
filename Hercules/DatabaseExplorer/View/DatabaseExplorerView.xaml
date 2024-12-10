@@ -1,0 +1,162 @@
+﻿<UserControl  x:Class="Hercules.DatabaseExplorer.View.DatabaseExplorerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:h="clr-namespace:Hercules"
+             xmlns:databaseExplorer="clr-namespace:Hercules.DatabaseExplorer"
+             xmlns:hc="clr-namespace:Hercules.Controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="#ffe9ecfa"
+             hc:RoutedCommandBindings.CommandBindings="{Binding RoutedCommandBindings}"
+             d:DataContext="{d:DesignInstance databaseExplorer:DatabaseExplorerTool}"
+             MinWidth="100">
+    <i:Interaction.Triggers>
+        <hc:DataEventTrigger Source="{Binding}" EventName="OnSelectItem">
+            <hc:CallMethod MethodName="SelectItem" />
+        </hc:DataEventTrigger>
+    </i:Interaction.Triggers>
+    <DockPanel>
+        <Border Height="20" DockPanel.Dock="Top" Margin="10,5,10,0">
+            <TextBlock
+                Margin = "0" Padding = "0"
+                HorizontalAlignment = "Left" VerticalAlignment = "Center"
+                Height = "20"
+                FontSize = "11.5"
+                FontFamily = "Arial"
+                FontWeight = "Regular"
+                FontStretch = "UltraExpanded"
+                FontStyle = "Normal"
+                Text = "Type to filter:" />
+        </Border>
+        <Grid
+            Height="22"
+            DockPanel.Dock="Top" Margin="10,0,10,0"
+            HorizontalAlignment = "Stretch">
+            <TextBox
+                Name="FilterBox"
+                BorderThickness = "1"
+                BorderBrush = "Gray"
+                MinWidth = "50"
+                VerticalAlignment = "Stretch"
+                HorizontalAlignment = "Stretch"
+                VerticalContentAlignment="Center"
+                Padding = "0,0,15,1"
+                FontSize = "12"
+                FontFamily = "Arial"
+                FontWeight = "Regular"
+                FontStretch = "Normal"
+                Text = "{Binding Filter, UpdateSourceTrigger=PropertyChanged}" />
+            <Button
+                        Grid.ZIndex="1"
+                        Style="{StaticResource ClearText}"
+                        Command="{Binding ClearFilterCommand}"
+                        Click="ClearFilter" />
+        </Grid>
+        <DockPanel Height="25" DockPanel.Dock="Top" Margin="10,0,10,0" LastChildFill="False">
+            <TextBlock
+                DockPanel.Dock="Left"
+                Margin = "0" Padding = "0"
+                HorizontalAlignment = "Left" VerticalAlignment = "Center"
+                FontSize = "11.5"
+                FontFamily = "Arial"
+                FontWeight = "Regular"
+                FontStretch = "UltraExpanded"
+                FontStyle = "Normal"
+                Text = "Documents:" />
+            <Button
+                DockPanel.Dock="Right"
+                Style="{StaticResource Flat}"
+                ToolTip="Expand All"
+                Command="{x:Static h:RoutedCommands.ExpandAll}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-toggle-expand}" />
+            </Button>
+            <Button
+                DockPanel.Dock="Right"
+                Style="{StaticResource Flat}"
+                ToolTip="Collapse All"
+                Command="{x:Static h:RoutedCommands.CollapseAll}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-toggle}" />
+            </Button>
+            <ToggleButton
+                DockPanel.Dock="Right" Margin="2"
+                IsTabStop="False"
+                Background="Transparent"
+                Visibility="{Binding Path=Tree.CategoryGroupsVisibility, FallbackValue=Collapsed}"
+                BorderThickness="1"
+                BorderBrush="#770B7AAE"
+                ToolTip="Toggle category groups"
+                IsChecked="{Binding Path=Tree.GroupByCategories}"
+                Padding="0" Width="20">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-category-group}" />
+            </ToggleButton>
+        </DockPanel>
+        <ListBox
+                Name="DocsTreeView"
+                DockPanel.Dock="Bottom" Margin="10,0,10,10"
+                BorderThickness = "1"
+                BorderBrush = "Gray"
+                Foreground = "DarkSlateGray"
+                Background = "WhiteSmoke"
+                MinWidth = "50"
+                VerticalAlignment = "Stretch"
+                HorizontalAlignment = "Stretch"
+                Padding = "0"
+                FontSize = "12"
+                FontFamily = "Arial"
+                FontWeight = "Regular"
+                FontStretch = "Normal"
+                SelectionMode="Extended"
+                MouseDoubleClick="DocsTreeView_MouseDoubleClick"
+                ItemsSource="{Binding Tree.Items}">
+
+            <i:Interaction.Behaviors>
+                <hc:ListBoxBehavior SelectedItems="{Binding SelectedItems, Mode=OneWayToSource}" />
+                <hc:ContextMenuBehavior Provider="{Binding}" Style="{StaticResource WorkspaceContextMenu}" />
+            </i:Interaction.Behaviors>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TreeViewItem_PreviewMouseLeftButtonDown" />
+                    <EventSetter Event="PreviewMouseLeftButtonUp" Handler="TreeViewItem_PreviewMouseLeftButtonUp" />
+                    <EventSetter Event="PreviewMouseMove" Handler="TreeViewItem_PreviewMouseMove" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type databaseExplorer:DatabaseExplorerCategoryGroup}">
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <ToggleButton Style="{StaticResource ExpandCollapseToggleStyle}" IsChecked="{Binding IsExpanded}" />
+                        <TextBlock
+                            Foreground="DarkGoldenrod"
+                            Text="{Binding Name}">
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type databaseExplorer:DatabaseExplorerCategory}">
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <ToggleButton Style="{StaticResource ExpandCollapseToggleStyle}" IsChecked="{Binding IsExpanded}" />
+                        <TextBlock
+                            Foreground="DarkGoldenrod"
+                            Text="{Binding Name}">
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type databaseExplorer:DatabaseExplorerSchemalessDocuments}">
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <ToggleButton Style="{StaticResource ExpandCollapseToggleStyle}" IsChecked="{Binding IsExpanded}" />
+                        <TextBlock
+                            Foreground="BurlyWood"
+                            Text="{Binding Title}">
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type databaseExplorer:DatabaseExplorerDocument}">
+                    <TextBlock Foreground = "DarkSlateGray" Margin="14,1,0,0">
+                        <Run Text="{Binding Path=FilterPrefix, Mode=OneWay}" /><Run Foreground = "MediumBlue" FontWeight="Bold" Text="{Binding Path=FilterPattern, Mode=OneWay}" /><Run Text="{Binding Path=FilterSuffix, Mode=OneWay}" />
+                    </TextBlock>
+                </DataTemplate>
+            </ListBox.Resources>
+        </ListBox>
+    </DockPanel>
+</UserControl>

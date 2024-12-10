@@ -1,0 +1,197 @@
+﻿<UserControl x:Class="Hercules.History.View.DatabaseHistoryPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="clr-namespace:Hercules.Controls"
+             xmlns:h="clr-namespace:Hercules"
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:history="clr-namespace:Hercules.History"
+             hc:RoutedCommandBindings.CommandBindings="{Binding RoutedCommandBindings}"
+             d:DataContext="{d:DesignInstance history:DatabaseHistoryPage}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="600">
+    <DockPanel LastChildFill="True">
+        <ToolBar DockPanel.Dock="Top" Padding="0" Margin="0" Focusable="False">
+            <TextBlock Text="Since:" VerticalAlignment="Center" Foreground="DarkSlateGray" Margin="5,0,5,0" FontStyle="Normal" />
+            <telerik:RadDateTimePicker Margin="0,0,4,0" SelectedDate="{Binding Since, Mode=TwoWay, StringFormat='dd-MM-yyyy'}" DisplayFormat="Long" InputMode="DatePicker" MinWidth="200" />
+            <Button Command="{Binding RefreshCommand}" ToolTip="Refresh" Focusable="False">
+                <Image Source="{StaticResource fugue-arrow-circle-225-left}" Style="{StaticResource MenuIcon}" />
+            </Button>
+            <Separator />
+            <TextBlock Text="Summary" VerticalAlignment="Center" Foreground="DarkSlateGray" Margin="5,0,5,0" FontStyle="Normal" />
+            <ToggleButton IsChecked="{Binding SummaryMode}" Focusable="False">
+                <Image Source="{StaticResource fugue-application--pencil}" Style="{StaticResource MenuIcon}" />
+            </ToggleButton>
+            <Separator />
+            <TextBlock Text="Export" VerticalAlignment="Center" Foreground="DarkSlateGray" Margin="5,0,5,0" FontStyle="Normal" />
+            <Button Command="{Binding ExportTableCommand}" ToolTip="Export Table" Focusable="False">
+                <Image Source="{StaticResource fugue-table-export}" Style="{StaticResource MenuIcon}" />
+            </Button>
+        </ToolBar>
+        <Grid>
+            <telerik:RadGridView
+                Visibility="{Binding SummaryMode, Converter={StaticResource BooleanToHiddenVisibilityConverter}, ConverterParameter=1}"
+                hc:GridViewItemBehavior.IsScrollSelectedIntoView="True"
+                SelectionMode="Single"
+                SelectionUnit="FullRow"
+                GroupRenderMode="Flat"
+                RowIndicatorVisibility="Collapsed"
+                CanUserFreezeColumns="False"
+                AutoGenerateColumns="False"
+                IsFilteringAllowed="False"
+                ShowColumnSortIndexes="True"
+                ItemsSource="{Binding Path=Revisions}">
+                <telerik:RadGridView.Columns>
+                    <telerik:GridViewToggleRowDetailsColumn />
+                    <telerik:GridViewDataColumn Header="Change" DataMemberBinding="{Binding ChangeType}" MinWidth="24">
+                        <telerik:GridViewDataColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Style="{StaticResource RevisionChangeType}" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
+                            </DataTemplate>
+                        </telerik:GridViewDataColumn.CellTemplate>
+                    </telerik:GridViewDataColumn>
+                    <telerik:GridViewDataColumn Header="Document" DataMemberBinding="{Binding DocumentId}" MinWidth="250">
+                        <telerik:GridViewDataColumn.CellTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <TextBlock
+                                        DockPanel.Dock="Left"
+                                        Background="Transparent"
+                                        HorizontalAlignment="Left"
+                                        Margin = "5,0,0,0"
+                                        Text="{Binding DocumentId}" />
+                                    <Button
+                                        DockPanel.Dock="Right"
+                                        Focusable="False"
+                                        Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type telerik:GridViewCellBase}}, Path=IsMouseOver, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right"
+                                        Command="{x:Static h:RoutedCommands.ViewRevision}"
+                                        CommandParameter="{Binding}"
+                                        Margin="2,0,2,0"
+                                        Style="{StaticResource Flat}">
+                                        <Image
+                                            Stretch = "None"
+                                            Source = "{StaticResource fugue-shortcut}"
+                                            ToolTip="View Revision" />
+                                    </Button>
+                                </DockPanel>
+                            </DataTemplate>
+                        </telerik:GridViewDataColumn.CellTemplate>
+                    </telerik:GridViewDataColumn>
+                    <telerik:GridViewDataColumn Header="Revision" DataMemberBinding="{Binding Revision}" MinWidth="250" />
+                    <telerik:GridViewDataColumn Header="Time" DataMemberBinding="{Binding Time}" SortingState="Descending" DataFormatString="dd-MM-yyyy HH:mm" MinWidth="150" />
+                    <telerik:GridViewDataColumn Header="User" DataMemberBinding="{Binding User}" MinWidth="150" />
+                </telerik:RadGridView.Columns>
+                <telerik:RadGridView.RowDetailsTemplate>
+                    <DataTemplate>
+                        <ae:TextEditor
+                                FontFamily="Courier New"
+                                IsReadOnly="True"
+                                ShowLineNumbers="True"
+                                Document="{Binding Changes.Editor}"
+                                HorizontalScrollBarVisibility="Hidden"
+                                HorizontalAlignment="Stretch"
+                                VerticalScrollBarVisibility="Auto">
+                            <i:Interaction.Behaviors>
+                                <hc:SyntaxHighlightBehavior Syntax="SyntaxHighlight\\Json.xshd" />
+                                <hc:FoldingBehavior />
+                                <hc:BracketHighlightBehavior />
+                                <hc:DiffHighlightBehavior DiffMarker="True" DiffLines="{Binding Changes.DiffLines}" />
+                            </i:Interaction.Behaviors>
+                            <ae:TextEditor.Options>
+                                <ae:TextEditorOptions ConvertTabsToSpaces="True" EnableImeSupport="False" HighlightCurrentLine="True" />
+                            </ae:TextEditor.Options>
+                        </ae:TextEditor>
+                    </DataTemplate>
+                </telerik:RadGridView.RowDetailsTemplate>
+                <telerik:RadGridView.SortDescriptors>
+                    <telerik:SortDescriptor Member="Time" SortDirection="Descending" />
+                </telerik:RadGridView.SortDescriptors>
+            </telerik:RadGridView>
+            <telerik:RadGridView
+                Visibility="{Binding SummaryMode, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+                hc:GridViewItemBehavior.IsScrollSelectedIntoView="True"
+                SelectionMode="Single"
+                SelectionUnit="FullRow"
+                GroupRenderMode="Flat"
+                RowIndicatorVisibility="Collapsed"
+                CanUserFreezeColumns="False"
+                AutoGenerateColumns="False"
+                IsFilteringAllowed="False"
+                ShowColumnSortIndexes="True"
+                ItemsSource="{Binding Path=Summary}">
+                <telerik:RadGridView.Columns>
+                    <telerik:GridViewToggleRowDetailsColumn />
+                    <telerik:GridViewDataColumn Header="Change" DataMemberBinding="{Binding ChangeType}" MinWidth="24">
+                        <telerik:GridViewDataColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Style="{StaticResource RevisionChangeType}" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
+                            </DataTemplate>
+                        </telerik:GridViewDataColumn.CellTemplate>
+                    </telerik:GridViewDataColumn>
+                    <telerik:GridViewDataColumn Header="Document" DataMemberBinding="{Binding DocumentId}" MinWidth="250">
+                        <telerik:GridViewDataColumn.CellTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <TextBlock
+                                        DockPanel.Dock="Left"
+                                        Background="Transparent"
+                                        HorizontalAlignment="Left"
+                                        Margin = "5,0,0,0"
+                                        Text="{Binding DocumentId}" />
+                                    <!--Button
+                                        DockPanel.Dock="Right"
+                                        Focusable="False"
+                                        Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type telerik:GridViewCellBase}}, Path=IsMouseOver, Converter={StaticResource BooleanToHiddenVisibilityConverter}}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right"
+                                        Command="{x:Static h:RoutedCommands.ViewRevision}"
+                                        CommandParameter="{Binding}"
+                                        Margin="2,0,2,0"
+                                        Style="{StaticResource Flat}">
+                                        <Image
+                                            Stretch = "None"
+                                            Source = "{StaticResource fugue-shortcut}"
+                                            ToolTip="View Revision" />
+                                    </-->
+                                </DockPanel>
+                            </DataTemplate>
+                        </telerik:GridViewDataColumn.CellTemplate>
+                    </telerik:GridViewDataColumn>
+                    <!--" telerik:GridViewDataColumn Header="Revision" DataMemberBinding="{Binding Revision}" MinWidth="250" />
+                    <telerik:GridViewDataColumn Header="Time" DataMemberBinding="{Binding Time}" SortingState="Descending" DataFormatString="dd-MM-yyyy HH:mm" MinWidth="150" />
+                    <telerik:GridViewDataColumn Header="User" DataMemberBinding="{Binding User}" MinWidth="150" /-->
+                </telerik:RadGridView.Columns>
+                <telerik:RadGridView.RowDetailsTemplate>
+                    <DataTemplate>
+                        <ae:TextEditor
+                                FontFamily="Courier New"
+                                IsReadOnly="True"
+                                ShowLineNumbers="True"
+                                Document="{Binding Changes.Editor}"
+                                HorizontalScrollBarVisibility="Hidden"
+                                HorizontalAlignment="Stretch"
+                                VerticalScrollBarVisibility="Auto">
+                            <i:Interaction.Behaviors>
+                                <hc:SyntaxHighlightBehavior Syntax="SyntaxHighlight\\Json.xshd" />
+                                <hc:FoldingBehavior />
+                                <hc:BracketHighlightBehavior />
+                                <hc:DiffHighlightBehavior DiffMarker="True" DiffLines="{Binding Changes.DiffLines}" />
+                            </i:Interaction.Behaviors>
+                            <ae:TextEditor.Options>
+                                <ae:TextEditorOptions ConvertTabsToSpaces="True" EnableImeSupport="False" HighlightCurrentLine="True" />
+                            </ae:TextEditor.Options>
+                        </ae:TextEditor>
+                    </DataTemplate>
+                </telerik:RadGridView.RowDetailsTemplate>
+                <telerik:RadGridView.SortDescriptors>
+                    <telerik:SortDescriptor Member="Time" SortDirection="Descending" />
+                </telerik:RadGridView.SortDescriptors>
+            </telerik:RadGridView>
+        </Grid>
+    </DockPanel>
+</UserControl>

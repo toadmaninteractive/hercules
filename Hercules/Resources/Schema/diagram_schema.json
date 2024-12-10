@@ -1,0 +1,185 @@
+{
+    "custom_types": {
+        "ConnectorType": {
+            "kind": "enum",
+            "values": [
+                "in",
+                "out",
+                "property",
+                "asset"
+            ]
+        },
+        "Connector": {
+            "kind": "record",
+            "fields": {
+                "name": {
+                    "kind": "string",
+                    "optional": false,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "type": {
+                    "kind": "enum",
+                    "optional": false,
+                    "name": "ConnectorType"
+                },
+                "position": {
+                    "kind": "string",
+                    "optional": false,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "field": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "color": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "caption": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "category": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                }
+            },
+            "interfaces": [
+                
+            ]
+        },
+        "Prototype": {
+            "kind": "record",
+            "fields": {
+                "name": {
+                    "kind": "string",
+                    "optional": false,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "custom_type": {
+                    "kind": "string",
+                    "optional": false,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "archetype": {
+                    "kind": "string",
+                    "optional": false,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "icon": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "color": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "caption": {
+                    "kind": "string",
+                    "optional": true,
+                    "multiline": false,
+                    "not_empty": false
+                },
+                "show_icon": {
+                    "kind": "bool",
+                    "optional": true
+                },
+                "special_fields": {
+                    "kind": "dict",
+                    "optional": false,
+                    "key": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    },
+                    "value": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    },
+                    "default": {
+                        
+                    }
+                },
+                "connectors": {
+                    "kind": "list",
+                    "optional": false,
+                    "element": {
+                        "kind": "record",
+                        "optional": false,
+                        "name": "Connector",
+                        "compact": false
+                    },
+                    "default": [
+                        
+                    ]
+                }
+            },
+            "interfaces": [
+                
+            ]
+        },
+        "DiagramSchema": {
+            "kind": "record",
+            "fields": {
+                "prototypes": {
+                    "kind": "list",
+                    "optional": false,
+                    "element": {
+                        "kind": "record",
+                        "optional": false,
+                        "name": "Prototype",
+                        "compact": false
+                    },
+                    "default": [
+                        
+                    ]
+                },
+                "diagram_tags": {
+                    "kind": "list",
+                    "optional": false,
+                    "element": {
+                        "kind": "string",
+                        "optional": false,
+                        "multiline": false,
+                        "not_empty": false
+                    },
+                    "default": [
+                        
+                    ]
+                },
+                "version": {
+                    "kind": "string",
+                    "optional": false,
+                    "default": "1.0",
+                    "multiline": false,
+                    "not_empty": false
+                }
+            },
+            "interfaces": [
+                
+            ]
+        }
+    },
+    "document_type": "DiagramSchema",
+    "version": "1.1"
+}

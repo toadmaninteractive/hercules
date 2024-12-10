@@ -1,0 +1,126 @@
+﻿<UserControl x:Class="Hercules.ServerBrowser.View.ServerBrowserPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:serverBrowser="clr-namespace:Hercules.ServerBrowser"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance serverBrowser:ServerBrowserPage}"
+             d:DesignHeight="300" d:DesignWidth="600">
+    <DockPanel LastChildFill="True">
+        <ToolBar DockPanel.Dock="Top" Padding="0" Margin="0" Focusable="False">
+            <Button Command="{Binding ReloadCommand}" ToolTip="Reload" Focusable="False">
+                <Image Source="{StaticResource fugue-arrow-circle-225-left}" Style="{StaticResource MenuIcon}" />
+            </Button>
+            <Separator />
+            <Button
+                Command="{Binding CloneDatabaseCommand}"
+                Width="120"
+                Margin="10,0,0,0" Style="{StaticResource FlatBorder}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-blue-document}" />
+                    <TextBlock
+                                Margin="7,0,0,0"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                FontSize="11.5" FontFamily="Arial"
+                                FontWeight="Regular" FontStretch="UltraExpanded"
+                                FontStyle="Normal" Foreground="Black"
+                                Text = "New Database" />
+                </StackPanel>
+            </Button>
+        </ToolBar>
+        <ItemsControl
+                Focusable="False"
+                DockPanel.Dock="Top"
+                ItemTemplateSelector="{StaticResource ViewModelTemplateSelector}"
+                ItemsSource="{Binding Notifications.Items}" />
+        <ListBox
+            HorizontalAlignment="Stretch"
+            Background="#ffe9ecfa"
+            AlternationCount="2"
+            Focusable="False"
+            KeyboardNavigation.TabNavigation="Cycle"
+            Visibility="{Binding Path=IsLoaded, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+            ItemsSource="{Binding Databases}">
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type serverBrowser:ServerDatabase}">
+                    <StackPanel Orientation="Horizontal" Height="30">
+                        <Button
+                            Command="{Binding DataContext.LoadConnectionCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}, Mode=FindAncestor}}"
+                            CommandParameter="{Binding Connection}"
+                            ToolTip="Open Connection"
+                            Width="24"
+                            Margin="10,0,0,0" Style="{StaticResource FlatBorder}">
+                            <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-database}" />
+                        </Button>
+                        <Button
+                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}, Mode=FindAncestor}, Path=DataContext.CreateConnectionCommand}"
+                            CommandParameter="{Binding}"
+                            ToolTip="Create Connection"
+                            Width="24"
+                            Margin="10,0,0,0" Style="{StaticResource FlatBorder}">
+                            <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-database--plus}" />
+                        </Button>
+
+                        <TextBlock Margin="50,0,0,0" Width="200" Text="{Binding Name}" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Connection}" Value="{x:Null}">
+                                            <Setter Property="FontWeight" Value="Normal" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <Button
+                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}, Mode=FindAncestor}, Path=DataContext.CloneDatabaseCommand}"
+                            CommandParameter="{Binding}"
+                            Width="120"
+                            Margin="10,0,0,0" Style="{StaticResource FlatBorder}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-blue-document-copy}" />
+                                <TextBlock
+                                Margin="7,0,0,0"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                FontSize="11.5" FontFamily="Arial"
+                                FontWeight="Regular" FontStretch="UltraExpanded"
+                                FontStyle="Normal" Foreground="Black"
+                                Text = "Clone Database" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button
+                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}, Mode=FindAncestor}, Path=DataContext.DeleteDatabaseCommand}"
+                            CommandParameter="{Binding}"
+                            Width="120"
+                            Margin="10,0,0,0" Style="{StaticResource FlatBorder}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-cross-script}" />
+                                <TextBlock
+                                Margin="7,0,0,0"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                FontSize="11.5" FontFamily="Arial"
+                                FontWeight="Regular" FontStretch="UltraExpanded"
+                                FontStyle="Normal" Foreground="Black"
+                                Text = "Delete Database" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+                <Style TargetType="ListBoxItem">
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                            <Setter Property="Background" Value="#ffe9ecfa" />
+                        </Trigger>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                            <Setter Property="Background" Value="SeaShell" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.Resources>
+        </ListBox>
+    </DockPanel>
+</UserControl>

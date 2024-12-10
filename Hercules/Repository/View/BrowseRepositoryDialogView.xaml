@@ -1,0 +1,93 @@
+﻿<Window x:Class="Hercules.Repository.View.BrowseRepositoryDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:repository="clr-namespace:Hercules.Repository"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:hc="clr-namespace:Hercules.Controls"
+        d:DataContext="{d:DesignInstance repository:BrowseRepositoryDialog}"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        hc:ApWindow.EscapeClosesWindow="True"
+        Title="{Binding Title}" Height="450" Width="800">
+    <DockPanel LastChildFill="True">
+        <ToolBar DockPanel.Dock="Top">
+            <Button ToolTip="Back" Command="{Binding BackCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-control-180}" />
+            </Button>
+            <Button ToolTip="Forward" Command="{Binding ForwardCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-control}" />
+            </Button>
+        </ToolBar>
+        <DockPanel DockPanel.Dock="Bottom" LastChildFill="True" Background="AliceBlue" Height="42">
+            <Button DockPanel.Dock="Right" Height="22" Command="{Binding OkCommand}" Content="OK" Width="100" IsDefault="True" Margin="0,0,10,0" />
+            <TextBox Text="{Binding SelectedPath}" Height="22" Margin="10" />
+        </DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition>
+                    <ColumnDefinition.Style>
+                        <Style TargetType="ColumnDefinition">
+                            <Setter Property="Width" Value="Auto" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ShowPreview}" Value="False">
+                                    <Setter Property="Width" Value="0" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ColumnDefinition.Style>
+                </ColumnDefinition>
+                <ColumnDefinition>
+                    <ColumnDefinition.Style>
+                        <Style TargetType="ColumnDefinition">
+                            <Setter Property="Width" Value="200" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ShowPreview}" Value="False">
+                                    <Setter Property="Width" Value="0" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ColumnDefinition.Style>
+                </ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <telerik:RadTreeView Grid.Column="0" ItemsSource="{Binding Root}" 
+                                 IsLoadOnDemandEnabled="True" 
+                                 telerik:AnimationManager.IsAnimationEnabled="False"
+                                 IsLineEnabled="True"
+                                 SelectedItem="{Binding SelectedFolder, Mode=TwoWay}"
+                                 LoadOnDemand="RadTreeView_LoadOnDemand" >
+                <telerik:RadTreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type telerik:RadTreeViewItem}">
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        <Setter Property="IsLoadOnDemandEnabled" Value="{Binding IsReady, Converter={StaticResource NotConverter}}" />
+                        <Setter Property="DefaultImageSrc" Value="{StaticResource fugue-folder}" />
+                        <Setter Property="ExpandedImageSrc" Value="{StaticResource fugue-folder-open}" />
+                    </Style>
+                </telerik:RadTreeView.ItemContainerStyle>
+                <telerik:RadTreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type repository:RepositoryFolder}" ItemsSource="{Binding Folders}">
+                        <TextBlock Foreground = "MidnightBlue" Text="{Binding Name}" />
+                    </HierarchicalDataTemplate>
+                </telerik:RadTreeView.Resources>
+            </telerik:RadTreeView>
+            <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" />
+            <ListBox Grid.Column="2" ItemsSource="{Binding SelectedFolder.Files}" SelectedItem="{Binding SelectedFile, Mode=TwoWay}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"></TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <GridSplitter Grid.Column="3" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" />
+            <DockPanel LastChildFill="True" Grid.Column="4">
+                <Label DockPanel.Dock="Top" Background="Beige">PREVIEW:</Label>
+                <ProgressBar IsIndeterminate="{Binding SelectedFile.IsLoading, FallbackValue=False}" DockPanel.Dock="Top" Value="1" Maximum="1"></ProgressBar>
+                <Image Source="{Binding SelectedFile.PreviewImage}" VerticalAlignment="Top" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Left"></Image>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</Window>

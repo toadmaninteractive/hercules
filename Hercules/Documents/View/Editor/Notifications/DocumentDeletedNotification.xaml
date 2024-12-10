@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="Hercules.Documents.View.Editor.DocumentDeletedNotificationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             Height="30"
+             mc:Ignorable="d">
+
+    <Border HorizontalAlignment="Stretch" BorderThickness="1" BorderBrush="Gainsboro" Background="Beige">
+        <StackPanel Orientation="Horizontal">
+            <Label Content="This document has been deleted by another user" VerticalAlignment="Center" />
+            <Button Content="Confirm and close" ToolTip="Confirm deletion and close the document." Width="120" HorizontalAlignment="Left" Margin="5,3,5,3" Cursor="Hand" Command="{Binding ConfirmAndCloseCommand}" />
+            <Button Content="Edit as new" ToolTip="Continue edit. The document will be treated as a new one and recreated if you save it." Width="120" HorizontalAlignment="Left" Margin="5,3,5,3" Cursor="Hand" Command="{Binding EditAsNewCommand}" />
+        </StackPanel>
+    </Border>
+</UserControl>

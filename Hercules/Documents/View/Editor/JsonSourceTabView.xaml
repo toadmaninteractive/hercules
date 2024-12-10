@@ -1,0 +1,86 @@
+﻿<UserControl
+    x:Class="Hercules.Documents.View.Editor.JsonSourceTabView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:ae="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
+    xmlns:hc="clr-namespace:Hercules.Controls"
+    xmlns:editor="clr-namespace:Hercules.Documents.Editor"
+    mc:Ignorable="d"
+    Loaded="UserControl_Loaded"
+    hc:RoutedCommandBindings.CommandBindings="{Binding RoutedCommandBindings}"
+    d:DataContext="{d:DesignInstance editor:JsonSourceTab}"
+    d:DesignHeight="300" d:DesignWidth="300" >
+    <i:Interaction.Triggers>
+        <hc:DataEventTrigger Source="{Binding}" EventName="GoToSourceLocation">
+            <hc:CallMethod MethodName="GoToSourceLocation" />
+        </hc:DataEventTrigger>
+    </i:Interaction.Triggers>
+    <DockPanel LastChildFill="True">
+        <ItemsControl
+                Focusable="False"
+                DockPanel.Dock="Top"
+                ItemTemplateSelector="{StaticResource ViewModelTemplateSelector}"
+                ItemsSource="{Binding Notifications.Items}" />
+        <Border
+        Focusable="False"
+        BorderThickness="1"
+        BorderBrush="Gray">
+        <DockPanel>
+            <ToolBar Padding="0" Margin="0" Focusable="False" DockPanel.Dock="Top">
+                <ToggleButton IsChecked="{Binding WordWrap}" ToolTip="Word Wrap">
+                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-edit-hyphenation}" />
+                </ToggleButton>
+                <Separator />
+                <Button
+                    Style="{StaticResource ToolButton}"
+                    Command="{Binding SyntaxCheckCommand}">
+                    <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-spell-check}" />
+                </Button>
+                <Separator />
+                <Button
+                    Focusable="False"
+                    Command="{Binding SubmitSourceCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Submit changes to Form" VerticalAlignment="Center" Foreground="DarkSlateGray" Margin="5,0,5,0" FontStyle="Normal" />
+                        <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-stamp--arrow}" />
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+            <ae:TextEditor
+                DockPanel.Dock="Bottom"
+                FontFamily="Courier New"
+                Name="SourceEditor"
+                IsReadOnly="False"
+                ShowLineNumbers="True"
+                WordWrap="{Binding WordWrap}"
+                Document="{Binding JsonEditor}"
+                VerticalScrollBarVisibility="Visible">
+                <i:Interaction.Behaviors>
+                    <hc:SyntaxHighlightBehavior Syntax="SyntaxHighlight\\Json.xshd" />
+                    <hc:FoldingBehavior />
+                    <hc:BracketHighlightBehavior />
+                    <hc:IndentationBehavior />
+                    <hc:AvalonEditSearchBehavior SearchTarget="{Binding SearchTarget, Mode=OneWayToSource}" />
+                </i:Interaction.Behaviors>
+                <ae:TextEditor.Options>
+                    <ae:TextEditorOptions InheritWordWrapIndentation="False" ConvertTabsToSpaces="True" EnableImeSupport="False" HighlightCurrentLine="True" />
+                </ae:TextEditor.Options>
+                <ae:TextEditor.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{x:Static ApplicationCommands.Copy}" />
+                        <MenuItem Command="{x:Static ApplicationCommands.Cut}" />
+                        <MenuItem Command="{x:Static ApplicationCommands.Paste}" />
+                        <MenuItem Command="{x:Static ApplicationCommands.Delete}" />
+                        <MenuItem Command="{x:Static ApplicationCommands.SelectAll}" />
+                        <Separator />
+                        <MenuItem Command="{Binding WordWrapCommand}" IsChecked="{Binding WordWrap}" Header="Word Wrap" />
+                    </ContextMenu>
+                </ae:TextEditor.ContextMenu>
+            </ae:TextEditor>
+        </DockPanel>
+    </Border>
+    </DockPanel>
+</UserControl>

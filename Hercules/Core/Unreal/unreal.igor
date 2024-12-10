@@ -1,0 +1,319 @@
+[* binary.enabled]
+[csharp namespace="Unreal" list_implementation=readonly dict_implementation=readonly]
+module UAsset
+{
+    [csharp binary.serializer="Unreal.UnrealTypes.FString"]
+    define FString string;
+    
+    [csharp binary.serializer="Unreal.UnrealTypes.TArray"]
+    define TArray<T> list<T>;
+
+    [csharp binary.serializer="Unreal.UnrealTypes.Binary"]
+    define Binary binary;
+
+    [csharp struct]
+    record FGuid
+    {
+        uint32 A;
+        uint32 B;
+        uint32 C;
+        uint32 D;
+    }
+
+    record FCustomVersion
+    {
+        int32 Key;
+        FGuid Version;
+    }
+    
+    record FGenerationInfo
+    {
+        # Number of exports in the linker's ExportMap for this generation.
+        int32 ExportCount;
+
+        # Number of names in the linker's NameMap for this generation.
+        int32 NameCount;
+    }
+
+    record FEngineVersion
+    {
+        # Major version number.
+        uint16 Major = 0;
+
+        # Minor version number.
+        uint16 Minor = 0;
+
+        # Patch version number.
+        uint16 Patch = 0;
+
+        # Changelist number. This is used to arbitrate when Major/Minor/Patch version numbers match. Use GetChangelist() instead of using this member directly.
+        uint32 Changelist = 0;
+
+        # Branch name.
+        FString Branch = "";
+    }
+
+    # Information about a compressed chunk in a file.
+    record FCompressedChunk
+    {
+        # Original offset in uncompressed file.
+        int32 UncompressedOffset;
+        # Uncompressed size in bytes.
+        int32 UncompressedSize;
+        # Offset in compressed file.
+        int32 CompressedOffset;
+        # Compressed size in bytes.
+        int32 CompressedSize;
+    }
+
+    # A "table of contents" for an Unreal package file.  Stored at the top of the file.
+    record FPackageFileSummary
+    {
+        # Magic tag compared against PACKAGE_FILE_TAG to ensure that package is an Unreal package.
+        uint32 Tag;
+        
+        # The package file version number when this package was saved.
+        #
+        # Lower 16 bits stores the UE3 engine version
+        # Upper 16 bits stores the UE4/licensee version
+        # For newer packages this is -7
+        #        -2 indicates presence of enum-based custom versions
+        #        -3 indicates guid-based custom versions
+        #        -4 indicates removal of the UE3 version. Packages saved with this ID cannot be loaded in older engine versions
+        #        -5 indicates the replacement of writing out the "UE3 version" so older versions of engine can gracefully fail to open newer packages
+        #        -6 indicates optimizations to how custom versions are being serialized
+        #        -7 indicates the texture allocation info has been removed from the summary
+        int32 LegacyFileVersion;
+        
+        int32 LegacyUE3Version;
+
+        # UE4 file version
+        int32 FileVersionUE4;
+        # Licensee file version
+        int32 FileVersionLicenseeUE4;
+        # Custom version numbers. Keyed off a unique tag for each custom component.
+        TArray<FCustomVersion> CustomVersions = [];
+
+        # Total size of all information that needs to be read in to create a FLinkerLoad.
+        # This includes the package file summary, name table and import & export maps.
+        int32 TotalHeaderSize;
+
+        # The Generic Browser folder name that this package lives in
+        FString FolderName = "";
+        
+        # The flags for the package
+        uint32 PackageFlags;
+
+        # Number of names used in this package
+        int32 NameCount;
+
+        # Location into the file on disk for the name data
+        int32 NameOffset;
+
+        # Localization ID of this package
+        # This is copy of the version stored in the package meta-data. 
+        # It exists here so we can query it without having to load the whole package
+        FString LocalizationId = "";
+
+        # Number of gatherable text data items in this package
+        int32 GatherableTextDataCount;
+
+        # Location into the file on disk for the gatherable text data items
+        int32 GatherableTextDataOffset;
+
+        # Number of exports contained in this package
+        int32 ExportCount;
+
+        # Location into the file on disk for the ExportMap data
+        int32 ExportOffset;
+
+        # Number of imports contained in this package
+        int32 ImportCount;
+
+        # Location into the file on disk for the ImportMap data
+        int32 ImportOffset;
+
+        # Location into the file on disk for the DependsMap data
+        int32 DependsOffset;
+
+        # Number of soft package references contained in this package
+        int32 SoftPackageReferencesCount;
+
+        # Location into the file on disk for the soft package reference list
+        int32 SoftPackageReferencesOffset;
+
+        # Location into the file on disk for the SearchableNamesMap data
+        int32 SearchableNamesOffset;
+
+        # Thumbnail table offset
+        int32 ThumbnailTableOffset;
+/*
+        # Current id for this package
+        FGuid Guid;
+
+        FGuid PersistentGuid;
+        FGuid OwnerPersistentGuid;
+
+        # Data about previous versions of this package
+        TArray<FGenerationInfo> Generations = [];
+
+        # Engine version this package was saved with. This may differ from CompatibleWithEngineVersion for assets saved with a hotfix release.
+        FEngineVersion SavedByEngineVersion;
+
+        # Engine version this package is compatible with. Assets saved by Hotfix releases and engine versions that maintain binary compatibility will have
+        # a CompatibleWithEngineVersion.Patch that matches the original release (as opposed to SavedByEngineVersion which will have a patch version of the new release).
+        FEngineVersion CompatibleWithEngineVersion;
+
+        # Flags used to compress the file on save and uncompress on load.
+        uint32 CompressionFlags;
+
+        # If present, this file has package level compression, we won't load it.
+        TArray<FCompressedChunk> CompressedChunks = [];
+
+        # Value that is used to determine if the package was saved by Epic (or licensee) or by a modder, etc
+        uint32 PackageSource;
+
+        # No longer used: List of additional packages that are needed to be cooked for this package (ie streaming levels)
+        # Keeping the serialization code for backwards compatibility without bumping the package version
+        TArray<FString>	AdditionalPackagesToCook = [];
+
+        # Location into the file on disk for the asset registry tag data
+        int32 AssetRegistryDataOffset;
+
+        # Offset to the location in the file where the bulkdata starts
+        int64 BulkDataStartOffset;
+        
+        # Offset to the location in the file where the FWorldTileInfo data starts
+        int32 WorldTileInfoDataOffset;
+
+        # Streaming install ChunkIDs
+        TArray<int32> ChunkIDs = [];
+
+        int32 PreloadDependencyCount;
+
+        # Location into the file on disk for the preload dependency data
+        int32 PreloadDependencyOffset; */
+    }
+
+    record FNameEntrySerialized
+    {
+        FString name = "";
+        uint16 NonCasePreservingHash;
+        uint16 CasePreservingHash;
+    }
+
+    [csharp struct]
+    record FPackageIndex
+    {
+        int32 Index;
+    }
+
+    [csharp struct]
+    record FName
+    {
+        int32 NameIndex;
+        int32 Number;
+    }
+
+    record FObjectImport
+    {
+        # The name of the package that contains the class of the UObject represented by this resource.
+        FName ClassPackage;
+
+        # The name of the class for the UObject represented by this resource.
+        FName ClassName;
+
+        # Location of the resource for this resource's Outer.  Values of 0 indicate that this resource
+        # represents a top-level UPackage object (the linker's LinkerRoot).
+        # Serialized
+        FPackageIndex OuterIndex;
+
+        # The name of the UObject represented by this resource.
+        FName ObjectName;
+
+        // # Package Name this import belongs to. Can be none, in that case follow the outer chain
+        // # until a set PackageName is found or until OuterIndex is null
+        // FName PackageName;
+    }
+
+    # UObject resource type for objects that are contained within this package and can
+    # be referenced by other packages.
+    record FObjectExport
+    {
+        # Location of the resource for this export's class (if non-zero).  A value of zero
+        # indicates that this export represents a UClass object; there is no resource for
+        # this export's class object
+        FPackageIndex ClassIndex;
+
+        # Location of the resource for this export's SuperField (parent).  Only valid if
+        # this export represents a UStruct object. A value of zero indicates that the object
+        # represented by this export isn't a UStruct-derived object.
+        FPackageIndex SuperIndex;
+
+        # Location of the resource for this export's template/archetypes.  Only used
+        # in the new cooked loader. A value of zero indicates that the value of GetArchetype
+        # was zero at cook time, which is more or less impossible and checked.
+        FPackageIndex TemplateIndex;
+
+        FPackageIndex OuterIndex;
+        FName ObjectName;
+
+        # The object flags for the UObject represented by this resource.  Only flags that
+        # match the RF_Load combination mask will be loaded from disk and applied to the UObject.
+        uint32 ObjectFlags;
+        // EObjectFlags ObjectFlags;
+
+        # The number of bytes to serialize when saving/loading this export's UObject.
+        int64 SerialSize;
+
+        # The location (into the FLinker's underlying file reader archive) of the beginning of the
+        # data for this export's UObject.  Used for verification only.
+        int64 SerialOffset;
+
+        # Whether the export was forced into the export table via OBJECTMARK_ForceTagExp.
+        int32 bForcedExport;   
+
+        # Whether the export should be loaded on clients
+        int32 bNotForClient;   
+
+        # Whether the export should be loaded on servers
+        int32 bNotForServer;
+
+        # If this object is a top level package (which must have been forced into the export table via OBJECTMARK_ForceTagExp)
+        # this is the GUID for the original package file
+        FGuid PackageGuid;
+
+        # If this object is a top level package (which must have been forced into the export table via OBJECTMARK_ForceTagExp)
+        # this is the package flags for the original package file
+        uint32 PackageFlags;
+
+        # Whether the export should be always loaded in editor game
+        # False means that the object is 
+        # True doesn't means, that the object won't be loaded.
+        int32 bNotAlwaysLoadedForEditorGame;
+
+        int32 bIsAsset;
+
+        # The export table must serialize as a fixed size, this is use to index into a long list, which is later loaded into the array. -1 means dependencies are not present
+        # These are contiguous blocks, so CreateBeforeSerializationDependencies starts at FirstExportDependency + SerializationBeforeSerializationDependencies
+        int32 FirstExportDependency;
+        int32 SerializationBeforeSerializationDependencies;
+        int32 CreateBeforeSerializationDependencies;
+        int32 SerializationBeforeCreateDependencies;
+        int32 CreateBeforeCreateDependencies;
+    }
+    
+    record FThumbnailAssetData
+    {
+        FString AssetClassName = "";
+        FString ObjectPathWithoutPackageName = "";
+        int32 FileOffset;
+    }
+
+    record FObjectThumbnail
+    {
+        int32 ImageWidth;
+        int32 ImageHeight;
+        Binary CompressedImageData;
+    }
+}

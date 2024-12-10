@@ -1,0 +1,21 @@
+﻿<Window x:Class="Hercules.Shell.View.AboutDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:hc="clr-namespace:Hercules.Controls"
+    hc:ApWindow.EscapeClosesWindow="True"
+    Style="{StaticResource DialogWindow}"
+    Title="{Binding Title}" Height="280" Width="450" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Icon="/Hercules;component/hercules.ico" ShowInTaskbar="False">
+    <Grid>
+        <Image Width="62" Height="64" Name="img_About" Source="/Resources/Misc/HerculesIcon.png" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Stretch="None" />
+        <Button Height="23" HorizontalAlignment="Right" Margin="0,0,10,10" Name="btn_OK" VerticalAlignment="Bottom" Width="75" Command="{Binding OkCommand}" Grid.ColumnSpan="2">OK</Button>
+        <StackPanel Margin="90,10,0,0" Orientation="Vertical">
+            <TextBlock VerticalAlignment="Top" FontSize="18" HorizontalAlignment="Left">Hercules</TextBlock>
+            <TextBlock Margin="0,10,0,0" FontSize="12" VerticalAlignment="Top" Foreground="DarkSlateGray">CouchDB document editor</TextBlock>
+            <TextBlock Margin="0,2,0,0" Text="{Binding Version}" FontSize="12" Foreground="DarkSlateGray" />
+            <TextBlock Margin="0,12,0,0" FontSize="12" Foreground="DarkSlateGray">© 2012-2017 Artplant</TextBlock>
+            <TextBlock Margin="0,0,0,0" FontSize="12" Foreground="DarkSlateGray">© 2018-2023 Toadman Interactive</TextBlock>
+            <TextBlock Margin="0,12,0,0" FontSize="12" Foreground="DarkSlateGray">Fugue Icons by <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="http://p.yusukekamiyamane.com/">Yusuke Kamiyamane</Hyperlink></TextBlock>
+            <TextBlock TextWrapping="Wrap" Margin="0,2,10,0" FontSize="12" Foreground="DarkSlateGray"> Licensed under a <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</Hyperlink></TextBlock>
+        </StackPanel>
+    </Grid>
+</Window>

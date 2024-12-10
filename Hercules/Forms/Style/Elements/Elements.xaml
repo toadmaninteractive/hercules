@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="SimpleElements.xaml" />
+        <ResourceDictionary Source="ProxyElements.xaml" />
+        <ResourceDictionary Source="CollectionElements.xaml" />
+        <ResourceDictionary Source="../../../InteractiveMaps/Style/InteractiveMapElements.xaml" />
+        <ResourceDictionary Source="../../../Plots/Style/PlotElements.xaml" />
+        <ResourceDictionary Source="ElementProperties.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
