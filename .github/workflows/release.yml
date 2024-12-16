@@ -46,4 +46,4 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       with:
         draft: ${{ inputs.draft }}
-        files: Setup\Output\hercules_setup.exe
+        files: Setup/Output/hercules_setup.exe
