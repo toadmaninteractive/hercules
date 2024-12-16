@@ -1,0 +1,1 @@
+This version of Telerik UI for WPF is protected according to https://docs.telerik.com/devtools/wpf/licensing/protecting-telerik-assembly and is only intended to be used by Hercules.

@@ -66,28 +66,28 @@
 
   <ItemGroup>
     <Reference Include="Telerik.Windows.Controls">
-      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.dll</HintPath>
+      <HintPath>..\Library\Telerik\Telerik.Windows.Controls.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Windows.Controls.Diagrams">
-      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.Diagrams.dll</HintPath>
+      <HintPath>..\Library\Telerik\Telerik.Windows.Controls.Diagrams.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Windows.Controls.Diagrams.Extensions">
-      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.Diagrams.Extensions.dll</HintPath>
+      <HintPath>..\Library\Telerik\Telerik.Windows.Controls.Diagrams.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Windows.Controls.GridView">
-      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.GridView.dll</HintPath>
+      <HintPath>..\Library\Telerik\Telerik.Windows.Controls.GridView.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Windows.Controls.Input">
-      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.Input.dll</HintPath>
+      <HintPath>..\Library\Telerik\Telerik.Windows.Controls.Input.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Windows.Controls.Navigation">
-      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Controls.Navigation.dll</HintPath>
+      <HintPath>..\Library\Telerik\Telerik.Windows.Controls.Navigation.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Windows.Data">
-      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Data.dll</HintPath>
+      <HintPath>..\Library\Telerik\Telerik.Windows.Data.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Windows.Diagrams.Core">
-      <HintPath>..\Library\Telerik.Core\Telerik.Windows.Diagrams.Core.dll</HintPath>
+      <HintPath>..\Library\Telerik\Telerik.Windows.Diagrams.Core.dll</HintPath>
     </Reference>
     <Reference Include="Igor.Runtime">
       <HintPath>..\Library\Igor.Runtime.dll</HintPath>
