@@ -34,7 +34,10 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Publish
-      run: dotnet publish Hercules\Hercules.csproj /p:PublishProfile=Hercules\Properties\PublishProfiles\PublishProfile.pubxml
+      run: dotnet publish Hercules\Hercules.csproj /p:PublishProfile=Hercules\Properties\PublishProfiles\PublishProfile.pubxml /p:BuildNumber=${{ github.run_number }} /p:Branch=stable
+
+    - name: Create rev.conf
+      run: echo "${{ github.run_number }}" > rev.conf
 
     - name: Inno Setup Action
       uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
@@ -46,4 +49,6 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       with:
         draft: ${{ inputs.draft }}
-        files: Setup/Output/hercules_setup.exe
+        files: |
+          Setup/Output/hercules_setup.exe
+          rev.conf

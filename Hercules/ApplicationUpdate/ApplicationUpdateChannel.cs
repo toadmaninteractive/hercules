@@ -7,8 +7,6 @@ namespace Hercules.ApplicationUpdate
     {
         Stable = 0,
         Beta = 1,
-        [Description("Development")]
-        Dev = 2,
     }
 
     public static class ApplicationUpdateChannelHelper
@@ -19,7 +17,6 @@ namespace Hercules.ApplicationUpdate
             {
                 ApplicationUpdateChannel.Stable => "stable",
                 ApplicationUpdateChannel.Beta => "beta",
-                ApplicationUpdateChannel.Dev => "dev",
                 _ => throw new ArgumentOutOfRangeException(nameof(channel))
             };
         }

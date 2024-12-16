@@ -51,7 +51,7 @@ namespace Hercules.ApplicationUpdate
         public async Task<ApplicationUpdateVersionInfo?> DownloadUpdateAsync(ApplicationUpdateChannel channel, IProgress<DownloadProgress> progress, CancellationToken ct = default)
         {
             int rev = Core.Revision;
-            string updateUrl = $"https://TODO/public/update/hercules/{channel.ToTag()}/";
+            string updateUrl = $"https://github.com/toadmaninteractive/hercules/releases/latest/download/";
 
             if (rev == 0 || string.IsNullOrEmpty(updateUrl))
                 return null;
