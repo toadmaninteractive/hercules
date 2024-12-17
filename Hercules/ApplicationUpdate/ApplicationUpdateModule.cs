@@ -73,7 +73,8 @@ namespace Hercules.ApplicationUpdate
 
         public void ShowOnlineHelp()
         {
-            Workspace.OpenExternalBrowser(new Uri($"https://toadman-hercules.readthedocs.io/latest/index.html"));
+            var branch = Core.Branch == "stable" ? "stable" : "latest";
+            Workspace.OpenExternalBrowser(new Uri($"https://toadman-hercules.readthedocs.io/{branch}/index.html"));
         }
 
         void NotifyAboutUpdate()

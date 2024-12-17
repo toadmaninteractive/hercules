@@ -2,7 +2,9 @@
 using System.Buffers;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
@@ -48,19 +50,38 @@ namespace Hercules.ApplicationUpdate
             }
         }
 
+#pragma warning disable IDE1006 // Naming Styles
+        private record GithubReleaseAsset(string name, string browser_download_url);
+        private record GithubRelease(string name, GithubReleaseAsset[] assets);
+#pragma warning restore IDE1006 // Naming Styles
+
         public async Task<ApplicationUpdateVersionInfo?> DownloadUpdateAsync(ApplicationUpdateChannel channel, IProgress<DownloadProgress> progress, CancellationToken ct = default)
         {
             int rev = Core.Revision;
             string updateUrl = $"https://github.com/toadmaninteractive/hercules/releases/latest/download/";
+            string? revConfUrl = updateUrl + "rev.conf";
+            string? herculesSetupUrl = updateUrl + "hercules_setup.exe";
 
-            if (rev == 0 || string.IsNullOrEmpty(updateUrl))
+            if (rev == 0)
                 return null;
 
             using var httpClient = HttpClientFactory.Create();
-            string remoteRev = (await httpClient.GetStringAsync(updateUrl + "rev.conf", ct).ConfigureAwait(false)).Trim();
+            httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
+            if (channel == ApplicationUpdateChannel.Beta)
+            {
+                var releases = await httpClient.GetFromJsonAsync<GithubRelease[]>("https://api.github.com/repos/toadmaninteractive/hercules/releases", ct);
+                var latestRelease = releases!.MaxBy(r => System.Version.Parse(r.name));
+                revConfUrl = latestRelease?.assets.FirstOrDefault(a => a.name == "rev.conf")?.browser_download_url;
+                herculesSetupUrl = latestRelease?.assets.FirstOrDefault(a => a.name == "hercules_setup.exe")?.browser_download_url;
+            }
+
+            if (string.IsNullOrEmpty(revConfUrl) || string.IsNullOrEmpty(herculesSetupUrl))
+                return null;
+
+            string remoteRev = (await httpClient.GetStringAsync(revConfUrl, ct).ConfigureAwait(false)).Trim();
             if (remoteRev != rev.ToString(CultureInfo.InvariantCulture))
             {
-                using HttpResponseMessage response = await httpClient.GetAsync(updateUrl + @"hercules_setup.exe", HttpCompletionOption.ResponseHeadersRead, ct).ConfigureAwait(false);
+                using HttpResponseMessage response = await httpClient.GetAsync(herculesSetupUrl, HttpCompletionOption.ResponseHeadersRead, ct).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
 
                 long? fileSize = response.Content.Headers.ContentLength;

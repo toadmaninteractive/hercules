@@ -60,8 +60,8 @@ namespace Hercules.Scripting
 
         void ShowScriptingReference()
         {
-            var updateChannel = Core.GetModule<ApplicationUpdateModule>().UpdateChannel;
-            Workspace.OpenExternalBrowser(new Uri($"https://TODO/hercules/{updateChannel.Value.ToTag()}/help/Manual/scripting/scripting-index.html"));
+            var branch = Core.Branch == "stable" ? "stable" : "latest";
+            Workspace.OpenExternalBrowser(new Uri($"https://toadman-hercules.readthedocs.io/{branch}/scripting/scripting-index.html"));
         }
 
         public ScriptContext CreateScriptContext()
