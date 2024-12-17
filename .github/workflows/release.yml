@@ -17,7 +17,7 @@ jobs:
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
-      Solution_Name: Hercules.sln
+      branch: ${{ inputs.prerelease && 'beta' || 'stable' }}
 
     steps:
     - name: Checkout
@@ -34,7 +34,7 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Publish
-      run: dotnet publish Hercules\Hercules.csproj /p:PublishProfile=Hercules\Properties\PublishProfiles\PublishProfile.pubxml /p:BuildNumber=${{ github.run_number }} /p:Branch=stable
+      run: dotnet publish Hercules\Hercules.csproj /p:PublishProfile=Hercules\Properties\PublishProfiles\PublishProfile.pubxml /p:BuildNumber=${{ github.run_number }} /p:Branch=${{ env.branch }}
 
     - name: Create rev.conf
       run: echo "${{ github.run_number }}" > rev.conf

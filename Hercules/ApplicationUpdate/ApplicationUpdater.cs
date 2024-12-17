@@ -52,23 +52,33 @@ namespace Hercules.ApplicationUpdate
 
 #pragma warning disable IDE1006 // Naming Styles
         private record GithubReleaseAsset(string name, string browser_download_url);
-        private record GithubRelease(string name, GithubReleaseAsset[] assets);
+        private record GithubRelease(string name, GithubReleaseAsset[] assets, string html_url);
 #pragma warning restore IDE1006 // Naming Styles
 
         public async Task<ApplicationUpdateVersionInfo?> DownloadUpdateAsync(ApplicationUpdateChannel channel, IProgress<DownloadProgress> progress, CancellationToken ct = default)
         {
             int rev = Core.Revision;
+            string updateUrl = $"https://github.com/toadmaninteractive/hercules/releases/latest/download/";
+            string? revConfUrl = updateUrl + "rev.conf";
+            string? herculesSetupUrl = updateUrl + "hercules_setup.exe";
+            string? releaseNotesUri = "https://github.com/toadmaninteractive/hercules/releases/latest";
+
             if (rev == 0)
                 return null;
 
-            string updateUrl =
-                channel == ApplicationUpdateChannel.Stable ?
-                    "https://github.com/toadmaninteractive/hercules/releases/latest/download/"
-                    : "https://github.com/toadmaninteractive/hercules/releases/beta/download/";
-            string revConfUrl = updateUrl + "rev.conf";
-            string herculesSetupUrl = updateUrl + "hercules_setup.exe";
-
             using var httpClient = HttpClientFactory.Create();
+            httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
+            if (channel == ApplicationUpdateChannel.Beta)
+            {
+                var releases = await httpClient.GetFromJsonAsync<GithubRelease[]>("https://api.github.com/repos/toadmaninteractive/hercules/releases", ct);
+                var latestRelease = releases!.MaxBy(r => System.Version.Parse(r.name));
+                revConfUrl = latestRelease?.assets.FirstOrDefault(a => a.name == "rev.conf")?.browser_download_url;
+                herculesSetupUrl = latestRelease?.assets.FirstOrDefault(a => a.name == "hercules_setup.exe")?.browser_download_url;
+                releaseNotesUri = latestRelease?.html_url;
+            }
+
+            if (string.IsNullOrEmpty(revConfUrl) || string.IsNullOrEmpty(herculesSetupUrl))
+                return null;
 
             string remoteRev = (await httpClient.GetStringAsync(revConfUrl, ct).ConfigureAwait(false)).Trim();
             if (remoteRev != rev.ToString(CultureInfo.InvariantCulture))
@@ -106,8 +116,7 @@ namespace Hercules.ApplicationUpdate
                     while (true);
                 }
 
-                var releaseNotesUri = channel == ApplicationUpdateChannel.Stable ? new Uri($"https://github.com/toadmaninteractive/hercules/releases/latest") : new Uri($"https://github.com/toadmaninteractive/hercules/releases/beta");
-                return new ApplicationUpdateVersionInfo(releaseNotesUri, remoteRev, tempFileName);
+                return new ApplicationUpdateVersionInfo(new Uri(releaseNotesUri!), remoteRev, tempFileName);
             }
             else
             {
