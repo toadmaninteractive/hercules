@@ -58,25 +58,17 @@ namespace Hercules.ApplicationUpdate
         public async Task<ApplicationUpdateVersionInfo?> DownloadUpdateAsync(ApplicationUpdateChannel channel, IProgress<DownloadProgress> progress, CancellationToken ct = default)
         {
             int rev = Core.Revision;
-            string updateUrl = $"https://github.com/toadmaninteractive/hercules/releases/latest/download/";
-            string? revConfUrl = updateUrl + "rev.conf";
-            string? herculesSetupUrl = updateUrl + "hercules_setup.exe";
-
             if (rev == 0)
                 return null;
 
-            using var httpClient = HttpClientFactory.Create();
-            httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
-            if (channel == ApplicationUpdateChannel.Beta)
-            {
-                var releases = await httpClient.GetFromJsonAsync<GithubRelease[]>("https://api.github.com/repos/toadmaninteractive/hercules/releases", ct);
-                var latestRelease = releases!.MaxBy(r => System.Version.Parse(r.name));
-                revConfUrl = latestRelease?.assets.FirstOrDefault(a => a.name == "rev.conf")?.browser_download_url;
-                herculesSetupUrl = latestRelease?.assets.FirstOrDefault(a => a.name == "hercules_setup.exe")?.browser_download_url;
-            }
+            string updateUrl =
+                channel == ApplicationUpdateChannel.Stable ?
+                    "https://github.com/toadmaninteractive/hercules/releases/latest/download/"
+                    : "https://github.com/toadmaninteractive/hercules/releases/beta/download/";
+            string revConfUrl = updateUrl + "rev.conf";
+            string herculesSetupUrl = updateUrl + "hercules_setup.exe";
 
-            if (string.IsNullOrEmpty(revConfUrl) || string.IsNullOrEmpty(herculesSetupUrl))
-                return null;
+            using var httpClient = HttpClientFactory.Create();
 
             string remoteRev = (await httpClient.GetStringAsync(revConfUrl, ct).ConfigureAwait(false)).Trim();
             if (remoteRev != rev.ToString(CultureInfo.InvariantCulture))
@@ -114,7 +106,7 @@ namespace Hercules.ApplicationUpdate
                     while (true);
                 }
 
-                var releaseNotesUri = new Uri($"https://github.com/toadmaninteractive/hercules/releases/latest");
+                var releaseNotesUri = channel == ApplicationUpdateChannel.Stable ? new Uri($"https://github.com/toadmaninteractive/hercules/releases/latest") : new Uri($"https://github.com/toadmaninteractive/hercules/releases/beta");
                 return new ApplicationUpdateVersionInfo(releaseNotesUri, remoteRev, tempFileName);
             }
             else

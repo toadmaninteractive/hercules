@@ -1,13 +1,7 @@
-name: Release Hercules
+name: Release Hercules Beta
 
 on:
   workflow_dispatch:
-    inputs:
-      prerelease:
-        description: 'Prerelease'
-        required: true
-        default: true
-        type: boolean
 
 jobs:
 
@@ -34,7 +28,7 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Publish
-      run: dotnet publish Hercules\Hercules.csproj /p:PublishProfile=Hercules\Properties\PublishProfiles\PublishProfile.pubxml /p:BuildNumber=${{ github.run_number }} /p:Branch=stable
+      run: dotnet publish Hercules\Hercules.csproj /p:PublishProfile=Hercules\Properties\PublishProfiles\PublishProfile.pubxml /p:BuildNumber=${{ github.run_number }} /p:Branch=beta
 
     - name: Create rev.conf
       run: echo "${{ github.run_number }}" > rev.conf
@@ -46,9 +40,9 @@ jobs:
 
     - name: Release
       uses: softprops/action-gh-release@v2
-      if: startsWith(github.ref, 'refs/tags/')
       with:
-        prerelease: ${{ inputs.prerelease }}
+        prerelease: true
+        name: beta
         files: |
           Setup/Output/hercules_setup.exe
           rev.conf
