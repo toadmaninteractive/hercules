@@ -93,7 +93,7 @@ namespace Hercules.ApplicationUpdate
                     while (true);
                 }
 
-                var releaseNotesUri = new Uri($"https://TODO/hercules/{channel.ToTag()}/help/ReleaseNotes.html");
+                var releaseNotesUri = new Uri($"https://github.com/toadmaninteractive/hercules/releases/latest");
                 return new ApplicationUpdateVersionInfo(releaseNotesUri, remoteRev, tempFileName);
             }
             else
