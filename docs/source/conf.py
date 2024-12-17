@@ -20,13 +20,13 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Hercules Manual'
-copyright = '2023, Toadman Interactive'
+copyright = '2024, Toadman Interactive'
 author = 'Toadman technical writers'
 
 # The short X.Y version
 version = '2.3'
 # The full version, including alpha/beta/rc tags
-release = '2.3.1'
+release = '2.3.2'
 
 
 # -- General configuration ---------------------------------------------------

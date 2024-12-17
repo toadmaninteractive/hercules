@@ -13,7 +13,7 @@
             <TextBlock Margin="0,10,0,0" FontSize="12" VerticalAlignment="Top" Foreground="DarkSlateGray">CouchDB document editor</TextBlock>
             <TextBlock Margin="0,2,0,0" Text="{Binding Version}" FontSize="12" Foreground="DarkSlateGray" />
             <TextBlock Margin="0,12,0,0" FontSize="12" Foreground="DarkSlateGray">© 2012-2017 Artplant</TextBlock>
-            <TextBlock Margin="0,0,0,0" FontSize="12" Foreground="DarkSlateGray">© 2018-2023 Toadman Interactive</TextBlock>
+            <TextBlock Margin="0,0,0,0" FontSize="12" Foreground="DarkSlateGray">© 2018-2024 Toadman Interactive</TextBlock>
             <TextBlock Margin="0,12,0,0" FontSize="12" Foreground="DarkSlateGray">Fugue Icons by <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="http://p.yusukekamiyamane.com/">Yusuke Kamiyamane</Hyperlink></TextBlock>
             <TextBlock TextWrapping="Wrap" Margin="0,2,10,0" FontSize="12" Foreground="DarkSlateGray"> Licensed under a <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</Hyperlink></TextBlock>
         </StackPanel>
