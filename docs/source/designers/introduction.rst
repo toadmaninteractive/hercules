@@ -102,6 +102,6 @@ To use Hercules, your machine must be running Windows 10.
 
 This is how you install Hercules:
 
-1. Get Hercules at TODO.
+1. Get Hercules at https://github.com/toadmaninteractive/hercules/releases/latest/download/hercules_setup.exe.
 
 2. Run the executable and install the program.
