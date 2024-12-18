@@ -3,6 +3,7 @@ using ICSharpCode.AvalonEdit;
 using JsonDiff;
 using Microsoft.Xaml.Behaviors;
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows;
 
@@ -42,7 +43,7 @@ namespace Hercules.Controls
             }
             if (newChunks != null)
             {
-                subscription = newChunks.WhenChanged.Throttle(TimeSpan.FromSeconds(0.1)).ObserveOnDispatcher().Subscribe(_ => Update());
+                subscription = newChunks.WhenChanged.Throttle(TimeSpan.FromSeconds(0.1)).ObserveOn(DispatcherScheduler.Current).Subscribe(_ => Update());
             }
         }
 
