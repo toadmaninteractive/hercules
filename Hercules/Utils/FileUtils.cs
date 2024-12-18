@@ -1,4 +1,5 @@
 ﻿using Json;
+using Pfim;
 using System;
 using System.Buffers;
 using System.Diagnostics;
@@ -34,7 +35,7 @@ namespace Hercules
             ArgumentNullException.ThrowIfNull(fileName);
             if (Path.GetExtension(fileName).Equals(".tga", StringComparison.OrdinalIgnoreCase))
             {
-                var pfimImage = Pfim.Pfim.FromFile(fileName);
+                var pfimImage = Pfimage.FromFile(fileName);
                 var pinnedArray = GCHandle.Alloc(pfimImage.Data, GCHandleType.Pinned);
                 var addr = pinnedArray.AddrOfPinnedObject();
                 var bsource = BitmapSource.Create(pfimImage.Width, pfimImage.Height, 96.0, 96.0,
@@ -69,7 +70,7 @@ namespace Hercules
             ArgumentNullException.ThrowIfNull(stream);
             if (ext.Equals(".tga", StringComparison.OrdinalIgnoreCase))
             {
-                var pfimImage = Pfim.Pfim.FromStream(stream);
+                var pfimImage = Pfimage.FromStream(stream);
                 var pinnedArray = GCHandle.Alloc(pfimImage.Data, GCHandleType.Pinned);
                 var addr = pinnedArray.AddrOfPinnedObject();
                 var bsource = BitmapSource.Create(pfimImage.Width, pfimImage.Height, 96.0, 96.0,
