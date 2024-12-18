@@ -1,4 +1,4 @@
-name: Build Installer
+name: Build and Test
 
 on:
   workflow_dispatch:
@@ -25,19 +25,9 @@ jobs:
       with:
         dotnet-version: 9.0.x
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
-
     # Execute all unit tests in the solution
     - name: Execute unit tests
       run: dotnet test
-
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: Release
 
     - name: Publish
       run: dotnet publish Hercules\Hercules.csproj /p:PublishProfile=Hercules\Properties\PublishProfiles\PublishProfile.pubxml
@@ -47,9 +37,3 @@ jobs:
       with:
         path: Setup/Hercules.iss
 
-    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: Hercules Installer
-        path: Setup\Output\hercules_setup.exe
