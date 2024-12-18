@@ -396,7 +396,7 @@ namespace Hercules.Summary
                                         if (col.Value.Type.Type == typeof(int))
                                             tableCell.ObjectValue = (int)cell.NumericCellValue;
                                         else if (col.Value.Type.Type == typeof(DateTime))
-                                            tableCell.ObjectValue = TimeZoneInfo.ConvertTimeToUtc(DateTime.SpecifyKind(cell.DateCellValue, DateTimeKind.Unspecified), timeZone);
+                                            tableCell.ObjectValue = TimeZoneInfo.ConvertTimeToUtc(DateTime.SpecifyKind(cell.DateCellValue.GetValueOrDefault(), DateTimeKind.Unspecified), timeZone);
                                         else
                                             tableCell.ObjectValue = cell.NumericCellValue;
                                         break;
