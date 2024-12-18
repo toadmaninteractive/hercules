@@ -7,7 +7,7 @@ namespace Hercules
     {
         public static void Track(this Task task)
         {
-            ArgumentNullException.ThrowIfNull(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
             task.ContinueWith(HandleException, TaskScheduler.Default);
         }
 

@@ -36,7 +36,7 @@ namespace Hercules
         {
             if (notificationMode != NotifyCollectionChangedAction.Add && notificationMode != NotifyCollectionChangedAction.Reset)
                 throw new ArgumentException("Mode must be either Add or Reset for AddRange.", nameof(notificationMode));
-            ArgumentNullException.ThrowIfNull(nameof(collection));
+            ArgumentNullException.ThrowIfNull(collection);
 
             CheckReentrancy();
 
@@ -69,7 +69,7 @@ namespace Hercules
         {
             if (notificationMode != NotifyCollectionChangedAction.Remove && notificationMode != NotifyCollectionChangedAction.Reset)
                 throw new ArgumentException("Mode must be either Remove or Reset for RemoveRange.", nameof(notificationMode));
-            ArgumentNullException.ThrowIfNull(nameof(collection));
+            ArgumentNullException.ThrowIfNull(collection);
 
             CheckReentrancy();
 
@@ -108,7 +108,7 @@ namespace Hercules
         /// </summary>
         public void ReplaceRange(IEnumerable<T> collection)
         {
-            ArgumentNullException.ThrowIfNull(nameof(collection));
+            ArgumentNullException.ThrowIfNull(collection);
 
             Items.Clear();
             AddRange(collection, NotifyCollectionChangedAction.Reset);

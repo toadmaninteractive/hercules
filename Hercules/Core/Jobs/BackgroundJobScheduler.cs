@@ -25,7 +25,7 @@ namespace Hercules
 
         public async Task<T> Schedule<T>(Func<Task<T>> task, string title, CancellationToken cancellationToken)
         {
-            ArgumentNullException.ThrowIfNull(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
             var job = new BackgroundJob(title);
             try
             {
@@ -46,7 +46,7 @@ namespace Hercules
 
         public async Task Schedule(Func<Task> task, string title, CancellationToken cancellationToken)
         {
-            ArgumentNullException.ThrowIfNull(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
             var job = new BackgroundJob(title);
             try
             {

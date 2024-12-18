@@ -70,7 +70,7 @@ namespace Hercules.Shortcuts
 
         private static T ValidateShortcut(IShortcut shortcut)
         {
-            ArgumentNullException.ThrowIfNull(nameof(shortcut));
+            ArgumentNullException.ThrowIfNull(shortcut);
             if (!(shortcut is T))
                 throw new ArgumentOutOfRangeException(nameof(shortcut));
             return (T)shortcut;

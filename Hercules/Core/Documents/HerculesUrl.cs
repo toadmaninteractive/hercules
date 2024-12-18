@@ -17,7 +17,7 @@ namespace Hercules.Documents
 
         public static string GetUrl(DbConnection connection, IDocument document)
         {
-            ArgumentNullException.ThrowIfNull(nameof(connection));
+            ArgumentNullException.ThrowIfNull(connection);
             var url = MakeHerculesUrl(connection.Url);
             if (!url.EndsWith(@"/", StringComparison.Ordinal))
                 url += @"/";
@@ -26,7 +26,7 @@ namespace Hercules.Documents
 
         public static string GetDatabaseUrl(DbConnection connection)
         {
-            ArgumentNullException.ThrowIfNull(nameof(connection));
+            ArgumentNullException.ThrowIfNull(connection);
             var url = MakeHerculesUrl(connection.Url);
             if (!url.EndsWith(@"/", StringComparison.Ordinal))
                 url += @"/";
@@ -35,8 +35,8 @@ namespace Hercules.Documents
 
         public static bool IsSuitableConnection(DbConnection connection, Uri herculesUri)
         {
-            ArgumentNullException.ThrowIfNull(nameof(connection));
-            ArgumentNullException.ThrowIfNull(nameof(herculesUri));
+            ArgumentNullException.ThrowIfNull(connection);
+            ArgumentNullException.ThrowIfNull(herculesUri);
             var connectionUri = connection.Url;
             if (string.Compare(herculesUri.Host, connectionUri.Host, StringComparison.OrdinalIgnoreCase) != 0)
                 return false;
@@ -54,7 +54,7 @@ namespace Hercules.Documents
 
         public static string? DocumentId(Uri uri)
         {
-            ArgumentNullException.ThrowIfNull(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
             if (uri.Segments.Length > 2)
                 return uri.Segments[2].TrimEnd('/');
             else
@@ -63,7 +63,7 @@ namespace Hercules.Documents
 
         public static string? Database(Uri uri)
         {
-            ArgumentNullException.ThrowIfNull(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
             if (uri.Segments.Length > 1)
                 return uri.Segments[1].TrimEnd('/');
             else

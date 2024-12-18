@@ -30,7 +30,7 @@ namespace CouchDB
 
         public static async Task<T> GetJsonResponseAsync<T>(this HttpContent content, IJsonSerializer<T> serializer, CancellationToken cancellationToken)
         {
-            ArgumentNullException.ThrowIfNull(nameof(serializer));
+            ArgumentNullException.ThrowIfNull(serializer);
 
             return serializer.Deserialize(await content.GetJsonResponseAsync(cancellationToken).ConfigureAwait(false));
         }

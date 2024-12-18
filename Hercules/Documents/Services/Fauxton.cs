@@ -7,7 +7,7 @@ namespace Hercules.Documents
     {
         public static Uri GetUrl(DbConnection connection, string documentId, bool includeAuth)
         {
-            ArgumentNullException.ThrowIfNull(nameof(connection));
+            ArgumentNullException.ThrowIfNull(connection);
             var uriBuilder = new UriBuilder(connection.Url);
             uriBuilder.Path = uriBuilder.Path.TrimEnd('/') + "/_utils/";
             uriBuilder.Fragment += $"database/{connection.Database}/{documentId}";

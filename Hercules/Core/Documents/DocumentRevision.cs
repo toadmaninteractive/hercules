@@ -14,8 +14,8 @@ namespace Hercules.Documents
 
         public DocumentRevision(ImmutableJsonObject json, IReadOnlyList<AttachmentRevision> attachments)
         {
-            ArgumentNullException.ThrowIfNull(nameof(json));
-            ArgumentNullException.ThrowIfNull(nameof(attachments));
+            ArgumentNullException.ThrowIfNull(json);
+            ArgumentNullException.ThrowIfNull(attachments);
             Json = json;
             Attachments = attachments;
             Rev = CouchUtils.GetRevision(Json);

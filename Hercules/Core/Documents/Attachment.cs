@@ -47,8 +47,8 @@ namespace Hercules.Documents
 
         public static AttachmentDraft CopyFrom(Attachment source, TempStorage tempStorage)
         {
-            ArgumentNullException.ThrowIfNull(nameof(source));
-            ArgumentNullException.ThrowIfNull(nameof(tempStorage));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(tempStorage);
             if (!source.File.IsLoaded)
                 throw new InvalidOperationException("Source file is not loaded");
 

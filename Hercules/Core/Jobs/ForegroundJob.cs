@@ -46,7 +46,7 @@ namespace Hercules
 
         public async Task Run(string title, Func<IProgress<string>, CancellationToken, Task> task)
         {
-            ArgumentNullException.ThrowIfNull(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
             var progress = new Progress<string>(str => Status = str);
             var cancellationTokenSource = new CancellationTokenSource();
             this.title = title;

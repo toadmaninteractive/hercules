@@ -7,9 +7,9 @@ namespace Hercules
     {
         public static void Add(this CommandBindingCollection commandBindings, RoutedCommand source, ICommand target)
         {
-            ArgumentNullException.ThrowIfNull(nameof(commandBindings));
-            ArgumentNullException.ThrowIfNull(nameof(source));
-            ArgumentNullException.ThrowIfNull(nameof(target));
+            ArgumentNullException.ThrowIfNull(commandBindings);
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(target);
 
             var binding = new CommandBinding(
                 source,
@@ -28,9 +28,9 @@ namespace Hercules
 
         public static void Add(this CommandBindingCollection commandBindings, RoutedCommand source, Action execute)
         {
-            ArgumentNullException.ThrowIfNull(nameof(commandBindings));
-            ArgumentNullException.ThrowIfNull(nameof(source));
-            ArgumentNullException.ThrowIfNull(nameof(execute));
+            ArgumentNullException.ThrowIfNull(commandBindings);
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(execute);
 
             var binding = new CommandBinding(
                 source,
@@ -44,10 +44,10 @@ namespace Hercules
 
         public static void Add(this CommandBindingCollection commandBindings, RoutedCommand source, Action execute, Func<bool> canExecute)
         {
-            ArgumentNullException.ThrowIfNull(nameof(commandBindings));
-            ArgumentNullException.ThrowIfNull(nameof(source));
-            ArgumentNullException.ThrowIfNull(nameof(execute));
-            ArgumentNullException.ThrowIfNull(nameof(canExecute));
+            ArgumentNullException.ThrowIfNull(commandBindings);
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(execute);
+            ArgumentNullException.ThrowIfNull(canExecute);
 
             var binding = new CommandBinding(
                 source,
@@ -66,10 +66,10 @@ namespace Hercules
 
         public static void Add<T>(this CommandBindingCollection commandBindings, RoutedCommand source, ICommand<T> target, ICommandContext context) where T : class
         {
-            ArgumentNullException.ThrowIfNull(nameof(commandBindings));
-            ArgumentNullException.ThrowIfNull(nameof(source));
-            ArgumentNullException.ThrowIfNull(nameof(target));
-            ArgumentNullException.ThrowIfNull(nameof(context));
+            ArgumentNullException.ThrowIfNull(commandBindings);
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(target);
+            ArgumentNullException.ThrowIfNull(context);
 
             Add(commandBindings, source, target.ForContext(context));
         }

@@ -40,7 +40,7 @@ namespace Hercules.DB.Tests
 
         public string? ReadRevision(string docId)
         {
-            ArgumentNullException.ThrowIfNull(nameof(docId));
+            ArgumentNullException.ThrowIfNull(docId);
 
             return revisions.GetValueOrDefault(docId);
         }
@@ -54,15 +54,15 @@ namespace Hercules.DB.Tests
 
         public ImmutableJsonObject? TryReadDocument(string docId, string revision)
         {
-            ArgumentNullException.ThrowIfNull(nameof(docId));
-            ArgumentNullException.ThrowIfNull(nameof(revision));
+            ArgumentNullException.ThrowIfNull(docId);
+            ArgumentNullException.ThrowIfNull(revision);
 
             return entries.FirstOrDefault(entry => entry.DocumentId == docId && entry.Revision == revision)?.Data;
         }
 
         public void WriteDocument(ImmutableJsonObject data)
         {
-            ArgumentNullException.ThrowIfNull(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
 
             var id = CouchUtils.GetId(data);
             var revision = CouchUtils.GetRevision(data);
@@ -73,8 +73,8 @@ namespace Hercules.DB.Tests
 
         public void WriteRevision(string docId, string revision)
         {
-            ArgumentNullException.ThrowIfNull(nameof(docId));
-            ArgumentNullException.ThrowIfNull(nameof(revision));
+            ArgumentNullException.ThrowIfNull(docId);
+            ArgumentNullException.ThrowIfNull(revision);
 
             revisions[docId] = revision;
         }

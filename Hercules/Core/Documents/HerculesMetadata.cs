@@ -27,7 +27,7 @@ namespace Hercules.Documents
     {
         public HerculesMetadata Deserialize(ImmutableJson json)
         {
-            ArgumentNullException.ThrowIfNull(nameof(json));
+            ArgumentNullException.ThrowIfNull((json));
 
             if (!json.IsObject)
                 return HerculesMetadata.Empty;

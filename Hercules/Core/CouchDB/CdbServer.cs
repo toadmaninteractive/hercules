@@ -51,7 +51,7 @@ namespace CouchDB
 
         public async Task CreateDatabaseAsync(string dbname, CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(nameof(dbname));
+            ArgumentNullException.ThrowIfNull(dbname);
             var response = await HttpClient.PutAsync(dbname, null!, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             var result = (await response.Content.GetJsonResponseAsync(cancellationToken).ConfigureAwait(false)).AsObject;
@@ -61,7 +61,7 @@ namespace CouchDB
 
         public async Task DeleteDatabaseAsync(string dbname, CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(nameof(dbname));
+            ArgumentNullException.ThrowIfNull(dbname);
             var response = await HttpClient.DeleteAsync(dbname, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
             var result = (await response.Content.GetJsonResponseAsync(cancellationToken).ConfigureAwait(false)).AsObject;

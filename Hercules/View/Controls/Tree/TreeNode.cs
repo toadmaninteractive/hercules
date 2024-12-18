@@ -27,7 +27,7 @@ namespace Hercules.Controls.Tree
 
             protected override void InsertItem(int index, TreeNode item)
             {
-                ArgumentNullException.ThrowIfNull(nameof(item));
+                ArgumentNullException.ThrowIfNull(item);
 
                 if (item.Parent != owner)
                 {
@@ -52,7 +52,7 @@ namespace Hercules.Controls.Tree
 
             protected override void SetItem(int index, TreeNode item)
             {
-                ArgumentNullException.ThrowIfNull(nameof(item));
+                ArgumentNullException.ThrowIfNull(item);
                 RemoveAt(index);
                 InsertItem(index, item);
             }
@@ -235,7 +235,7 @@ namespace Hercules.Controls.Tree
 
         internal TreeNode(TreeList tree, object? tag)
         {
-            ArgumentNullException.ThrowIfNull(nameof(tree));
+            ArgumentNullException.ThrowIfNull(tree);
 
             this.Tree = tree;
             this.Children = new NodeCollection(this);

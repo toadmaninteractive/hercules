@@ -25,7 +25,7 @@ namespace Hercules.DB
 
         public DatabaseCache(string path)
         {
-            ArgumentNullException.ThrowIfNull(nameof(path));
+            ArgumentNullException.ThrowIfNull(path);
 
             RootPath = path;
             DesignPath = GetPath("_design");
@@ -83,8 +83,8 @@ namespace Hercules.DB
 
         public void WriteRevision(string docId, string revision)
         {
-            ArgumentNullException.ThrowIfNull(nameof(docId));
-            ArgumentNullException.ThrowIfNull(nameof(revision));
+            ArgumentNullException.ThrowIfNull(docId);
+            ArgumentNullException.ThrowIfNull(revision);
 
             EnsureDirectory(docId);
             File.WriteAllText(GetPath(docId, FilenameRevision), revision);
@@ -92,7 +92,7 @@ namespace Hercules.DB
 
         public string? ReadRevision(string docId)
         {
-            ArgumentNullException.ThrowIfNull(nameof(docId));
+            ArgumentNullException.ThrowIfNull(docId);
 
             var path = GetPath(docId, FilenameRevision);
             if (File.Exists(path))
@@ -103,7 +103,7 @@ namespace Hercules.DB
 
         public void WriteDocument(ImmutableJsonObject data)
         {
-            ArgumentNullException.ThrowIfNull(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
 
             var id = CouchUtils.GetId(data);
             var revision = CouchUtils.GetRevision(data);
@@ -113,8 +113,8 @@ namespace Hercules.DB
 
         public ImmutableJsonObject? TryReadDocument(string docId, string revision)
         {
-            ArgumentNullException.ThrowIfNull(nameof(docId));
-            ArgumentNullException.ThrowIfNull(nameof(revision));
+            ArgumentNullException.ThrowIfNull(docId);
+            ArgumentNullException.ThrowIfNull(revision);
 
             var path = GetPath(docId, revision);
             if (File.Exists(path))
@@ -139,7 +139,7 @@ namespace Hercules.DB
 
         public void DeleteDocument(string docId)
         {
-            ArgumentNullException.ThrowIfNull(nameof(docId));
+            ArgumentNullException.ThrowIfNull(docId);
 
             Directory.Delete(GetPath(docId), true);
         }

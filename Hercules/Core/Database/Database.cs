@@ -180,7 +180,7 @@ namespace Hercules.DB
 
         public async Task DeleteDocumentAsync(IDocument document)
         {
-            ArgumentNullException.ThrowIfNull(nameof(document));
+            ArgumentNullException.ThrowIfNull(document);
             if (!(document is DatabaseDocument dbDocument))
                 throw new ArgumentException($"Document is not a {nameof(DatabaseDocument)}", nameof(document));
             if (!document.IsExisting)
@@ -208,11 +208,11 @@ namespace Hercules.DB
 
         public async Task SaveDocumentAsync(IDocument document, DocumentDraft draft, MetadataDraft metadataDraft)
         {
-            ArgumentNullException.ThrowIfNull(nameof(document));
+            ArgumentNullException.ThrowIfNull(document);
             if (!(document is DatabaseDocument dbDocument))
                 throw new ArgumentException($"Document is not a {nameof(DatabaseDocument)}", nameof(document));
-            ArgumentNullException.ThrowIfNull(nameof(draft));
-            ArgumentNullException.ThrowIfNull(nameof(metadataDraft));
+            ArgumentNullException.ThrowIfNull(draft);
+            ArgumentNullException.ThrowIfNull(metadataDraft);
 
             var shortcut = new DocumentShortcut(document.DocumentId);
             Logger.Log($"Saving document <{document.DocumentId}>", shortcut);

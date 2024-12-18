@@ -46,7 +46,7 @@ namespace Hercules.Controls.AvalonEdit
 
         public BracketHighlightRenderer(TextView textView)
         {
-            ArgumentNullException.ThrowIfNull(nameof(textView));
+            ArgumentNullException.ThrowIfNull(textView);
 
             this.textView = textView;
             this.UpdateColors(DefaultBackground, DefaultBorder);

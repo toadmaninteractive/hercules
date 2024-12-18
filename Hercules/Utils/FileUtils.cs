@@ -31,7 +31,7 @@ namespace Hercules
 
         public static BitmapSource LoadImageFromFile(string fileName)
         {
-            ArgumentNullException.ThrowIfNull(nameof(fileName));
+            ArgumentNullException.ThrowIfNull(fileName);
             if (Path.GetExtension(fileName).Equals(".tga", StringComparison.OrdinalIgnoreCase))
             {
                 var pfimImage = Pfim.Pfim.FromFile(fileName);
@@ -66,7 +66,7 @@ namespace Hercules
 
         public static BitmapSource LoadImageFromStream(Stream stream, string ext)
         {
-            ArgumentNullException.ThrowIfNull(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
             if (ext.Equals(".tga", StringComparison.OrdinalIgnoreCase))
             {
                 var pfimImage = Pfim.Pfim.FromStream(stream);

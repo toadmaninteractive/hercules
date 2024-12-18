@@ -43,7 +43,7 @@ namespace Hercules
     {
         public static ICommand If(this ICommand command, Func<bool> condition)
         {
-            ArgumentNullException.ThrowIfNull(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             if (command is RelayCommand relay)
             {
@@ -58,7 +58,7 @@ namespace Hercules
 
         public static ICommand<T> If<T>(this ICommand<T> command, Predicate<T> condition)
         {
-            ArgumentNullException.ThrowIfNull(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             if (command is RelayCommand<T> relay)
             {
@@ -73,7 +73,7 @@ namespace Hercules
 
         public static ICommand<T> If<T>(this ICommand<T> command, Func<bool> condition)
         {
-            ArgumentNullException.ThrowIfNull(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             if (command is RelayCommand<T> relay)
             {
@@ -88,7 +88,7 @@ namespace Hercules
 
         public static ICommand<T> IfNotNull<T>(this ICommand<T> command) where T : class
         {
-            ArgumentNullException.ThrowIfNull(nameof(command));
+            ArgumentNullException.ThrowIfNull(command);
 
             if (command is RelayCommand<T> relay)
             {
