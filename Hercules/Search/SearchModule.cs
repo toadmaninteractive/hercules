@@ -29,7 +29,6 @@ namespace Hercules.Search
         }
 
         public IBulkCommand<IDocument> FindReferencesCommand { get; }
-        public IBulkCommand<IDocument> ReferenceGraphCommand { get; }
 
         public SearchTool SearchTool { get; }
         public SearchResultsTool SearchResultsTool { get; }
