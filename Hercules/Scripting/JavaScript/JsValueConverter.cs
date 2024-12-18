@@ -55,13 +55,13 @@ namespace Hercules.Scripting.JavaScript
                 return new JsNumber(json.AsNumber);
             if (json.IsArray)
             {
-                var jsArray = engine.Realm.Intrinsics.Array.Construct(Arguments.Empty);
-                engine.Realm.Intrinsics.Array.PrototypeObject.Push(jsArray, json.AsArray.Select(i => FromJsonValue(i, engine)).ToArray());
+                var jsArray = engine.Intrinsics.Array.Construct(Arguments.Empty);
+                engine.Intrinsics.Array.PrototypeObject.Push(jsArray, json.AsArray.Select(i => FromJsonValue(i, engine)).ToArray());
                 return jsArray;
             }
             if (json.IsObject)
             {
-                var jsObject = engine.Realm.Intrinsics.Object.Construct(Arguments.Empty);
+                var jsObject = engine.Intrinsics.Object.Construct(Arguments.Empty);
                 foreach (var pair in json.AsObject)
                 {
                     var value = FromJsonValue(pair.Value, engine);

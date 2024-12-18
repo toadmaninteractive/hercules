@@ -1,5 +1,4 @@
-﻿using Esprima;
-using Esprima.Ast;
+﻿using Acornima;
 using Hercules.Documents;
 using Hercules.Forms.Schema;
 using System;
@@ -21,7 +20,7 @@ namespace Hercules.Scripting
         private readonly IReadOnlyList<CompletionData> enums;
         private readonly IReadOnlyList<IDocument> documents;
 
-        private static readonly JavaScriptParser parser = new JavaScriptParser(new ParserOptions { Tolerant = true, Tokens = true });
+        private static readonly Acornima.Parser parser = new Acornima.Parser(new ParserOptions { Tolerant = true });
 
         public CodeCompletionStrategy(IReadOnlyList<IDocument> documents, FormSchema? schema)
         {
@@ -50,9 +49,8 @@ namespace Hercules.Scripting
 
         private bool Tokenize(string code, out IReadOnlyList<Token> tokens)
         {
-            var scanner = new Scanner(code, new ScannerOptions
+            var scanner = new Acornima.Tokenizer(code, new TokenizerOptions
             {
-                Comments = true,
                 Tolerant = true,
             });
 
@@ -60,23 +58,23 @@ namespace Hercules.Scripting
             tokens = result;
             try
             {
-                scanner.ScanComments();
-                Token token = scanner.Lex();
-                while (token.Type != TokenType.EOF)
+                scanner.Next();
+                Token token = scanner.Current;
+                while (token.Kind != TokenKind.EOF)
                 {
                     result.Add(token);
-                    scanner.ScanComments();
-                    token = scanner.Lex();
+                    scanner.Next();
+                    token = scanner.Current;
                 }
                 return result.Count > 0;
             }
-            catch (ParserException)
+            catch (Acornima.ParseErrorException)
             {
                 return false;
             }
         }
 
-        private Script? cachedScript;
+        private Acornima.Ast.Script? cachedScript;
 
         private enum CompletionContextKind
         {
@@ -88,7 +86,7 @@ namespace Hercules.Scripting
 
         private static bool IsDot(in Token token)
         {
-            return token.Type == TokenType.Punctuator && token.Value is ".";
+            return token.Kind == TokenKind.Punctuator && token.Value is ".";
         }
 
         public bool SuggestCompletion(TextDocument textDocument, int caretOffset, CompletionDataList result, [MaybeNullWhen(false)] out string prefix)
@@ -99,7 +97,7 @@ namespace Hercules.Scripting
             {
                 cachedScript = parser.ParseScript(textDocument.Text);
             }
-            catch (ParserException)
+            catch (Acornima.ParseErrorException)
             {
             }
 
@@ -116,7 +114,7 @@ namespace Hercules.Scripting
                 // foreach (var token in tokens)
                 //     Logger.LogDebug(token.ToString());
                 var lastToken = tokens[^1];
-                if (lastToken.Type == TokenType.Identifier && lastToken.End == line.Length)
+                if (lastToken.Kind == TokenKind.Identifier && lastToken.End == line.Length)
                 {
                     // Potentially incomplete identifier
                     prefix = (string)lastToken.Value!;
@@ -225,7 +223,7 @@ namespace Hercules.Scripting
             return result.Data.Count > 0;
         }
 
-        private void VisitNode(Node? node, CompletionDataList result, Position position)
+        private void VisitNode(Acornima.Ast.Node? node, CompletionDataList result, Position position)
         {
             if (node == null)
                 return;
@@ -238,7 +236,7 @@ namespace Hercules.Scripting
                 VisitNode(n, result, position);
             }
 
-            if (node is Identifier id && !(position >= id.Location.Start && position <= id.Location.End))
+            if (node is Acornima.Ast.Identifier id && !(position >= id.Location.Start && position <= id.Location.End))
             { 
                 result.Add(new CompletionData(id.Name, ""));
             }

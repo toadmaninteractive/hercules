@@ -1,9 +1,7 @@
-﻿using Esprima;
-using Jint;
+﻿using Jint;
 using Jint.Native;
 using Json;
 using System.Collections.Generic;
-using Esprima.Ast;
 using Jint.Runtime.Modules;
 
 namespace Hercules.Scripting.JavaScript
@@ -13,7 +11,7 @@ namespace Hercules.Scripting.JavaScript
         string GetModuleCode(string name);
     }
 
-    internal class JsModuleLoader : IModuleLoader
+    internal class JsModuleLoader : ModuleLoader
     {
         private readonly IJsModuleProvider provider;
 
@@ -22,14 +20,14 @@ namespace Hercules.Scripting.JavaScript
             this.provider = moduleProvider;
         }
 
-        public ResolvedSpecifier Resolve(string? referencingModuleLocation, string specifier)
+        public override ResolvedSpecifier Resolve(string? referencingModuleLocation, ModuleRequest moduleRequest)
         {
-            return new ResolvedSpecifier(specifier, specifier, null, SpecifierType.Bare);
+            return new ResolvedSpecifier(moduleRequest, referencingModuleLocation, null, SpecifierType.Bare);
         }
 
-        public Module LoadModule(Engine engine, ResolvedSpecifier resolved)
+        protected override string LoadModuleContents(Engine engine, ResolvedSpecifier resolved)
         {
-            return new JavaScriptParser().ParseModule(provider.GetModuleCode(resolved.Specifier), resolved.Specifier);
+            return provider.GetModuleCode(resolved.Key);
         }
     }
 
@@ -87,15 +85,15 @@ namespace Hercules.Scripting.JavaScript
             return Execute(script);
         }
 
-        public static IReadOnlyList<ParserException>? SyntaxCheck(string script)
+        public static IReadOnlyList<Acornima.ParseErrorException>? SyntaxCheck(string script)
         {
             try
             {
-                var parser = new JavaScriptParser(new ParserOptions { Tolerant = true });
+                var parser = new Acornima.Parser(new Acornima.ParserOptions { Tolerant = true });
                 parser.ParseScript(script, strict: true);
                 return null;
             }
-            catch (ParserException ex)
+            catch (Acornima.ParseErrorException ex)
             {
                 return new[] { ex };
             }
