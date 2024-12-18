@@ -46,7 +46,7 @@ namespace Hercules
         public MainViewModel(Window mainWindow, DockingManager dockingManager)
         {
             Logger.Log("Application started...");
-            Logger.Log($"Version: {Core.GetVersion()}.{Core.Branch}");
+            Logger.Log($"Version: {Core.GetVersion()}");
             var args = Environment.GetCommandLineArgs();
             bool resetLayout = args.Contains("-reset_layout");
             bool isBatchMode = args.Contains("-batch");

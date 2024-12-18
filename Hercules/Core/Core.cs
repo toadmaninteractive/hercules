@@ -13,16 +13,6 @@ using System.Reflection;
 
 namespace Hercules
 {
-    [AttributeUsage(AttributeTargets.Assembly)]
-    sealed class ApplicationBranchAttribute : Attribute
-    {
-        public string Branch { get; }
-        public ApplicationBranchAttribute(string branch)
-        {
-            this.Branch = branch;
-        }
-    }
-
     public class Core : NotifyPropertyChanged
     {
         public Core(Workspace workspace, SettingsService settingsService, bool isBatch)
@@ -130,7 +120,5 @@ namespace Hercules
         }
 
         public static int Revision => GetVersion().Revision;
-
-        public static readonly string Branch = Assembly.GetEntryAssembly()!.GetCustomAttribute<ApplicationBranchAttribute>()!.Branch;
     }
 }

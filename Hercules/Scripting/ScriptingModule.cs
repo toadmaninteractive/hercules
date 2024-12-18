@@ -60,7 +60,7 @@ namespace Hercules.Scripting
 
         void ShowScriptingReference()
         {
-            var branch = Core.Branch == "stable" ? "stable" : "latest";
+            var branch = Core.GetModule<ApplicationUpdateModule>().UpdateChannel.Value == ApplicationUpdateChannel.Stable ? "stable" : "latest";
             Workspace.OpenExternalBrowser(new Uri($"https://toadman-hercules.readthedocs.io/{branch}/scripting/scripting-index.html"));
         }
 
