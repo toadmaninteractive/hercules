@@ -1,6 +1,7 @@
 ﻿using Hercules.Forms.Schema;
 using Json;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,11 +34,11 @@ namespace Hercules.Documents.Editor.Tests
             var fireball = db["spell_fireball"];
             var editor = new DocumentEditorPage(editorContext, fireball);
             fireball.RemoteUpdated(new JsonObject(fireball.Json) { [CouchUtils.HerculesBase] = db["spell_roots"].Json.WithoutKeys(CouchUtils.BaseJsonExcludedKeys) });
-            Assert.IsTrue(editor.Notifications.Items.OfType<DocumentChangedNotification>().Any());
+            ClassicAssert.IsTrue(editor.Notifications.Items.OfType<DocumentChangedNotification>().Any());
             editor.Notifications.Items.OfType<DocumentChangedNotification>().First().TakeRemoteCommand.Execute(null);
-            Assert.IsTrue(editor.PatchHandler.IsPatch);
-            Assert.AreEqual("spell_roots", editor.PatchHandler.BaseDocument!.DocumentId);
-            Assert.IsFalse(editor.IsDirty);
+            ClassicAssert.IsTrue(editor.PatchHandler.IsPatch);
+            ClassicAssert.AreEqual("spell_roots", editor.PatchHandler.BaseDocument!.DocumentId);
+            ClassicAssert.IsFalse(editor.IsDirty);
         }
 
         [Test]
@@ -54,10 +55,10 @@ namespace Hercules.Documents.Editor.Tests
             var fireball = db["spell_fireball"];
             var editor = new DocumentEditorPage(editorContext, fireball);
             fireball.RemoteUpdated(new JsonObject(fireball.Json).WithoutKeys(CouchUtils.HerculesBase));
-            Assert.IsTrue(editor.Notifications.Items.OfType<DocumentChangedNotification>().Any());
+            ClassicAssert.IsTrue(editor.Notifications.Items.OfType<DocumentChangedNotification>().Any());
             editor.Notifications.Items.OfType<DocumentChangedNotification>().First().TakeRemoteCommand.Execute(null);
-            Assert.IsFalse(editor.PatchHandler.IsPatch);
-            Assert.IsFalse(editor.IsDirty);
+            ClassicAssert.IsFalse(editor.PatchHandler.IsPatch);
+            ClassicAssert.IsFalse(editor.IsDirty);
         }
 
         [Test]
@@ -74,10 +75,10 @@ namespace Hercules.Documents.Editor.Tests
             var fireball = db["spell_fireball"];
             var editor = new DocumentEditorPage(editorContext, fireball);
             fireball.RemoteUpdated(new JsonObject(fireball.Json) { [CouchUtils.HerculesBase] = db["spell_roots"].Json.WithoutKeys(CouchUtils.BaseJsonExcludedKeys) });
-            Assert.IsTrue(editor.Notifications.Items.OfType<DocumentChangedNotification>().Any());
+            ClassicAssert.IsTrue(editor.Notifications.Items.OfType<DocumentChangedNotification>().Any());
             editor.Notifications.Items.OfType<DocumentChangedNotification>().First().TakeMineCommand.Execute(null);
-            Assert.IsFalse(editor.PatchHandler.IsPatch);
-            Assert.IsTrue(editor.IsDirty);
+            ClassicAssert.IsFalse(editor.PatchHandler.IsPatch);
+            ClassicAssert.IsTrue(editor.IsDirty);
         }
 
         [Test]
@@ -94,11 +95,11 @@ namespace Hercules.Documents.Editor.Tests
             var fireball = db["spell_fireball"];
             var editor = new DocumentEditorPage(editorContext, fireball);
             fireball.RemoteUpdated(new JsonObject(fireball.Json).WithoutKeys(CouchUtils.HerculesBase));
-            Assert.IsTrue(editor.Notifications.Items.OfType<DocumentChangedNotification>().Any());
+            ClassicAssert.IsTrue(editor.Notifications.Items.OfType<DocumentChangedNotification>().Any());
             editor.Notifications.Items.OfType<DocumentChangedNotification>().First().TakeMineCommand.Execute(null);
-            Assert.IsTrue(editor.PatchHandler.IsPatch);
-            Assert.IsTrue(editor.IsDirty);
-            Assert.AreEqual("spell_roots", editor.PatchHandler.BaseDocument!.DocumentId);
+            ClassicAssert.IsTrue(editor.PatchHandler.IsPatch);
+            ClassicAssert.IsTrue(editor.IsDirty);
+            ClassicAssert.AreEqual("spell_roots", editor.PatchHandler.BaseDocument!.DocumentId);
         }
 
         FormSchema GetTestFormSchema()

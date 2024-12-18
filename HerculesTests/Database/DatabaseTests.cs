@@ -2,6 +2,7 @@
 using Json;
 using Microsoft.Reactive.Testing;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -56,8 +57,8 @@ namespace Hercules.DB.Tests
             scheduler.Start();
 
             var document = database.Documents["spell_fireball"];
-            Assert.AreEqual("Fireball v2", document.CurrentRevision!.Json["name"].AsString);
-            Assert.AreEqual("2-b", document.CurrentRevision.Rev);
+            ClassicAssert.AreEqual("Fireball v2", document.CurrentRevision!.Json["name"].AsString);
+            ClassicAssert.AreEqual("2-b", document.CurrentRevision.Rev);
             AssertCacheConsistency(document);
         }
 
@@ -70,8 +71,8 @@ namespace Hercules.DB.Tests
             backend.PushDelete("spell_fireball");
             scheduler.Start();
 
-            Assert.AreEqual(false, document.IsExisting);
-            Assert.AreEqual(false, database.Documents.ContainsKey("spell_fireball"));
+            ClassicAssert.AreEqual(false, document.IsExisting);
+            ClassicAssert.AreEqual(false, database.Documents.ContainsKey("spell_fireball"));
             AssertCacheConsistency(document);
         }
 
@@ -84,8 +85,8 @@ namespace Hercules.DB.Tests
             scheduler.Start();
 
             var document = database.Documents["summon_goblin"];
-            Assert.AreEqual(true, document.IsExisting);
-            Assert.AreEqual("1-c", document.CurrentRevision!.Rev);
+            ClassicAssert.AreEqual(true, document.IsExisting);
+            ClassicAssert.AreEqual("1-c", document.CurrentRevision!.Rev);
             AssertCacheConsistency(document);
         }
 
@@ -111,10 +112,10 @@ namespace Hercules.DB.Tests
 
             scheduler.Start();
 
-            Assert.AreEqual("Roots v2", document.CurrentRevision.Json["name"].AsString);
-            Assert.AreEqual("2-b", document.CurrentRevision.Rev);
+            ClassicAssert.AreEqual("Roots v2", document.CurrentRevision.Json["name"].AsString);
+            ClassicAssert.AreEqual("2-b", document.CurrentRevision.Rev);
             AssertCacheConsistency(document);
-            Assert.AreEqual((lastSeq + 1).ToString(CultureInfo.InvariantCulture), cache.ReadLastSequence());
+            ClassicAssert.AreEqual((lastSeq + 1).ToString(CultureInfo.InvariantCulture), cache.ReadLastSequence());
         }
 
         [Test]
@@ -139,22 +140,22 @@ namespace Hercules.DB.Tests
 
             scheduler.Start();
 
-            Assert.AreEqual("Roots v2", document.CurrentRevision.Json["name"].AsString);
-            Assert.AreEqual("2-d404cd203d419612a74a207ccb0dbac8", document.CurrentRevision.Rev);
+            ClassicAssert.AreEqual("Roots v2", document.CurrentRevision.Json["name"].AsString);
+            ClassicAssert.AreEqual("2-d404cd203d419612a74a207ccb0dbac8", document.CurrentRevision.Rev);
             AssertCacheConsistency(document);
-            Assert.AreEqual((lastSeq + 1).ToString(CultureInfo.InvariantCulture), cache.ReadLastSequence());
+            ClassicAssert.AreEqual((lastSeq + 1).ToString(CultureInfo.InvariantCulture), cache.ReadLastSequence());
         }
 
         void AssertCacheConsistency(IDocument document)
         {
             if (document.IsExisting)
             {
-                Assert.AreEqual(document.CurrentRevision!.Rev, cache.ReadRevision(document.DocumentId));
-                Assert.AreEqual(document.CurrentRevision.Json, cache.TryReadDocument(document.DocumentId, document.CurrentRevision.Rev));
+                ClassicAssert.AreEqual(document.CurrentRevision!.Rev, cache.ReadRevision(document.DocumentId));
+                ClassicAssert.AreEqual(document.CurrentRevision.Json, cache.TryReadDocument(document.DocumentId, document.CurrentRevision.Rev));
             }
             else
             {
-                Assert.AreEqual(null, cache.ReadRevision(document.DocumentId));
+                ClassicAssert.AreEqual(null, cache.ReadRevision(document.DocumentId));
             }
         }
 

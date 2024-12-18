@@ -4,6 +4,7 @@ using Hercules.Forms.Schema;
 using Hercules.Shortcuts;
 using Json;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Hercules.Forms.Tests
 {
@@ -25,9 +26,9 @@ namespace Hercules.Forms.Tests
             };
 
             var form = CreateForm(data, data, testCardSchema);
-            Assert.AreEqual(0, form.Root.SchemalessFields.Count);
-            Assert.AreEqual(0, form.Root.Record.Children.Count);
-            Assert.AreEqual(false, form.IsModified.Value);
+            ClassicAssert.AreEqual(0, form.Root.SchemalessFields.Count);
+            ClassicAssert.AreEqual(0, form.Root.Record.Children.Count);
+            ClassicAssert.AreEqual(false, form.IsModified.Value);
         }
 
         [Test]
@@ -42,32 +43,32 @@ namespace Hercules.Forms.Tests
             };
 
             var form = CreateForm(originalData, originalData, rootRecord);
-            Assert.AreEqual(2, form.Root.SchemalessFields.Count);
-            Assert.IsFalse(form.IsModified.Value);
-            Assert.AreEqual(ImmutableJson.Create(1), form.Root.SchemalessFields[0].Json);
-            Assert.AreEqual("custom_field1", form.Root.SchemalessFields[0].Name);
-            Assert.AreEqual(ImmutableJson.Create("hello"), form.Root.SchemalessFields[1].Json);
-            Assert.AreEqual("custom_field2", form.Root.SchemalessFields[1].Name);
-            Assert.AreEqual(originalData.ToImmutable(), form.Json);
+            ClassicAssert.AreEqual(2, form.Root.SchemalessFields.Count);
+            ClassicAssert.IsFalse(form.IsModified.Value);
+            ClassicAssert.AreEqual(ImmutableJson.Create(1), form.Root.SchemalessFields[0].Json);
+            ClassicAssert.AreEqual("custom_field1", form.Root.SchemalessFields[0].Name);
+            ClassicAssert.AreEqual(ImmutableJson.Create("hello"), form.Root.SchemalessFields[1].Json);
+            ClassicAssert.AreEqual("custom_field2", form.Root.SchemalessFields[1].Name);
+            ClassicAssert.AreEqual(originalData.ToImmutable(), form.Json);
 
             form.Run(t => form.Root.RemoveSchemalessField(form.Root.SchemalessFields[0], t));
-            Assert.AreEqual(1, form.Root.SchemalessFields.Count);
-            Assert.IsTrue(form.IsModified.Value);
-            Assert.AreEqual(new JsonObject { ["custom_field2"] = "hello" }.ToImmutable(), form.Json);
-
+            ClassicAssert.AreEqual(1, form.Root.SchemalessFields.Count);
+            ClassicAssert.IsTrue(form.IsModified.Value);
+            ClassicAssert.AreEqual(new JsonObject { ["custom_field2"] = "hello" }.ToImmutable(), form.Json);
+    
             form.Undo();
-            Assert.AreEqual(2, form.Root.SchemalessFields.Count);
-            Assert.AreEqual(originalData.ToImmutable(), form.Json);
-            Assert.IsFalse(form.History.CanUndo);
-            Assert.IsTrue(form.History.CanRedo);
-            Assert.IsFalse(form.IsModified.Value);
+            ClassicAssert.AreEqual(2, form.Root.SchemalessFields.Count);
+            ClassicAssert.AreEqual(originalData.ToImmutable(), form.Json);
+            ClassicAssert.IsFalse(form.History.CanUndo);
+            ClassicAssert.IsTrue(form.History.CanRedo);
+            ClassicAssert.IsFalse(form.IsModified.Value);
 
             form.Redo();
-            Assert.AreEqual(1, form.Root.SchemalessFields.Count);
-            Assert.AreEqual(new JsonObject { ["custom_field2"] = "hello" }.ToImmutable(), form.Json);
-            Assert.IsTrue(form.History.CanUndo);
-            Assert.IsFalse(form.History.CanRedo);
-            Assert.IsTrue(form.IsModified.Value);
+            ClassicAssert.AreEqual(1, form.Root.SchemalessFields.Count);
+            ClassicAssert.AreEqual(new JsonObject { ["custom_field2"] = "hello" }.ToImmutable(), form.Json);
+            ClassicAssert.IsTrue(form.History.CanUndo);
+            ClassicAssert.IsFalse(form.History.CanRedo);
+            ClassicAssert.IsTrue(form.IsModified.Value);
         }
 
         [Test]
@@ -82,15 +83,15 @@ namespace Hercules.Forms.Tests
             list.DragStarted(list.Children[1]);
             form.Run(transaction => list.Move(list.Children[1], list.Children[2], transaction));
             var expected = new JsonObject { ["value"] = new JsonArray { "one", "three", "two", "four" } }.ToImmutable();
-            Assert.AreEqual(expected, form.Json);
+            ClassicAssert.AreEqual(expected, form.Json);
             form.Undo();
-            Assert.IsTrue(form.History.CanRedo);
-            Assert.IsFalse(form.History.CanUndo);
-            Assert.AreEqual(originalJson, form.Json);
+            ClassicAssert.IsTrue(form.History.CanRedo);
+            ClassicAssert.IsFalse(form.History.CanUndo);
+            ClassicAssert.AreEqual(originalJson, form.Json);
             form.Redo();
-            Assert.IsTrue(form.History.CanUndo);
-            Assert.IsFalse(form.History.CanRedo);
-            Assert.AreEqual(expected, form.Json);
+            ClassicAssert.IsTrue(form.History.CanUndo);
+            ClassicAssert.IsFalse(form.History.CanRedo);
+            ClassicAssert.AreEqual(expected, form.Json);
         }
 
         [Test]
@@ -109,15 +110,15 @@ namespace Hercules.Forms.Tests
                 list.Remove(list.Children[1], transaction);
             });
             var expected = new JsonObject { ["value"] = new JsonArray { "one", "four" } }.ToImmutable();
-            Assert.AreEqual(expected, form.Json);
+            ClassicAssert.AreEqual(expected, form.Json);
             form.Undo();
-            Assert.IsTrue(form.History.CanRedo);
-            Assert.IsFalse(form.History.CanUndo);
-            Assert.AreEqual(originalJson, form.Json);
+            ClassicAssert.IsTrue(form.History.CanRedo);
+            ClassicAssert.IsFalse(form.History.CanUndo);
+            ClassicAssert.AreEqual(originalJson, form.Json);
             form.Redo();
-            Assert.IsTrue(form.History.CanUndo);
-            Assert.IsFalse(form.History.CanRedo);
-            Assert.AreEqual(expected, form.Json);
+            ClassicAssert.IsTrue(form.History.CanUndo);
+            ClassicAssert.IsFalse(form.History.CanRedo);
+            ClassicAssert.AreEqual(expected, form.Json);
         }
 
         [Test]
@@ -132,15 +133,15 @@ namespace Hercules.Forms.Tests
             list.DragStarted(list.Children[2]);
             form.Run(transaction => list.Move(list.Children[2], list.Children[1], transaction));
             var expected = new JsonObject { ["value"] = new JsonArray { "one", "three", "two", "four" } }.ToImmutable();
-            Assert.AreEqual(expected, form.Json);
+            ClassicAssert.AreEqual(expected, form.Json);
             form.Undo();
-            Assert.IsTrue(form.History.CanRedo);
-            Assert.IsFalse(form.History.CanUndo);
-            Assert.AreEqual(originalJson, form.Json);
+            ClassicAssert.IsTrue(form.History.CanRedo);
+            ClassicAssert.IsFalse(form.History.CanUndo);
+            ClassicAssert.AreEqual(originalJson, form.Json);
             form.Redo();
-            Assert.IsTrue(form.History.CanUndo);
-            Assert.IsFalse(form.History.CanRedo);
-            Assert.AreEqual(expected, form.Json);
+            ClassicAssert.IsTrue(form.History.CanUndo);
+            ClassicAssert.IsFalse(form.History.CanRedo);
+            ClassicAssert.AreEqual(expected, form.Json);
         }
 
         [Test]
@@ -154,9 +155,9 @@ namespace Hercules.Forms.Tests
             var newJson = new JsonObject { ["value"] = new JsonArray { "one", "two", "three", "four" } }.ToImmutable();
             form.SetOriginalJson(newJson);
             form.Run(transaction => form.Root.SetJson(newJson, transaction));
-            Assert.AreEqual(newJson, form.Json);
-            Assert.IsFalse(form.IsModified.Value);
-            Assert.IsTrue(form.Root.IsValid);
+            ClassicAssert.AreEqual(newJson, form.Json);
+            ClassicAssert.IsFalse(form.IsModified.Value);
+            ClassicAssert.IsTrue(form.Root.IsValid);
         }
 
         [Test]
@@ -169,29 +170,29 @@ namespace Hercules.Forms.Tests
             {
                 var data = new JsonObject();
                 var form = CreateForm(data, data, rootRecord);
-                Assert.IsTrue(form.ElementByPath(new JsonPath("bool1")).IsModified);
-                Assert.IsFalse(form.ElementByPath(new JsonPath("bool2")).IsModified);
+                ClassicAssert.IsTrue(form.ElementByPath(new JsonPath("bool1")).IsModified);
+                ClassicAssert.IsFalse(form.ElementByPath(new JsonPath("bool2")).IsModified);
             }
 
             {
                 var data = new JsonObject { ["bool1"] = false, ["bool2"] = false };
                 var form = CreateForm(data, data, rootRecord);
-                Assert.IsFalse(form.ElementByPath(new JsonPath("bool1")).IsModified);
-                Assert.IsFalse(form.ElementByPath(new JsonPath("bool2")).IsModified);
+                ClassicAssert.IsFalse(form.ElementByPath(new JsonPath("bool1")).IsModified);
+                ClassicAssert.IsFalse(form.ElementByPath(new JsonPath("bool2")).IsModified);
             }
 
             {
                 var data = new JsonObject { ["bool1"] = 1, ["bool2"] = 1 };
                 var form = CreateForm(data, data, rootRecord);
-                Assert.IsTrue(form.ElementByPath(new JsonPath("bool1")).IsModified);
-                Assert.IsTrue(form.ElementByPath(new JsonPath("bool2")).IsModified);
+                ClassicAssert.IsTrue(form.ElementByPath(new JsonPath("bool1")).IsModified);
+                ClassicAssert.IsTrue(form.ElementByPath(new JsonPath("bool2")).IsModified);
             }
 
             {
                 var data = new JsonObject { ["bool1"] = ImmutableJson.Null, ["bool2"] = ImmutableJson.Null };
                 var form = CreateForm(data, data, rootRecord);
-                Assert.IsTrue(form.ElementByPath(new JsonPath("bool1")).IsModified);
-                Assert.IsTrue(form.ElementByPath(new JsonPath("bool2")).IsModified);
+                ClassicAssert.IsTrue(form.ElementByPath(new JsonPath("bool1")).IsModified);
+                ClassicAssert.IsTrue(form.ElementByPath(new JsonPath("bool2")).IsModified);
             }
         }
 
@@ -203,23 +204,23 @@ namespace Hercules.Forms.Tests
             var data = new JsonObject();
             var form = CreateForm(data, data, rootRecord);
             var element = (OptionalElement)form.ElementByPath(new JsonPath("value"))!;
-            Assert.IsFalse(element.IsSet);
-            Assert.IsFalse(form.IsModified.Value);
+            ClassicAssert.IsFalse(element.IsSet);
+            ClassicAssert.IsFalse(form.IsModified.Value);
             element.ToggleCommand.Execute(null);
-            Assert.IsTrue(element.IsSet);
-            Assert.AreEqual(new JsonObject { ["value"] = 1 }.ToImmutable(), form.Json);
-            Assert.IsTrue(form.IsModified.Value);
+            ClassicAssert.IsTrue(element.IsSet);
+            ClassicAssert.AreEqual(new JsonObject { ["value"] = 1 }.ToImmutable(), form.Json);
+            ClassicAssert.IsTrue(form.IsModified.Value);
             form.Undo();
-            Assert.IsFalse(element.IsSet);
-            Assert.AreEqual(new JsonObject { ["value"] = ImmutableJson.Null }.ToImmutable(), form.Json);
-            Assert.IsTrue(form.History.CanRedo);
-            Assert.IsFalse(form.History.CanUndo);
-            Assert.IsFalse(form.IsModified.Value);
+            ClassicAssert.IsFalse(element.IsSet);
+            ClassicAssert.AreEqual(new JsonObject { ["value"] = ImmutableJson.Null }.ToImmutable(), form.Json);
+            ClassicAssert.IsTrue(form.History.CanRedo);
+            ClassicAssert.IsFalse(form.History.CanUndo);
+            ClassicAssert.IsFalse(form.IsModified.Value);
             form.Redo();
-            Assert.IsTrue(element.IsSet);
-            Assert.AreEqual(new JsonObject { ["value"] = 1 }.ToImmutable(), form.Json);
-            Assert.IsFalse(form.History.CanRedo);
-            Assert.IsTrue(form.IsModified.Value);
+            ClassicAssert.IsTrue(element.IsSet);
+            ClassicAssert.AreEqual(new JsonObject { ["value"] = 1 }.ToImmutable(), form.Json);
+            ClassicAssert.IsFalse(form.History.CanRedo);
+            ClassicAssert.IsTrue(form.IsModified.Value);
         }
 
         [Test]
@@ -231,25 +232,25 @@ namespace Hercules.Forms.Tests
             var form = CreateForm(data, data, rootRecord);
             var optElement = (OptionalElement)form.ElementByPath(new JsonPath("value"))!;
             var intElement = (IntElement)optElement.Element!;
-            Assert.IsFalse(optElement.IsSet);
-            Assert.IsFalse(form.IsModified.Value);
+            ClassicAssert.IsFalse(optElement.IsSet);
+            ClassicAssert.IsFalse(form.IsModified.Value);
             intElement.Value = 2;
-            Assert.IsTrue(optElement.IsSet);
-            Assert.AreEqual(new JsonObject { ["value"] = 2 }.ToImmutable(), form.Json);
-            Assert.IsTrue(form.History.CanUndo);
-            Assert.IsFalse(form.History.CanRedo);
-            Assert.IsTrue(form.IsModified.Value);
+            ClassicAssert.IsTrue(optElement.IsSet);
+            ClassicAssert.AreEqual(new JsonObject { ["value"] = 2 }.ToImmutable(), form.Json);
+            ClassicAssert.IsTrue(form.History.CanUndo);
+            ClassicAssert.IsFalse(form.History.CanRedo);
+            ClassicAssert.IsTrue(form.IsModified.Value);
             form.Undo();
-            Assert.IsFalse(optElement.IsSet);
-            Assert.IsFalse(intElement.IsActive);
-            Assert.IsFalse(form.History.CanUndo);
-            Assert.IsFalse(form.IsModified.Value);
+            ClassicAssert.IsFalse(optElement.IsSet);
+            ClassicAssert.IsFalse(intElement.IsActive);
+            ClassicAssert.IsFalse(form.History.CanUndo);
+            ClassicAssert.IsFalse(form.IsModified.Value);
             form.Redo();
-            Assert.IsTrue(optElement.IsSet);
-            Assert.AreEqual(new JsonObject { ["value"] = 2 }.ToImmutable(), form.Json);
-            Assert.IsFalse(form.History.CanRedo);
-            Assert.IsTrue(form.History.CanUndo);
-            Assert.IsTrue(form.IsModified.Value);
+            ClassicAssert.IsTrue(optElement.IsSet);
+            ClassicAssert.AreEqual(new JsonObject { ["value"] = 2 }.ToImmutable(), form.Json);
+            ClassicAssert.IsFalse(form.History.CanRedo);
+            ClassicAssert.IsTrue(form.History.CanUndo);
+            ClassicAssert.IsTrue(form.IsModified.Value);
         }
 
         [Test]
@@ -262,10 +263,10 @@ namespace Hercules.Forms.Tests
             var form = CreateForm(data, data, rootRecord);
             var list = (ListElement)form.ElementByPath(new JsonPath("value"));
             form.Run(t => list.SetJson(new JsonArray { 1 }.ToImmutable(), t));
-            Assert.IsTrue(form.IsModified.Value);
+            ClassicAssert.IsTrue(form.IsModified.Value);
             var newOriginal = new JsonObject { ["value"] = new JsonArray { 1 } }.ToImmutable();
             form.SetOriginalJson(newOriginal);
-            Assert.IsFalse(form.IsModified.Value);
+            ClassicAssert.IsFalse(form.IsModified.Value);
         }
 
         [Test]
@@ -279,8 +280,8 @@ namespace Hercules.Forms.Tests
             var form = CreateForm(data, data, rootRecord);
             var dictElement = (DictElement)form.ElementByPath(new JsonPath("value"))!;
             var intElement = (IntElement)dictElement.Children[0].KeyElement;
-            Assert.AreEqual("1", intElement.JsonKey);
-            Assert.IsFalse(form.IsModified.Value);
+            ClassicAssert.AreEqual("1", intElement.JsonKey);
+            ClassicAssert.IsFalse(form.IsModified.Value);
         }
 
         private DocumentForm CreateForm(ImmutableJsonObject json, ImmutableJson? originalJson, SchemaRecord schemaRecord)

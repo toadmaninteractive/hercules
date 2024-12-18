@@ -2,6 +2,7 @@
 using Jint;
 using Json;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace Hercules.Scripting.JavaScript.Tests
 {
@@ -14,7 +15,7 @@ namespace Hercules.Scripting.JavaScript.Tests
             var engine = new Engine();
             var value = JsValueConverter.FromJsonValue(json, engine);
             var json1 = JsValueConverter.ToJsonValue(value);
-            Assert.AreEqual(json, json1);
+            ClassicAssert.AreEqual(json, json1);
         }
     }
 }

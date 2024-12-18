@@ -1,5 +1,6 @@
 ﻿using Hercules.Forms.Elements;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using System;
 
 namespace Hercules.Forms.Tests
@@ -40,8 +41,8 @@ namespace Hercules.Forms.Tests
             history.Push(new TestUndoStep(DoNothing, DoNothing));
             history.Push(new TestUndoStep(DoNothing, DoNothing));
             history.Clear();
-            Assert.False(history.CanUndo);
-            Assert.False(history.CanRedo);
+            ClassicAssert.False(history.CanUndo);
+            ClassicAssert.False(history.CanRedo);
         }
 
         [Test]
@@ -50,7 +51,7 @@ namespace Hercules.Forms.Tests
             var history = new UndoHistory<TestUndoStep>(this);
             history.Push(new TestUndoStep(DoNothing, DoNothing));
             history.Undo(Transactions.CreateUndoRedoTransaction());
-            Assert.True(history.CanRedo);
+            ClassicAssert.True(history.CanRedo);
         }
 
         [Test]
@@ -60,7 +61,7 @@ namespace Hercules.Forms.Tests
             history.Push(new TestUndoStep(DoNothing, DoNothing));
             history.Undo(Transactions.CreateUndoRedoTransaction());
             history.Push(new TestUndoStep(DoNothing, DoNothing));
-            Assert.False(history.CanRedo);
+            ClassicAssert.False(history.CanRedo);
         }
 
         [Test]
@@ -70,7 +71,7 @@ namespace Hercules.Forms.Tests
             int i = 1;
             history.Push(new TestUndoStep(_ => i = 0, _ => i = 1));
             history.Undo(Transactions.CreateUndoRedoTransaction());
-            Assert.AreEqual(i, 0);
+            ClassicAssert.AreEqual(i, 0);
         }
 
         [Test]
@@ -81,7 +82,7 @@ namespace Hercules.Forms.Tests
             history.Push(new TestUndoStep(_ => i = 0, _ => i = 1));
             history.Undo(Transactions.CreateUndoRedoTransaction());
             history.Redo(Transactions.CreateUndoRedoTransaction());
-            Assert.AreEqual(i, 1);
+            ClassicAssert.AreEqual(i, 1);
         }
 
         [Test]

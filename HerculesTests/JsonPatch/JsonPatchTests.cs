@@ -1,5 +1,6 @@
 ﻿using Json;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using System.Text;
 
 namespace JsonDiff.Tests
@@ -25,7 +26,7 @@ namespace JsonDiff.Tests
             var sb = new StringBuilder();
             sb.AppendLine("doc.splice(1, 2);");
             sb.AppendLine("doc.splice(3, 1);");
-            Assert.AreEqual(sb.ToString(), js);
+            ClassicAssert.AreEqual(sb.ToString(), js);
         }
 
         [Test]
@@ -35,7 +36,7 @@ namespace JsonDiff.Tests
             var json = JsonParser.Parse(@"[0, 1, 2, 3, 4, 5, 6]");
             var expectedJson = JsonParser.Parse(@"[0, 3, 4, 6]");
             var changedJson = patch.Apply(json);
-            Assert.AreEqual(expectedJson, changedJson);
+            ClassicAssert.AreEqual(expectedJson, changedJson);
         }
 
         [Test]
@@ -47,7 +48,7 @@ namespace JsonDiff.Tests
             var path = new JsonPath().AppendObject("dict").AppendObjectKey("secundo");
             patch.Chunks.Add(new JsonPatchChunk(path, "second"));
             var changedJson = patch.Apply(json.AsObject);
-            Assert.AreEqual(expectedJson, changedJson);
+            ClassicAssert.AreEqual(expectedJson, changedJson);
         }
     }
 }
