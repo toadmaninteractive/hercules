@@ -62,6 +62,8 @@ This is a list of metadata values that Hercules understands and processes:
 | caption_path           | **string**     | record type    | | Path to the document record caption used as     |                |
 |                        |                |                | | additional info in document key pickers         |                |
 +------------------------+----------------+----------------+---------------------------------------------------+----------------+
+| image_path             | **string**     | record type    | Path to the document image used in tile view      |                |
++------------------------+----------------+----------------+---------------------------------------------------+----------------+
 | preview                | **bool**       | | type         | Show preview image                                | ``false``      |
 |                        |                | | record field |                                                   |                |
 +------------------------+----------------+----------------+---------------------------------------------------+----------------+
