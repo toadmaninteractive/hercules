@@ -22,7 +22,7 @@ namespace Hercules.Scripting.JavaScript
 
         public override ResolvedSpecifier Resolve(string? referencingModuleLocation, ModuleRequest moduleRequest)
         {
-            return new ResolvedSpecifier(moduleRequest, referencingModuleLocation, null, SpecifierType.Bare);
+            return new ResolvedSpecifier(moduleRequest, moduleRequest.Specifier, null, SpecifierType.Bare);
         }
 
         protected override string LoadModuleContents(Engine engine, ResolvedSpecifier resolved)
