@@ -40,7 +40,10 @@ namespace Hercules.Scripting.JavaScript
             Options GetOptions(Options options)
             {
                 if (moduleProvider != null)
+                {
                     options = options.EnableModules(new JsModuleLoader(moduleProvider));
+                    options.Modules.RegisterRequire = true;
+                }
                 return options;
             }
             engine = new Engine(options => GetOptions(options));
