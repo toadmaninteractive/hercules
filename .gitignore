@@ -5,3 +5,4 @@ bin
 *.db
 *.opendb
 /Setup/Output
+/docs/build
