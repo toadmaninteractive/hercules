@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using Unreal;
 
@@ -21,12 +22,8 @@ namespace Hercules
 
         public static ImmutableJson LoadJsonFromFile(string path)
         {
-            using var stream = File.OpenRead(path);
-            var size = checked((int)stream.Length);
-            using var memoryOwner = MemoryPool<byte>.Shared.Rent(size);
-            var span = memoryOwner.Memory.Span.Slice(0, size);
-            stream.Read(span);
-            var jsonReader = new Utf8JsonReader(span);
+            var bytes = File.ReadAllBytes(path);
+            var jsonReader = new Utf8JsonReader(bytes);
             return Utf8Json.Parse(ref jsonReader);
         }
 
