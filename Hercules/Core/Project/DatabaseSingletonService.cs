@@ -26,6 +26,7 @@ namespace Hercules
         private void Callback(string uri)
         {
             Logger.LogDebug($"IPC request to open {uri}");
+            workspace.BringToFront();
             if (workspace.ShortcutService.TryParseUri(new Uri(uri), out var shortcut))
                 workspace.ShortcutService.Open(shortcut);
         }

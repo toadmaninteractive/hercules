@@ -60,7 +60,7 @@ namespace Hercules
             DockingLayoutService = new DockingLayoutService(dockingManager, Path.Combine(PathUtils.ConfigFolder, "layout.xml"), resetLayout);
             WindowService = new WindowService();
             var dpi = VisualTreeHelper.GetDpi(mainWindow);
-            this.Workspace = new Workspace(scheduler, WindowService, DockingLayoutService, dialogService, commandManager, shortcutService, RoutedCommandBindings, InputBindings, dpi);
+            this.Workspace = new Workspace(scheduler, WindowService, DockingLayoutService, dialogService, commandManager, shortcutService, RoutedCommandBindings, InputBindings, dpi, () => BringToFront(mainWindow));
             settingsService.AddSettingGroup(Workspace);
             this.Core = new Core(Workspace, settingsService, isBatchMode);
             Core.AddModule(new ApplicationUpdateModule(Core));
@@ -90,6 +90,16 @@ namespace Hercules
             }
             settingsService.Save();
             settingsService.SaveOnChange = true;
+        }
+
+        private static void BringToFront(Window window)
+        {
+            if (window.WindowState == WindowState.Minimized)
+            {
+                window.WindowState = WindowState.Normal;
+            }
+
+            window.Activate();
         }
 
         public void OnLoad()

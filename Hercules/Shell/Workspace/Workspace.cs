@@ -46,7 +46,7 @@ namespace Hercules.Shell
 
     public sealed class Workspace : NotifyPropertyChanged, ICommandContext, ISettingGroup
     {
-        public Workspace(BackgroundJobScheduler scheduler, IWindowService windowService, IDockingLayoutService dockingLayoutService, IDialogService dialogService, UiOptionManager optionManager, ShortcutService shortcutService, CommandBindingCollection routedCommandBindings, InputBindingCollection inputBindings, DpiScale dpi)
+        public Workspace(BackgroundJobScheduler scheduler, IWindowService windowService, IDockingLayoutService dockingLayoutService, IDialogService dialogService, UiOptionManager optionManager, ShortcutService shortcutService, CommandBindingCollection routedCommandBindings, InputBindingCollection inputBindings, DpiScale dpi, Action bringToFront)
         {
             this.DialogService = dialogService;
             this.Scheduler = scheduler;
@@ -57,7 +57,7 @@ namespace Hercules.Shell
             this.routedCommandBindings = routedCommandBindings;
             this.inputBindings = inputBindings;
             this.Dpi = dpi;
-
+            this.bringToFront = bringToFront;
             this.OpenFileCommand = Commands.Execute<IFile>(FileUtils.Open).If(f => f?.IsLoaded == true);
             this.OpenShortcutCommand = Commands.Execute<IShortcut>(s => shortcutService.Open(s)).IfNotNull();
 
@@ -123,6 +123,7 @@ namespace Hercules.Shell
         private readonly IDockingLayoutService dockingLayoutService;
         private readonly CommandBindingCollection routedCommandBindings;
         private readonly InputBindingCollection inputBindings;
+        private readonly Action bringToFront;
 
         public BackgroundJobScheduler Scheduler { get; }
         public IWindowService WindowService { get; }
@@ -311,6 +312,11 @@ namespace Hercules.Shell
         {
             if (uiOption.Gesture != null)
                 AddGesture(uiOption.Command, uiOption.Gesture);
+        }
+
+        public void BringToFront()
+        {
+            bringToFront();
         }
     }
 }
