@@ -166,7 +166,7 @@ namespace Hercules
             }
             else
             {
-                startUriString = GetArgument(args, "-open");
+                startUriString = GetArgument(args, "-open") ?? GetArgument(args, "-dispatch");
                 if (startUriString == null)
                 {
                     var batchString = GetArgument(args, "-batch");

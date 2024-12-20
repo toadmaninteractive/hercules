@@ -20,6 +20,7 @@ namespace Hercules
             Workspace = workspace;
             SettingsService = settingsService;
             IsBatch = isBatch;
+            databaseSingletonService = new DatabaseSingletonService(workspace);
         }
 
         public bool IsBatch { get; }
@@ -41,6 +42,8 @@ namespace Hercules
         }
 
         private readonly ObservableValue<Project?> projectObservable = new ObservableValue<Project?>(null);
+        private readonly IDatabaseSingletonService databaseSingletonService;
+        private IDisposable databaseSingleton;
 
         public Project? Project
         {
@@ -81,6 +84,7 @@ namespace Hercules
             var projectSettings = new ProjectSettings(Workspace.DialogService);
             var formSchemaFactory = documentsModule.FormSchemaFactory with { ProjectSettings = projectSettings };
             projectSettings.Load(settingsReader);
+            databaseSingleton = databaseSingletonService.CreateIpcListener(HerculesUrl.GetDatabaseUrl(connection));
             var newProject = new Project(connection, database, projectSettings, schemaUpdater, formSchemaFactory, documentsModule.MetaSchemaProvider);
             modules.ForEach(mod => mod.OnLoadProject(newProject, settingsReader));
             Project = newProject;
@@ -90,6 +94,8 @@ namespace Hercules
         {
             if (Project != null)
             {
+                databaseSingleton?.Dispose();
+                databaseSingleton = null;
                 Workspace.WindowService.CloseAllPages(CloseDirtyPageAction.ForceClose);
                 SaveProject();
                 Project.Close();
@@ -120,5 +126,12 @@ namespace Hercules
         }
 
         public static int Revision => GetVersion().Revision;
+
+        public static string? GetCliArgument(string name)
+        {
+            var args = Environment.GetCommandLineArgs();
+            var i = Array.IndexOf(args, name);
+            return i > 0 && i < args.Length - 1 ? args[i + 1] : null;
+        }
     }
 }

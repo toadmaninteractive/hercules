@@ -26,6 +26,7 @@ Command Line Options
 * ``-log LOGFILE`` - saves log to **LOGFILE**
 * ``-batch SCRIPT`` - runs **SCRIPT** and exits. **SCRIPT** is the filename path or Hercules URL, in which case the database connection is loaded first
 * ``-open HERCULESURL`` - opens **HERCULESURL** on program start
+* ``-dispatch HERCULESURL`` - opens **HERCULESURL** in existing (if possible) or new application instance
 
 If Hercules is run with a single argument that doesn't start with ``-``, it is considered to be a **HERCULESURL**, and Hercules opens this URL on load.
 

@@ -1,5 +1,6 @@
 ﻿using Hercules.Connections;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Hercules.Documents
 {
@@ -68,6 +69,20 @@ namespace Hercules.Documents
                 return uri.Segments[1].TrimEnd('/');
             else
                 return null;
+        }
+
+        public static bool TryGetDatabaseHerculesUrl(Uri source, [MaybeNullWhen(returnValue: false)]out Uri dbUrl)
+        {
+            dbUrl = null;
+            if (source.Scheme != "hercules" || string.IsNullOrEmpty(source.Host) || source.Segments.Length < 2)
+                return false;
+            var builder = new UriBuilder();
+            builder.Scheme = source.Scheme;
+            builder.Host = source.Host;
+            builder.Port = source.Port;
+            builder.Path = source.Segments[1].TrimEnd('/');
+            dbUrl = builder.Uri;
+            return true;
         }
     }
 }

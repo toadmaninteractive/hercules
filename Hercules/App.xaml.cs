@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Threading;
 using System.Windows;
@@ -17,6 +18,16 @@ namespace Hercules
             var innerException = e.Exception.InnerException ?? e.Exception;
             Logger.LogException(innerException);
             e.Handled = true;
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            if (UrlDispatcher.TryDispatch())
+            {
+                Environment.Exit(0);
+                return;
+            }
+            base.OnStartup(e);
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)

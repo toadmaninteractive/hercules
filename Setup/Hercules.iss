@@ -38,7 +38,7 @@ Root: HKCR; Subkey: "hercules"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "hercules"; ValueType: string; ValueData: "URL:Hercules Protocol"
 Root: HKCR; Subkey: "hercules"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
 Root: HKCR; Subkey: "hercules\DefaultIcon"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"",0"
-Root: HKCR; Subkey: "hercules\shell\open\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKCR; Subkey: "hercules\shell\open\command"; ValueType: string; ValueData: """{app}\{#MyAppExeName}"" -dispatch ""%1"""
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
