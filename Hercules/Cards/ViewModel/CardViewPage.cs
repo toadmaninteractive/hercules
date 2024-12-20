@@ -2,6 +2,7 @@
 using Hercules.Forms.Schema;
 using Hercules.Shell;
 using Json;
+using Json.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,21 @@ using System.Windows.Media.Imaging;
 
 namespace Hercules.Cards
 {
+    public class CardSettings : IJsonSerializable
+    {
+        public double TileSize { get; set; } = 250;
+
+        public void DeserializeJson(ImmutableJson json)
+        {
+            TileSize = json.IsObject ? json.AsObject.GetValueOrDefault("TileSize")?.AsNumber ?? 250 : 250;
+        }
+
+        public ImmutableJson SerializeJson()
+        {
+            return new JsonObject { ["TileSize"] = TileSize };
+        }
+    }
+
     public class Card : NotifyPropertyChanged
     {
         public Card(IDocument document, IReadOnlyObservableValue<BitmapSource>? image, ICommand<IDocument> EditDocumentCommand)
@@ -31,10 +47,11 @@ namespace Hercules.Cards
 
     public class CardViewPage : Page, IWorkspaceContextMenuProvider
     {
-        public CardViewPage(Project project, DocumentsModule documentsModule, Category category, UiOptionManager optionManager)
+        public CardViewPage(Project project, CardSettings settings, DocumentsModule documentsModule, Category category, UiOptionManager optionManager)
         {
             ContextMenu = optionManager.GetContextMenu<IDocument>();
             Project = project;
+            Settings = settings;
             DocumentsModule = documentsModule;
             Category = category;
             Title = $"Tiles: {Category.Name}";
@@ -45,12 +62,15 @@ namespace Hercules.Cards
                 imagePathType = SchemaRecord.GetByPath(SchemaRecord.ImagePath) as PathSchemaType;
             }
             Cards.AddRange(Category.Documents.Select(d => new Card(d, ObserveImage(d), documentsModule.EditDocumentCommand.Single)));
+            tileSize = settings.TileSize;
+            smoothTileSize = settings.TileSize;
             smoothTileSizeSubscription = this.OnPropertyChanged(nameof(TileSize), host => host.TileSize).Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(s => SmoothTileSize = s);
         }
 
         private readonly IDisposable smoothTileSizeSubscription;
 
         public Project Project { get; }
+        public CardSettings Settings { get; }
         public DocumentsModule DocumentsModule { get; }
         public SchemaRecord SchemaRecord { get; }
         public Category Category { get; }
@@ -66,7 +86,11 @@ namespace Hercules.Cards
         public double TileSize
         {
             get => tileSize;
-            set => SetField(ref tileSize, value);
+            set
+            {
+                if (SetField(ref tileSize, value))
+                    Settings.TileSize = (float)value;
+            }
         }
 
         private double smoothTileSize = 250;
