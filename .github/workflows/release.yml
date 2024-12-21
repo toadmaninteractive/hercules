@@ -13,8 +13,11 @@ jobs:
 
   build:
 
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    runs-on: windows-latest
+
+    env:
+      SM_CLIENT_CERT_FILE: D:\\Certificate_pkcs12.p12
+      SM_HOST: ${{ secrets.SM_HOST }}
 
     steps:
     - name: Checkout
@@ -27,19 +30,34 @@ jobs:
       with:
         dotnet-version: 9.0.x
 
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
+    - name: Code signing with Software Trust Manager
+      uses: digicert/ssm-code-signing@v1.0.0
+
+    - name: Set up certificate 
+      run: | 
+        echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > ${{ env.SM_CLIENT_CERT_FILE }}
+        smctl credentials save ${{ secrets.SM_API_KEY }} ${{ secrets.SM_CLIENT_CERT_PASSWORD }}
+        smctl windows certsync --keypair-alias="${{ secrets.SM_KEYPAIR_ALIAS }}"
+      shell: bash
 
     - name: Publish
       run: dotnet publish Hercules\Hercules.csproj /p:PublishProfile=Hercules\Properties\PublishProfiles\PublishProfile.pubxml /p:BuildNumber=${{ github.run_number }}
 
+    - name: Sign Executables
+      run: |
+        smctl sign --fingerprint ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} --input bin\\hercules.exe --tool signtool
+        smctl sign --fingerprint ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} --input bin\\hercules.dll --tool signtool
+
     - name: Create rev.conf
       run: echo "${{ github.run_number }}" > rev.conf
 
-    - name: Inno Setup Action
+    - name: Create installer
       uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
       with:
         path: Setup/Hercules.iss
+
+    - name: Sign Installer
+      run: smctl sign --fingerprint ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} --input Setup\\Output\\hercules_setup.exe --tool signtool
 
     - name: Release
       uses: softprops/action-gh-release@v2
