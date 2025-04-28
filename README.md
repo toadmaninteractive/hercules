@@ -35,7 +35,7 @@ View documentation at https://toadman-hercules.readthedocs.io/stable/index.html
 - Viewing and editing of diagrams
 - API-powered scripting system for advanced data manipulation
 
-## Hercules For Game Designers
+## Hercules For Game Designers
 
 - Universal data editor that works with all kinds of game design data
 - Lightweight design cycle without technical routines: launching heavy engine editors, submitting changes to version control systems, making builds, performing installations, waiting for playtests to start, and receiving feedback
