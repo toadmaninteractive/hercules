@@ -43,6 +43,7 @@
     <PackageReference Include="Jint" Version="4.1.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="MimeMapping" Version="3.1.0" />
+    <PackageReference Include="ModelContextProtocol.Core" Version="0.3.0-preview.1" />
     <PackageReference Include="NPOI" Version="2.7.2" />
     <PackageReference Include="Pfim" Version="0.11.3" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />

@@ -29,6 +29,7 @@ using System.Windows.Media;
 using Hercules.Repository;
 using Hercules.Localization;
 using Hercules.Cards;
+using Hercules.AI;
 
 namespace Hercules
 {
@@ -68,6 +69,7 @@ namespace Hercules
             Core.AddModule(new RepositoryModule(Core));
             Core.AddModule(new DocumentsModule(Core));
             Core.AddModule(new SearchModule(Core));
+            Core.AddModule(new AiModule(Core));
             Core.AddModule(new AnalysisModule(Core));
             Core.AddModule(new SummaryModule(Core));
             Core.AddModule(new ScriptingModule(Core));

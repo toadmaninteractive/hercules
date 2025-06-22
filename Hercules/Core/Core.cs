@@ -133,5 +133,11 @@ namespace Hercules
             var i = Array.IndexOf(args, name);
             return i > 0 && i < args.Length - 1 ? args[i + 1] : null;
         }
+
+        public static bool HasCliArgument(string name)
+        {
+            var args = Environment.GetCommandLineArgs();
+            return Array.IndexOf(args, name) >= 0;
+        }
     }
 }
