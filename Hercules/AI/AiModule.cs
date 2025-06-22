@@ -85,9 +85,10 @@ namespace Hercules.AI
                 ]
             };
 
+            var loggerFactory = new HerculesLoggerFactory();
             // Create and run server with stdio transport
-            await using var stdioTransport = new StdioServerTransport(serverOptions);
-            var server = McpServerFactory.Create(stdioTransport, serverOptions);
+            await using var stdioTransport = new StdioServerTransport(serverOptions, loggerFactory);
+            var server = McpServerFactory.Create(stdioTransport, serverOptions, loggerFactory);
             await server.RunAsync(ct);
         }
 

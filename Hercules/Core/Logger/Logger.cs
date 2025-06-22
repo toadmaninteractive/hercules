@@ -39,7 +39,7 @@ namespace Hercules
 
         public static IObservable<LogEvent> Events => subject.AsObservable();
 
-        static void AddEvent(LogEvent e)
+        public static void AddEvent(LogEvent e)
         {
             subject.OnNext(e);
         }
