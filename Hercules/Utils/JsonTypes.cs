@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 
 namespace Json
 {
@@ -103,6 +104,11 @@ namespace Json
             foreach (var key in keys)
                 jsonObject.Remove(key);
             return jsonObject;
+        }
+
+        public static JsonElement ToJsonElement(this ImmutableJson json)
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<JsonElement>(json.ToString());
         }
     }
 

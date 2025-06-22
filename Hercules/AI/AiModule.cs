@@ -3,6 +3,7 @@ using ModelContextProtocol.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -92,28 +93,28 @@ namespace Hercules.AI
             await server.RunAsync(ct);
         }
 
-        public string GetSchema()
+        public JsonElement GetSchema()
         {
-            return Core.Project.Database.Documents["schema"].Json.ToString();
+            return Core.Project.Database.Documents["schema"].Json.ToJsonElement();
         }
 
-        public string GetDocument(string id)
+        public JsonElement? GetDocument(string id)
         {
             if (Core.Project.Database.Documents.TryGetValue(id, out var doc))
             {
-                return doc.Json.ToString();
+                return doc.Json.ToJsonElement();
             }
-            return "null";
+            return null;
         }
 
-        public List<string> GetDocuments(string[] ids)
+        public List<JsonElement> GetDocuments(string[] ids)
         {
-            var result = new List<string>();
+            var result = new List<JsonElement>();
             foreach (var id in ids)
             {
                 if (Core.Project.Database.Documents.TryGetValue(id, out var doc))
                 {
-                    result.Add(doc.Json.ToString());
+                    result.Add(doc.Json.ToJsonElement());
                 }
             }
             return result;
