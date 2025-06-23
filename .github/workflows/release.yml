@@ -8,6 +8,11 @@ on:
         required: true
         default: true
         type: boolean
+      sign:
+        description: 'Sign'
+        required: true
+        default: false
+        type: boolean
 
 jobs:
 
@@ -31,9 +36,11 @@ jobs:
         dotnet-version: 9.0.x
 
     - name: Code signing with Software Trust Manager
+      if: ${{ inputs.sign }}
       uses: digicert/ssm-code-signing@v1.0.0
 
     - name: Set up certificate 
+      if: ${{ inputs.sign }}
       run: | 
         echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > ${{ env.SM_CLIENT_CERT_FILE }}
         smctl credentials save ${{ secrets.SM_API_KEY }} ${{ secrets.SM_CLIENT_CERT_PASSWORD }}
@@ -44,6 +51,7 @@ jobs:
       run: dotnet publish Hercules\Hercules.csproj /p:PublishProfile=Hercules\Properties\PublishProfiles\PublishProfile.pubxml /p:BuildNumber=${{ github.run_number }}
 
     - name: Sign Executables
+      if: ${{ inputs.sign }}
       run: |
         smctl sign --fingerprint ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} --input bin\\hercules.exe --tool signtool
         smctl sign --fingerprint ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} --input bin\\hercules.dll --tool signtool
@@ -57,6 +65,7 @@ jobs:
         path: Setup/Hercules.iss
 
     - name: Sign Installer
+      if: ${{ inputs.sign }}
       run: smctl sign --fingerprint ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} --input Setup\\Output\\hercules_setup.exe --tool signtool
 
     - name: Release
