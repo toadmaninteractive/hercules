@@ -10,7 +10,7 @@ namespace Hercules.AI
         public AiModule(Core core)
             : base(core)
         {
-            aiChatTool = new AiChatTool(core);
+            aiChatTool = new AiChatTool(this, new McpServer(core));
             Workspace.WindowService.AddTool(aiChatTool);
             var aiChatCommand = Commands.Execute(() => aiChatTool.Show());
             var searchOption = new UiCommandOption("AI Chat", Fugue.Icons.Robot, aiChatCommand);

@@ -78,7 +78,7 @@ namespace Hercules.AI
                     foreach (var toolCall in result.ToolCalls)
                     {
                         var response = toolCall.Invoke<string>();
-                        Logger.LogDebug($"AI Calls {toolCall.Name}({toolCall.Arguments})");
+                        // Logger.LogDebug($"AI Calls {toolCall.Name}({toolCall.Arguments})");
                         chatLog.Insert(chatLog.TextLength, response);
                         chatLog.Insert(chatLog.TextLength, Environment.NewLine);
                         chatLog.Insert(chatLog.TextLength, Environment.NewLine);
