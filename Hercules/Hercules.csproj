@@ -13,8 +13,8 @@
     <Copyright>Toadman Interactive © 2012 - 2024</Copyright>
     <Description>Design document editor</Description>
     <BuildNumber>0</BuildNumber>
-    <AssemblyVersion>2.3.2.$(BuildNumber)</AssemblyVersion>
-    <FileVersion>2.3.2.$(BuildNumber)</FileVersion>
+    <AssemblyVersion>2.4.0.$(BuildNumber)</AssemblyVersion>
+    <FileVersion>2.4.0.$(BuildNumber)</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
     <Nullable>enable</Nullable>
