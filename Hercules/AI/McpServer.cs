@@ -3,6 +3,7 @@ using Json;
 using ModelContextProtocol.Server;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -102,16 +103,16 @@ namespace Hercules.AI
             await server.RunAsync(ct);
         }
 
-        public JsonElement GetSchema()
+        public string GetSchema()
         {
-            return Core.Project.Database.Documents["schema"].Json.ToJsonElement();
+            return Core.Project.Database.Documents["schema"].Json.ToString();
         }
 
-        public JsonElement? GetDocument(string id)
+        public string? GetDocument(string id)
         {
             if (Core.Project.Database.Documents.TryGetValue(id, out var doc))
             {
-                return doc.Json.ToJsonElement();
+                return doc.Json.ToString();
             }
             return null;
         }
@@ -129,31 +130,36 @@ namespace Hercules.AI
             return result;
         }
 
-        public string[] GetCategoryList(string category)
+        public string GetCategoryList(string category)
         {
-            return Core.Project.SchemafulDatabase.Categories.Select(c => c.Name).ToArray();
+            var strings = Core.Project.SchemafulDatabase.Categories.Select(c => c.Name).ToArray();
+            return string.Join(Environment.NewLine, strings);
         }
 
-        public string[] GetAllDocumentIds()
+        public string GetAllDocumentIds()
         {
-            return Core.Project.Database.Documents.Select(d => d.Key).ToArray();
+            var strings = Core.Project.Database.Documents.Select(d => d.Key).ToArray();
+            return string.Join(Environment.NewLine, strings);
         }
 
-        public string[] GetDocumentIdsByCategory(string category)
+        public string GetDocumentIdsByCategory(string category)
         {
-            var categoryObject = Core.Project.SchemafulDatabase.Categories.FirstOrDefault(c => c.Name == category);
+            var categoryObject = Core.Project.SchemafulDatabase.Categories.FirstOrDefault(c => string.Equals(c.Name, category, StringComparison.CurrentCultureIgnoreCase));
             if (categoryObject == null)
-                return Array.Empty<string>();
+                return "No documents found";
             else
-                return categoryObject.Documents.Select(d => d.DocumentId).ToArray();
+            {
+                var strings = categoryObject.Documents.Select(d => d.DocumentId).ToArray();
+                return string.Join(Environment.NewLine, strings);
+            }
         }
 
-        public List<Dictionary<string, string>> GetPropertyValuesForMultipleDocuments(string[] ids, string[] jsonPropertyPaths)
+        public string GetPropertyValuesForMultipleDocuments(string[] ids, string[] jsonPropertyPaths)
         {
-            List<Dictionary<string, string>> result = new();
+            JsonArray result = new();
             foreach (var id in ids)
             {
-                var obj = new Dictionary<string, string>();
+                var obj = new JsonObject();
                 obj["_id"] = id;
                 if (Core.Project.Database.Documents.TryGetValue(id, out var doc))
                 {
@@ -166,7 +172,7 @@ namespace Hercules.AI
                 }
                 result.Add(obj);
             }
-            return result;
+            return result.ToImmutable().ToString();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Protocol usage")]

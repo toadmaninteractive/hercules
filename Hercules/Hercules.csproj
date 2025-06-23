@@ -35,6 +35,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Anthropic.SDK" Version="5.4.1" />
     <PackageReference Include="Artplant.Json" Version="1.0.4" />
     <PackageReference Include="AutomaticGraphLayout" Version="1.1.12" />
     <PackageReference Include="AutomaticGraphLayout.WpfGraphControl" Version="1.1.12" />
@@ -45,7 +46,6 @@
     <PackageReference Include="MimeMapping" Version="3.1.0" />
     <PackageReference Include="ModelContextProtocol.Core" Version="0.3.0-preview.1" />
     <PackageReference Include="NPOI" Version="2.7.2" />
-    <PackageReference Include="OllamaSharp" Version="5.2.2" />
     <PackageReference Include="Pfim" Version="0.11.3" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.68.0.3624" />

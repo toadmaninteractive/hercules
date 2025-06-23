@@ -9,7 +9,10 @@
     <DockPanel LastChildFill="True">
         <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom" Margin="4">
             <TextBox Text="{Binding UserPrompt, UpdateSourceTrigger=PropertyChanged}" Height="70" TextWrapping="Wrap" />
-            <Button HorizontalAlignment="Right" Command="{Binding SubmitCommand}" Margin="4" Height="20" Width="160"  Content="Submit" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button HorizontalAlignment="Right" Command="{Binding SubmitCommand}" Margin="4" Height="20" Width="160"  Content="Submit" />
+                <Button HorizontalAlignment="Right" Command="{Binding ResetChatCommand}" Margin="4" Height="20" Width="160"  Content="Reset Chat" />
+            </StackPanel>
         </StackPanel>
         <Grid Background="#ffe9ecfa" Margin="4">
             <Border
@@ -19,6 +22,7 @@
                             Name="TextEditor"
                             FontFamily="Courier New"
                             IsReadOnly="True"
+                    WordWrap="True"
                             Document="{Binding ChatLog}"
                             ShowLineNumbers="False"
                             VerticalScrollBarVisibility="Visible">

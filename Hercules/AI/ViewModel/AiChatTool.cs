@@ -18,14 +18,16 @@ namespace Hercules.AI
         private readonly HerculesChatClient herculesChatClient;
 
         public ICommand SubmitCommand { get; }
+        public ICommand ResetChatCommand { get; }
 
-        public AiChatTool()
+        public AiChatTool(Core core)
         {
             ChatLog = new();
-            herculesChatClient = new(ChatLog);
+            herculesChatClient = new(ChatLog, new McpServer(core));
             Title = "AI Chat";
             userPrompt = "";
             SubmitCommand = Commands.Execute(Submit).If(() => !string.IsNullOrEmpty(UserPrompt));
+            ResetChatCommand = Commands.Execute(ResetChat);
         }
 
         private void Submit()
@@ -34,6 +36,12 @@ namespace Hercules.AI
                 herculesChatClient.InitOllama();
 
             herculesChatClient.Ask(userPrompt);
+        }
+
+        private void ResetChat()
+        {
+            ChatLog.Text = "";
+            herculesChatClient.Reset();
         }
     }
 }
