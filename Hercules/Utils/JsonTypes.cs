@@ -110,6 +110,37 @@ namespace Json
         {
             return System.Text.Json.JsonSerializer.Deserialize<JsonElement>(json.ToString());
         }
+
+        public static ImmutableJson ToImmutableJson(this JsonElement jsonElement)
+        {
+            switch (jsonElement.ValueKind)
+            {
+                case JsonValueKind.Object:
+                    var jsonObject = new JsonObject();
+                    foreach (var item in jsonElement.EnumerateObject())
+                    {
+                        jsonObject.Add(item.Name, item.Value.ToImmutableJson());
+                    }
+                    return jsonObject.ToImmutable();
+                case JsonValueKind.Array:
+                    var jsonArray = new JsonArray();
+                    foreach (var item in jsonElement.EnumerateArray())
+                    {
+                        jsonArray.Add(item.ToImmutableJson());
+                    }
+                    return jsonArray.ToImmutable();
+                case JsonValueKind.String:
+                    return ImmutableJson.Create(jsonElement.GetString()!);
+                case JsonValueKind.Number:
+                    return ImmutableJson.Create(jsonElement.GetDouble()!);
+                case JsonValueKind.True:
+                    return ImmutableJson.Null;
+                case JsonValueKind.False:
+                    return ImmutableJson.False;
+                default:
+                    return ImmutableJson.Null;
+            }
+        }
     }
 
     public class JsonPathSerializer : IJsonSerializer<JsonPath>
