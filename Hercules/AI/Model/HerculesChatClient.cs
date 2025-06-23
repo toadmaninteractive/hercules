@@ -15,18 +15,22 @@ namespace Hercules.AI
         private AnthropicClient? chatClient;
         private List<Anthropic.SDK.Common.Tool>? tools;
         private readonly McpServer mcpServer;
+        private readonly Setting<string> apiKey;
+        private readonly Setting<string> aiModel;
 
         public bool IsConnected => chatClient != null;
 
-        public HerculesChatClient(TextDocument chatLog, McpServer mcpServer)
+        public HerculesChatClient(TextDocument chatLog, McpServer mcpServer, Setting<string> apiKey, Setting<string> aiModel)
         {
             this.chatLog = chatLog;
             this.mcpServer = mcpServer;
+            this.apiKey = apiKey;
+            this.aiModel = aiModel;
         }
 
-        public void Init(string apiKey)
+        public void Init()
         {
-            chatClient = new AnthropicClient(new APIAuthentication(apiKey));
+            chatClient = new AnthropicClient(new APIAuthentication(apiKey.Value));
 
             tools = new List<Anthropic.SDK.Common.Tool>
             {
@@ -43,11 +47,12 @@ namespace Hercules.AI
 
         public async Task WaitForAnswer()
         {
+            chatClient.Auth.ApiKey = apiKey.Value;
             var parameters = new MessageParameters()
             {
                 Messages = messages,
                 MaxTokens = 2048,
-                Model = AnthropicModels.Claude37Sonnet,
+                Model = aiModel.Value,
                 Stream = false,
                 Temperature = 1.0m,
                 Tools = tools,

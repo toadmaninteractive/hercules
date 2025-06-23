@@ -16,26 +16,27 @@ namespace Hercules.AI
         }
 
         private readonly HerculesChatClient herculesChatClient;
-        private readonly Core core;
 
         public ICommand SubmitCommand { get; }
         public ICommand ResetChatCommand { get; }
 
         public AiChatTool(Core core)
         {
+            var aiModule = core.GetModule<AiModule>();
             ChatLog = new();
-            herculesChatClient = new(ChatLog, new McpServer(core));
+            herculesChatClient = new(ChatLog, new McpServer(core), aiModule.AnthropicApiKey, aiModule.AiModel);
             Title = "AI Chat";
             userPrompt = "";
             SubmitCommand = Commands.Execute(Submit).If(() => !string.IsNullOrEmpty(UserPrompt));
             ResetChatCommand = Commands.Execute(ResetChat);
-            this.core = core;
         }
 
         private void Submit()
         {
             if (!herculesChatClient.IsConnected)
-                herculesChatClient.Init(core.GetModule<AiModule>().AnthropicApiKey.Value);
+            {
+                herculesChatClient.Init();
+            }
 
             herculesChatClient.Ask(userPrompt);
         }

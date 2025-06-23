@@ -6,8 +6,10 @@
              xmlns:local="clr-namespace:Hercules.AI" xmlns:ai="clr-namespace:Hercules.AI" d:DataContext="{d:DesignInstance Type=ai:AiSettingsTab}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Margin="8">
-        <TextBlock Margin="0,0,0,10" Text="Anthropic API Key" FontWeight="Black" />
-        <TextBox HorizontalAlignment="Stretch" Text="{Binding AnthropicApiKey.Value}" />
+    <StackPanel Margin="10,0,10,0">
+        <TextBlock Margin="0,10,0,4" Text="Anthropic API Key:" />
+        <TextBox Height="22" HorizontalAlignment="Stretch" Padding="2,2" Text="{Binding AnthropicApiKey.Value}" />
+        <TextBlock Margin="0,10,0,4" Text="AI Model:" />
+        <ComboBox Width="250" HorizontalAlignment="Left" ItemsSource="{Binding AiModels}" SelectedValue="{Binding AiModel.Value}" />
     </StackPanel>
 </UserControl>

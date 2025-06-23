@@ -1,4 +1,5 @@
-﻿using Hercules.Shell;
+﻿using Anthropic.SDK.Constants;
+using Hercules.Shell;
 using System;
 using System.Reactive.Linq;
 
@@ -14,8 +15,9 @@ namespace Hercules.AI
             var aiChatCommand = Commands.Execute(() => aiChatTool.Show());
             var searchOption = new UiCommandOption("AI Chat", Fugue.Icons.Robot, aiChatCommand);
             Workspace.OptionManager.AddMenuOption(searchOption, "Tools", showInToolbar: true);
-            settingsPageSubscription = Workspace.WindowService.WhenAddingPage.OfType<SettingsPage>().Subscribe(p => p.Tabs.Add(new AiSettingsTab(AnthropicApiKey)));
+            settingsPageSubscription = Workspace.WindowService.WhenAddingPage.OfType<SettingsPage>().Subscribe(p => p.Tabs.Add(new AiSettingsTab(AnthropicApiKey, AiModel)));
             Core.SettingsService.AddSetting(AnthropicApiKey);
+            Core.SettingsService.AddSetting(AiModel);
         }
 
         private McpServer? mcpServer;
@@ -23,6 +25,7 @@ namespace Hercules.AI
         private readonly IDisposable settingsPageSubscription;
 
         public Setting<string> AnthropicApiKey { get; } = new Setting<string>(nameof(AnthropicApiKey), "");
+        public Setting<string> AiModel { get; } = new Setting<string>(nameof(AiModel), AnthropicModels.Claude35Sonnet);
 
         public override void OnLoad(Uri? startUri)
         {
