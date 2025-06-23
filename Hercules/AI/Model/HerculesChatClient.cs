@@ -25,9 +25,9 @@ namespace Hercules.AI
             this.mcpServer = mcpServer;
         }
 
-        public void InitOllama()
+        public void Init(string apiKey)
         {
-            chatClient = new AnthropicClient();
+            chatClient = new AnthropicClient(new APIAuthentication(apiKey));
 
             tools = new List<Anthropic.SDK.Common.Tool>
             {
