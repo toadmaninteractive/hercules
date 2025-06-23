@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Hercules.AI.Model
+namespace Hercules.AI.View
 {
     /// <summary>
     /// Interaction logic for AiSettingsTabView.xaml
