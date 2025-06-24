@@ -1,4 +1,5 @@
 ﻿using Hercules.Documents;
+using Hercules.Documents.Editor;
 using Json;
 using ModelContextProtocol.Server;
 using System;
@@ -69,6 +70,14 @@ namespace Hercules.AI
                         Destructive = false,
                         OpenWorld = false,
                     }),
+                    McpServerTool.Create(GetOpenedDocumentIds, new()
+                    {
+                        Name = nameof(GetOpenedDocumentIds),
+                        Description = "Gets the list of opened Hercules document IDs.",
+                        ReadOnly = true,
+                        Destructive = false,
+                        OpenWorld = false,
+                    }),
                     McpServerTool.Create(GetDocumentIdsByCategory, new()
                     {
                         Name = nameof(GetDocumentIdsByCategory),
@@ -117,17 +126,17 @@ namespace Hercules.AI
             return null;
         }
 
-        public List<JsonElement> GetDocuments(string[] ids)
+        public string GetDocuments(string[] ids)
         {
-            var result = new List<JsonElement>();
+            var result = new List<string>();
             foreach (var id in ids)
             {
                 if (Core.Project.Database.Documents.TryGetValue(id, out var doc))
                 {
-                    result.Add(doc.Json.ToJsonElement());
+                    result.Add(doc.Json.ToString());
                 }
             }
-            return result;
+            return string.Join(Environment.NewLine, result);
         }
 
         public string GetCategoryList(string category)
@@ -140,6 +149,15 @@ namespace Hercules.AI
         {
             var strings = Core.Project.Database.Documents.Select(d => d.Key).ToArray();
             return string.Join(Environment.NewLine, strings);
+        }
+
+        public string GetOpenedDocumentIds()
+        {
+            var documentIds = Core.Workspace.WindowService.Pages.OfType<DocumentEditorPage>().Select(d => d.Document.DocumentId).ToArray();
+            if (documentIds.Length > 0)
+                return string.Join(Environment.NewLine, documentIds);
+            else
+                return "There're no opened documents";
         }
 
         public string GetDocumentIdsByCategory(string category)

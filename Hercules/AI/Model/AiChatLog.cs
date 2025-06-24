@@ -42,7 +42,7 @@ namespace Hercules.AI
 
         public void AddHerculesMessage(string message)
         {
-            Document.Blocks.Add(new Paragraph(new Run(message)) { Foreground = Brushes.Gray, FontWeight = FontWeights.Light });
+            Document.Blocks.Add(new Paragraph(new Run(message)) { Foreground = Brushes.Gray, FontWeight = FontWeights.Light, FontFamily = new FontFamily("Courier New"), FontSize = 11 });
             OnChanged?.Invoke();
         }
 
