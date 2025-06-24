@@ -1,12 +1,13 @@
 ﻿using Hercules.Shell;
-using ICSharpCode.AvalonEdit.Document;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace Hercules.AI
 {
     public class AiChatTool : Tool
     {
-        public TextDocument ChatLog { get; }
+        public FlowDocument ChatLog { get; }
+        public ObservableValue<bool> IsGenerating { get; }
 
         private string userPrompt;
         public string UserPrompt
@@ -23,7 +24,8 @@ namespace Hercules.AI
         public AiChatTool(AiModule aiModule, McpServer mcpServer)
         {
             ChatLog = new();
-            herculesChatClient = new(ChatLog, mcpServer, aiModule.AnthropicApiKey, aiModule.AiModel);
+            IsGenerating = new(false);
+            herculesChatClient = new(ChatLog, mcpServer, aiModule.AnthropicApiKey, aiModule.AiModel, IsGenerating);
             Title = "AI Chat";
             userPrompt = "";
             SubmitCommand = Commands.Execute(Submit).If(() => !string.IsNullOrEmpty(UserPrompt));
@@ -42,7 +44,7 @@ namespace Hercules.AI
 
         private void ResetChat()
         {
-            ChatLog.Text = "";
+            ChatLog.Blocks.Clear();
             herculesChatClient.Reset();
         }
     }

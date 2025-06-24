@@ -1,31 +1,34 @@
 ﻿using Anthropic.SDK;
-using Anthropic.SDK.Constants;
 using Anthropic.SDK.Messaging;
-using ICSharpCode.AvalonEdit.Document;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace Hercules.AI
 {
     public class HerculesChatClient
     {
         private readonly List<Message> messages = new();
-        private readonly TextDocument chatLog;
+        private readonly FlowDocument chatLog;
         private AnthropicClient? chatClient;
         private List<Anthropic.SDK.Common.Tool>? tools;
         private readonly McpServer mcpServer;
         private readonly Setting<string> apiKey;
         private readonly Setting<string> aiModel;
+        private readonly ObservableValue<bool> isGenerating;
 
         public bool IsConnected => chatClient != null;
 
-        public HerculesChatClient(TextDocument chatLog, McpServer mcpServer, Setting<string> apiKey, Setting<string> aiModel)
+        public HerculesChatClient(FlowDocument chatLog, McpServer mcpServer, Setting<string> apiKey, Setting<string> aiModel, ObservableValue<bool> isGenerating)
         {
             this.chatLog = chatLog;
             this.mcpServer = mcpServer;
             this.apiKey = apiKey;
             this.aiModel = aiModel;
+            this.isGenerating = isGenerating;
         }
 
         public void Init()
@@ -47,69 +50,71 @@ namespace Hercules.AI
 
         public async Task WaitForAnswer()
         {
-            chatClient.Auth.ApiKey = apiKey.Value;
-            var parameters = new MessageParameters()
+            isGenerating.Value = true;
+            try
             {
-                Messages = messages,
-                MaxTokens = 2048,
-                Model = aiModel.Value,
-                Stream = false,
-                Temperature = 1.0m,
-                Tools = tools,
-                PromptCaching = PromptCacheType.AutomaticToolsAndSystem,
-                System = new List<SystemMessage>
+                chatClient.Auth.ApiKey = apiKey.Value;
+                var parameters = new MessageParameters()
+                {
+                    Messages = messages,
+                    MaxTokens = 2048,
+                    Model = aiModel.Value,
+                    Stream = false,
+                    Temperature = 1.0m,
+                    Tools = tools,
+                    PromptCaching = PromptCacheType.AutomaticToolsAndSystem,
+                    System = new List<SystemMessage>
                 {
                     new SystemMessage("You're the assistant in the tool called Hercules. This is the design data database frontend and editor for game development. Each database entry is a JSON document, and a single document describes a single game entity. Documents are identified by their _id property, and contain their type in category property. Special schema document defines which other properties are available. Answer user's questions.")
                 }
-            };
-            while (true)
-            {
-                var result = await chatClient!.Messages.GetClaudeMessageAsync(parameters);
-                // result.Message.Content.First().CacheControl = new Anthropic.SDK.Messaging.CacheControl() { Type = CacheControlType.ephemeral };
-
-                messages.Add(result.Message);
-
-                chatLog.Insert(chatLog.TextLength, result.Message.ToString());
-                chatLog.Insert(chatLog.TextLength, Environment.NewLine);
-                chatLog.Insert(chatLog.TextLength, Environment.NewLine);
-
-                if (result.ToolCalls.Count > 0)
+                };
+                while (true)
                 {
-                    foreach (var toolCall in result.ToolCalls)
+                    var result = await chatClient!.Messages.GetClaudeMessageAsync(parameters);
+                    // result.Message.Content.First().CacheControl = new Anthropic.SDK.Messaging.CacheControl() { Type = CacheControlType.ephemeral };
+
+                    messages.Add(result.Message);
+
+                    chatLog.Blocks.Add(new Paragraph(new Run(result.Message.ToString())));
+
+                    if (result.ToolCalls.Count > 0)
                     {
-                        var response = toolCall.Invoke<string>();
-                        // Logger.LogDebug($"AI Calls {toolCall.Name}({toolCall.Arguments})");
-                        chatLog.Insert(chatLog.TextLength, response);
-                        chatLog.Insert(chatLog.TextLength, Environment.NewLine);
-                        chatLog.Insert(chatLog.TextLength, Environment.NewLine);
-                        messages.Add(new Message(toolCall, response));
+                        foreach (var toolCall in result.ToolCalls)
+                        {
+                            var response = toolCall.Invoke<string>();
+                            chatLog.Blocks.Add(new Paragraph(new Run(response)) { Foreground = Brushes.Gray, FontWeight = FontWeights.Light });
+                            messages.Add(new Message(toolCall, response));
+                        }
+                        continue;
                     }
-                    continue;
-                }
-                if (result.StopReason == "end_turn")
-                {
-                    chatLog.Insert(chatLog.TextLength, "Finished.");
-                    chatLog.Insert(chatLog.TextLength, Environment.NewLine);
-                    chatLog.Insert(chatLog.TextLength, Environment.NewLine);
-                    break;
-                }
-                if (!string.IsNullOrEmpty(result.StopReason))
-                {
-                    chatLog.Insert(chatLog.TextLength, result.StopReason);
-                    chatLog.Insert(chatLog.TextLength, Environment.NewLine);
-                    chatLog.Insert(chatLog.TextLength, Environment.NewLine);
+                    if (result.StopReason == "end_turn")
+                    {
+                        break;
+                    }
+                    if (!string.IsNullOrEmpty(result.StopReason))
+                    {
+                        chatLog.Blocks.Add(new Paragraph(new Run(result.StopReason)) { Foreground = Brushes.Yellow });
+                    }
                 }
             }
-            chatLog.Insert(chatLog.TextLength, Environment.NewLine);
-            chatLog.Insert(chatLog.TextLength, Environment.NewLine);
+            catch (Exception exception)
+            {
+                Logger.LogException("AI Chat error", exception);
+                var errorParagraph = new Paragraph(new Run(exception.Message.Trim())) { Foreground = Brushes.Red };
+                chatLog.Blocks.Add(errorParagraph);
+            }
+            finally
+            {
+                isGenerating.Value = false;
+            }
         }
 
         public void Ask(string userPrompt)
         {
+            userPrompt = userPrompt.Trim();
             messages.Add(new Message(RoleType.User, userPrompt));
-            chatLog.Insert(chatLog.TextLength, userPrompt);
-            chatLog.Insert(chatLog.TextLength, Environment.NewLine);
-            chatLog.Insert(chatLog.TextLength, Environment.NewLine);
+            var paragraph = new Paragraph(new Run(userPrompt)) { FontStyle = FontStyles.Italic, Foreground = Brushes.DarkBlue };
+            chatLog.Blocks.Add(paragraph);
             WaitForAnswer().Track();
         }
 

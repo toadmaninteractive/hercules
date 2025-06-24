@@ -3,40 +3,37 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
              xmlns:local="clr-namespace:Hercules.AI.View" xmlns:ai="clr-namespace:Hercules.AI" xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:hc="clr-namespace:Hercules.Controls" d:DataContext="{d:DesignInstance Type=ai:AiChatTool}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <DockPanel LastChildFill="True">
-        <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom" Margin="4">
-            <TextBox Text="{Binding UserPrompt, UpdateSourceTrigger=PropertyChanged}" Height="70" TextWrapping="Wrap" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button HorizontalAlignment="Right" Command="{Binding SubmitCommand}" Margin="4" Height="20" Width="160"  Content="Submit" />
-                <Button HorizontalAlignment="Right" Command="{Binding ResetChatCommand}" Margin="4" Height="20" Width="160"  Content="Reset Chat" />
-            </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4" />
+            <RowDefinition Height="*" MinHeight="30" />
+            <RowDefinition Height="4" />
+            <RowDefinition Height="100" MinHeight="30" />
+            <RowDefinition Height="32" />
+        </Grid.RowDefinitions>
+        <ProgressBar Grid.Row="0" Value="100" IsIndeterminate="{Binding IsGenerating.Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal" />
+        <FlowDocumentScrollViewer FontFamily="Courier New" FontSize="12" Padding="0" Grid.Row="1" Document="{Binding ChatLog}" VerticalScrollBarVisibility="Visible">
+            <FlowDocumentScrollViewer.Resources>
+                <Style TargetType="{x:Type Paragraph}">
+                    <Setter Property="Margin" Value="0,0,0,8" />
+                    <Setter Property="Padding" Value="0" />
+                </Style>
+                <Style TargetType="{x:Type FlowDocument}">
+                    <Setter Property="PagePadding" Value="4" />
+                    <Setter Property="FontFamily" Value="Courier New" />
+                    <Setter Property="FontSize" Value="12" />
+                </Style>
+            </FlowDocumentScrollViewer.Resources>
+        </FlowDocumentScrollViewer>
+        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" ResizeDirection="Rows" />
+        <telerik:RadWatermarkTextBox Grid.Row="3" WatermarkContent="Start conversation with AI" VerticalContentAlignment="Top" Text="{Binding UserPrompt, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" TextWrapping="Wrap" />
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button IsDefault="True" HorizontalAlignment="Right" Command="{Binding SubmitCommand}" Margin="4" Height="20" Width="160"  Content="Submit" />
+            <Button HorizontalAlignment="Right" Command="{Binding ResetChatCommand}" Margin="4" Height="20" Width="160"  Content="Reset Chat" />
         </StackPanel>
-        <Grid Background="#ffe9ecfa" Margin="4">
-            <Border
-                        BorderThickness="1"
-                        BorderBrush="Gray">
-                <ae:TextEditor
-                            Name="TextEditor"
-                            FontFamily="Courier New"
-                            IsReadOnly="True"
-                    WordWrap="True"
-                            Document="{Binding ChatLog}"
-                            ShowLineNumbers="False"
-                            VerticalScrollBarVisibility="Visible">
-                    <ae:TextEditor.Options>
-                        <ae:TextEditorOptions EnableImeSupport="False" HighlightCurrentLine="True" ConvertTabsToSpaces="True" />
-                    </ae:TextEditor.Options>
-                    <ae:TextEditor.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{x:Static ApplicationCommands.Copy}" />
-                            <MenuItem Command="{x:Static ApplicationCommands.SelectAll}" />
-                        </ContextMenu>
-                    </ae:TextEditor.ContextMenu>
-                </ae:TextEditor>
-            </Border>
-        </Grid>
-    </DockPanel>
+    </Grid>
 </UserControl>
