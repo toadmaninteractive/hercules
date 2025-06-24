@@ -1,4 +1,6 @@
 ﻿using Hercules.Shell;
+using System;
+using System.Collections.Specialized;
 using System.Windows.Documents;
 using System.Windows.Input;
 
@@ -6,7 +8,7 @@ namespace Hercules.AI
 {
     public class AiChatTool : Tool
     {
-        public FlowDocument ChatLog { get; }
+        public AiChatLog ChatLog { get; }
         public ObservableValue<bool> IsGenerating { get; }
 
         private string userPrompt;
@@ -44,7 +46,7 @@ namespace Hercules.AI
 
         private void ResetChat()
         {
-            ChatLog.Blocks.Clear();
+            ChatLog.Clear();
             herculesChatClient.Reset();
         }
     }

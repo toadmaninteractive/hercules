@@ -25,5 +25,11 @@ namespace Hercules.AI.View
         {
             InitializeComponent();
         }
+
+        public void ScrollToLast()
+        {
+            var scrollViewer = (ScrollViewer)ChatLog.Template.FindName("PART_ContentHost", ChatLog);
+            scrollViewer.ScrollToEnd();
+        }
     }
 }

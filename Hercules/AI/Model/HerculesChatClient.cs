@@ -12,7 +12,7 @@ namespace Hercules.AI
     public class HerculesChatClient
     {
         private readonly List<Message> messages = new();
-        private readonly FlowDocument chatLog;
+        private readonly IAiChatLog chatLog;
         private AnthropicClient? chatClient;
         private List<Anthropic.SDK.Common.Tool>? tools;
         private readonly McpServer mcpServer;
@@ -22,7 +22,7 @@ namespace Hercules.AI
 
         public bool IsConnected => chatClient != null;
 
-        public HerculesChatClient(FlowDocument chatLog, McpServer mcpServer, Setting<string> apiKey, Setting<string> aiModel, ObservableValue<bool> isGenerating)
+        public HerculesChatClient(IAiChatLog chatLog, McpServer mcpServer, Setting<string> apiKey, Setting<string> aiModel, ObservableValue<bool> isGenerating)
         {
             this.chatLog = chatLog;
             this.mcpServer = mcpServer;
@@ -75,14 +75,14 @@ namespace Hercules.AI
 
                     messages.Add(result.Message);
 
-                    chatLog.Blocks.Add(new Paragraph(new Run(result.Message.ToString())));
+                    chatLog.AddAiMessage(result.Message.ToString());
 
                     if (result.ToolCalls.Count > 0)
                     {
                         foreach (var toolCall in result.ToolCalls)
                         {
                             var response = toolCall.Invoke<string>();
-                            chatLog.Blocks.Add(new Paragraph(new Run(response)) { Foreground = Brushes.Gray, FontWeight = FontWeights.Light });
+                            chatLog.AddHerculesMessage(response);                            
                             messages.Add(new Message(toolCall, response));
                         }
                         continue;
@@ -93,15 +93,14 @@ namespace Hercules.AI
                     }
                     if (!string.IsNullOrEmpty(result.StopReason))
                     {
-                        chatLog.Blocks.Add(new Paragraph(new Run(result.StopReason)) { Foreground = Brushes.Yellow });
+                        chatLog.AddSpecialMessage(result.StopReason);
                     }
                 }
             }
             catch (Exception exception)
             {
                 Logger.LogException("AI Chat error", exception);
-                var errorParagraph = new Paragraph(new Run(exception.Message.Trim())) { Foreground = Brushes.Red };
-                chatLog.Blocks.Add(errorParagraph);
+                chatLog.AddException(exception);
             }
             finally
             {
@@ -113,8 +112,7 @@ namespace Hercules.AI
         {
             userPrompt = userPrompt.Trim();
             messages.Add(new Message(RoleType.User, userPrompt));
-            var paragraph = new Paragraph(new Run(userPrompt)) { FontStyle = FontStyles.Italic, Foreground = Brushes.DarkBlue };
-            chatLog.Blocks.Add(paragraph);
+            chatLog.AddUserMessage(userPrompt);
             WaitForAnswer().Track();
         }
 
