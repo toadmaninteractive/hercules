@@ -46,6 +46,7 @@ namespace Hercules.AI
                 Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.GetDocumentIdsByCategory), "Gets the list of Hercules design document IDs belonging to the category."),
                 Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.GetPropertyValuesForMultipleDocuments), "Gets values for the specified property path for multiple Hercules documents. Returns the list of objects with document ID and property values."),
                 Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.BatchUpdateDocuments), "Updates multiple values in Hercules documents. Accepts the list of JSON objects as input. Each object has three properties: id is document ID, path is the dot separated path to the property, and value is new JSON value of updated property."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.CreateDocument), "Create new Hercules document with the given id and json content."),
             };
         }
 

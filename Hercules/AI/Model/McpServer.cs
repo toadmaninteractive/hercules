@@ -102,6 +102,14 @@ namespace Hercules.AI
                         Destructive = false,
                         OpenWorld = false,
                     }),
+                    McpServerTool.Create(CreateDocument, new()
+                    {
+                        Name = nameof(CreateDocument),
+                        Description = "Create new Hercules document with the given id and json content.",
+                        ReadOnly = false,
+                        Destructive = false,
+                        OpenWorld = false,
+                    }),
                 ]
             };
 
@@ -200,15 +208,11 @@ namespace Hercules.AI
         {
             try
             {
-                Logger.Log("Start batch update");
                 Dictionary<string, ImmutableJsonObject> updatedDocs = new();
                 foreach (var update in updates)
                 {
                     var id = update.id;
-                    Logger.Log($"id: {id}");
                     var path = JsonPath.Parse(update.path.RemovePrefix("$."));
-                    Logger.Log($"path: {path}");
-                    Logger.Log($"update: {update.value}");
                     ImmutableJson json = JsonParser.Parse(update.value);
                     if (!updatedDocs.TryGetValue(id, out var updatedJson))
                     {
@@ -232,6 +236,14 @@ namespace Hercules.AI
                 Logger.LogException(exception);
                 throw;
             }
+        }
+
+        public string CreateDocument(string id, string jsonString)
+        {
+            var json = JsonParser.Parse(jsonString);
+            var draft = new DocumentDraft(json.AsObject);
+            Core.Workspace.Scheduler.ScheduleForegroundJob(() => Core.GetModule<DocumentsModule>().CreateDocument(id, draft));
+            return $"Document {id} created.";
         }
     }
 }
