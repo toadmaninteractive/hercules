@@ -105,7 +105,7 @@ namespace Hercules.AI
                     McpServerTool.Create(CreateDocument, new()
                     {
                         Name = nameof(CreateDocument),
-                        Description = "Create new Hercules document with the given id and json content.",
+                        Description = "Create new Hercules document with the given id and JSON content. When using this function, make sure either to clone existing document or check schema document to ensure that properties are correct.",
                         ReadOnly = false,
                         Destructive = false,
                         OpenWorld = false,
