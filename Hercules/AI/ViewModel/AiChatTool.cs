@@ -22,8 +22,9 @@ namespace Hercules.AI
 
         public ICommand SubmitCommand { get; }
         public ICommand ResetChatCommand { get; }
+        public ICommand SettingsCommand { get; }
 
-        public AiChatTool(AiModule aiModule, McpServer mcpServer)
+        public AiChatTool(AiModule aiModule, McpServer mcpServer, ICommand settingsCommand)
         {
             ChatLog = new();
             IsGenerating = new(false);
@@ -32,6 +33,7 @@ namespace Hercules.AI
             userPrompt = "";
             SubmitCommand = Commands.Execute(Submit).If(() => !string.IsNullOrEmpty(UserPrompt));
             ResetChatCommand = Commands.Execute(ResetChat);
+            SettingsCommand = settingsCommand;
         }
 
         private void Submit()
