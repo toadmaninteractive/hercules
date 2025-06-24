@@ -7,14 +7,11 @@ namespace Hercules.AI
 {
     public class AiSettingsTab : PageTab
     {
-        public Setting<string> AnthropicApiKey { get; }
-        public Setting<string> AiModel { get; }
         public List<string> AiModels { get; }
+        public AiSettings Settings { get; }
 
-        public AiSettingsTab(Setting<string> anthropicApiKey, Setting<string> aiModel)
+        public AiSettingsTab(AiSettings settings)
         {
-            AnthropicApiKey = anthropicApiKey;
-            AiModel = aiModel;
             Title = "AI";
             AiModels = new List<string>
             {
@@ -27,6 +24,7 @@ namespace Hercules.AI
                 AnthropicModels.Claude35Haiku,
                 AnthropicModels.Claude3Haiku,
             };
+            Settings = settings;
         }
     }
 }

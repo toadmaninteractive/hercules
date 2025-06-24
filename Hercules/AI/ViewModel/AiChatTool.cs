@@ -28,7 +28,7 @@ namespace Hercules.AI
         {
             ChatLog = new();
             IsGenerating = new(false);
-            herculesChatClient = new(ChatLog, mcpServer, aiModule.AnthropicApiKey, aiModule.AiModel, IsGenerating);
+            herculesChatClient = new(ChatLog, mcpServer, aiModule.Settings, IsGenerating);
             Title = "AI Chat";
             userPrompt = "";
             SubmitCommand = Commands.Execute(Submit).If(() => !string.IsNullOrEmpty(UserPrompt));

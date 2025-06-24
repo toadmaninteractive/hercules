@@ -10,23 +10,22 @@ namespace Hercules.AI
         public AiModule(Core core)
             : base(core)
         {
+            Settings = new();
             var settingsCommand = Commands.Execute(() => core.Workspace.ShowSettings("AI"));
             aiChatTool = new AiChatTool(this, new McpServer(core), settingsCommand);
             Workspace.WindowService.AddTool(aiChatTool);
             var aiChatCommand = Commands.Execute(() => aiChatTool.Show());
             var searchOption = new UiCommandOption("AI Chat", Fugue.Icons.Robot, aiChatCommand);
             Workspace.OptionManager.AddMenuOption(searchOption, "Tools", showInToolbar: true);
-            settingsPageSubscription = Workspace.WindowService.WhenAddingPage.OfType<SettingsPage>().Subscribe(p => p.Tabs.Add(new AiSettingsTab(AnthropicApiKey, AiModel)));
-            Core.SettingsService.AddSetting(AnthropicApiKey);
-            Core.SettingsService.AddSetting(AiModel);
+            settingsPageSubscription = Workspace.WindowService.WhenAddingPage.OfType<SettingsPage>().Subscribe(p => p.Tabs.Add(new AiSettingsTab(Settings)));
+            Core.SettingsService.AddSettingGroup(Settings);
         }
 
         private McpServer? mcpServer;
         private readonly AiChatTool aiChatTool;
         private readonly IDisposable settingsPageSubscription;
 
-        public Setting<string> AnthropicApiKey { get; } = new Setting<string>(nameof(AnthropicApiKey), "");
-        public Setting<string> AiModel { get; } = new Setting<string>(nameof(AiModel), AnthropicModels.Claude35Sonnet);
+        public AiSettings Settings { get; }
 
         public override void OnLoad(Uri? startUri)
         {

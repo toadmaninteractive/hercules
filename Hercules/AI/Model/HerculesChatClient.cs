@@ -16,24 +16,22 @@ namespace Hercules.AI
         private AnthropicClient? chatClient;
         private List<Anthropic.SDK.Common.Tool>? tools;
         private readonly McpServer mcpServer;
-        private readonly Setting<string> apiKey;
-        private readonly Setting<string> aiModel;
+        private readonly AiSettings settings;
         private readonly ObservableValue<bool> isGenerating;
 
         public bool IsConnected => chatClient != null;
 
-        public HerculesChatClient(IAiChatLog chatLog, McpServer mcpServer, Setting<string> apiKey, Setting<string> aiModel, ObservableValue<bool> isGenerating)
+        public HerculesChatClient(IAiChatLog chatLog, McpServer mcpServer, AiSettings settings, ObservableValue<bool> isGenerating)
         {
             this.chatLog = chatLog;
             this.mcpServer = mcpServer;
-            this.apiKey = apiKey;
-            this.aiModel = aiModel;
+            this.settings = settings;
             this.isGenerating = isGenerating;
         }
 
         public void Init()
         {
-            chatClient = new AnthropicClient(new APIAuthentication(apiKey.Value));
+            chatClient = new AnthropicClient(new APIAuthentication(settings.AnthropicApiKey.Value));
 
             tools = new List<Anthropic.SDK.Common.Tool>
             {
@@ -55,14 +53,14 @@ namespace Hercules.AI
             isGenerating.Value = true;
             try
             {
-                chatClient.Auth.ApiKey = apiKey.Value;
+                chatClient.Auth.ApiKey = settings.AnthropicApiKey.Value;
                 var parameters = new MessageParameters()
                 {
                     Messages = messages,
                     MaxTokens = 2048,
-                    Model = aiModel.Value,
+                    Model = settings.AiModel.Value,
                     Stream = false,
-                    Temperature = 1.0m,
+                    Temperature = (decimal)settings.AiTemperature.Value,
                     Tools = tools,
                     PromptCaching = PromptCacheType.AutomaticToolsAndSystem,
                     System = new List<SystemMessage>
