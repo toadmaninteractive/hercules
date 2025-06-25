@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using Telerik.Windows.Controls;
 
@@ -16,7 +13,7 @@ namespace Hercules.AI
 
         void AddAiMessage(string message);
         void AddUserMessage(string message);
-        void AddHerculesMessage(string message);
+        void AddToolCall(string function, string arguments, string response);
         void AddException(Exception exception);
         void AddSpecialMessage(string message);
     }
@@ -40,9 +37,38 @@ namespace Hercules.AI
             OnChanged?.Invoke();
         }
 
-        public void AddHerculesMessage(string message)
+        public void AddToolCall(string function, string arguments, string response)
         {
-            Document.Blocks.Add(new Paragraph(new Run(message)) { Foreground = Brushes.Gray, FontWeight = FontWeights.Light, FontFamily = new FontFamily("Courier New"), FontSize = 11 });
+            var glyphRun = new Run("+ ");
+            var functionRun = new Run(function);
+            var hyperlink = new Hyperlink(glyphRun);
+            var expandedSection = new Span();
+            hyperlink.TextDecorations = new TextDecorationCollection();
+            hyperlink.Cursor = Cursors.Hand;
+            var paragraph = new Paragraph { Foreground = Brushes.Gray, FontWeight = FontWeights.Light, FontFamily = new FontFamily("Courier New"), FontSize = 11 };
+            paragraph.Inlines.Add(hyperlink);
+            paragraph.Inlines.Add(functionRun);
+            expandedSection.Inlines.Add(new LineBreak());
+            expandedSection.Inlines.Add(new LineBreak());
+            expandedSection.Inlines.Add(new Run(arguments));
+            expandedSection.Inlines.Add(new LineBreak());
+            expandedSection.Inlines.Add(new LineBreak());
+            expandedSection.Inlines.Add(new Run(response));
+            hyperlink.Command = Commands.Execute(() =>
+            {
+                bool isExpanded = paragraph.Inlines.Contains(expandedSection);
+                if (isExpanded)
+                {
+                    glyphRun.Text = "+ ";
+                    paragraph.Inlines.Remove(expandedSection);
+                }
+                else
+                {
+                    glyphRun.Text = "- ";
+                    paragraph.Inlines.Add(expandedSection);
+                }
+            });
+            Document.Blocks.Add(paragraph);
             OnChanged?.Invoke();
         }
 
