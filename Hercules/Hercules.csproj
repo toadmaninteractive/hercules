@@ -49,6 +49,7 @@
     <PackageReference Include="Pfim" Version="0.11.3" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.68.0.3624" />
+    <PackageReference Include="VYaml" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>

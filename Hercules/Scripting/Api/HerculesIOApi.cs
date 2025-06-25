@@ -26,6 +26,28 @@ namespace Hercules.Scripting
             Host = host;
         }
 
+        [ScriptingApi("readDirectory", "Read list of files in the directry.",
+            Example = "hercules.io.getFiles(\"D:\\\\MyProject\");")]
+        public JsValue GetFiles(string path, JsValue options)
+        {
+            var optionsJson = options == null ? ImmutableJsonObject.Empty : Host.JsValueToJson(options).AsObject;
+            var pattern = "*.*";
+            if (optionsJson.TryGetValue("pattern", out var patternJson) && patternJson.IsString)
+                pattern = patternJson.AsString;
+            bool recursive = false;
+            if (optionsJson.TryGetValue("recursive", out var recursiveJson) && recursiveJson.IsBool)
+                recursive = recursiveJson.AsBool;
+            var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            var relative = false;
+            if (optionsJson.TryGetValue("relative", out var relativeJson) && relativeJson.IsBool)
+                relative = relativeJson.AsBool;
+            var files = System.IO.Directory.GetFiles(path, pattern, searchOption);
+            if (relative)
+                files = files.Select(p => Path.GetRelativePath(path, p)).ToArray();
+            var json = new JsonArray(files.Select(ImmutableJson.Create));
+            return Host.JsonToJsValue(json);
+        }
+
         [ScriptingApi("loadJsonFromFile", "Load JSON from file.",
             Example = "hercules.io.loadJsonFromFile(\"D:\\\\asset.json\");")]
         public JsValue LoadJsonFromFile(string fileName)
@@ -58,6 +80,14 @@ namespace Hercules.Scripting
                 File.WriteAllText(fileName, text);
             else
                 File.WriteAllText(fileName, text, Encoding.GetEncoding(encoding));
+        }
+
+        [ScriptingApi("loadYamlFromFile", "Load YAML from file.",
+            Example = "hercules.io.loadYamlFromFile(\"D:\\\\asset.yaml\");")]
+        public JsValue LoadYamlFromFile(string fileName)
+        {
+            var json = YamlUtils.ParseYaml(File.ReadAllText(fileName));
+            return Host.JsonToJsValue(json);
         }
 
         [ScriptingApi("saveTableToFile", "Save table to file.",
