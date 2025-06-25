@@ -16,7 +16,6 @@ namespace Hercules.AI
             AiModels = new List<string>
             {
                 AnthropicModels.Claude3Opus,
-                AnthropicModels.Claude3Sonnet,
                 AnthropicModels.Claude35Sonnet,
                 AnthropicModels.Claude37Sonnet,
                 AnthropicModels.Claude4Sonnet,
