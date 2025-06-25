@@ -1,4 +1,5 @@
 ﻿using Json;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Igor.Schema
 {
@@ -17,6 +18,17 @@ namespace Igor.Schema
 
         public static bool GetBoolMetadata(this CustomType customType, string name) =>
             customType.Meta != null && customType.Meta.TryGetValue(name, out var json) && json != null && json.Equals(ImmutableJson.True);
+
+        public static bool TryGetStringMetadata(this CustomType customType, string name, [MaybeNullWhen(returnValue: false)] out string value)
+        {
+            if (customType.Meta != null && customType.Meta.TryGetValue(name, out var json) && json != null && json.IsString)
+            {
+                value = json.AsString;
+                return true;
+            }
+            value = null;
+            return false;
+        }
 
         public static string? GetStringMetadata(this CustomType customType, string name) =>
             customType.Meta != null && customType.Meta.TryGetValue(name, out var json) && json != null && json.IsString ? json.AsString : null;

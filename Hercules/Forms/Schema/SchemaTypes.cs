@@ -138,6 +138,7 @@ namespace Hercules.Forms.Schema
         public bool IsReplica { get; set; }
         public bool IsDialog { get; set; }
         public ColorRecordSchema? ColorSchema { get; set; }
+        public string? AiHint { get; set; }
 
         public SchemaRecord(string name, SchemaVariant? parent, IReadOnlyList<string>? interfaces, string? tagValue = null)
             : base(name, parent, interfaces)

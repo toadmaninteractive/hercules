@@ -148,6 +148,9 @@ namespace Hercules.Forms.Schema
 
                     if (customType.GetBoolMetadata("dialog"))
                         sr.IsDialog = true;
+
+                    if (customType.TryGetStringMetadata("ai_hint", out var aiHint))
+                        sr.AiHint = aiHint;
                 }
 
                 var captionPath = customType.GetStringMetadata("caption_path");
@@ -458,10 +461,6 @@ namespace Hercules.Forms.Schema
 
         void DetectColorRecord(SchemaRecord record)
         {
-            if (record.Name == "TextColor")
-            {
-                Debug.Assert(true);
-            }
             if (record.Fields.Count is not (3 or 4))
                 return;
 

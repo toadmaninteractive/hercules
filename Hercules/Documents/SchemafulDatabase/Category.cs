@@ -18,7 +18,7 @@ namespace Hercules.Documents
         public string Name { get; }
 
         public string? Group { get; }
-
+        public string? AiHint { get; }
         public CategoryType Type { get; }
 
         public bool IsSchemaful => Type == CategoryType.Schemaful;
@@ -28,11 +28,12 @@ namespace Hercules.Documents
 
         public ObservableCollection<IDocument> Documents { get; } = new ObservableCollection<IDocument>();
 
-        public Category(CategoryType type, string name, string? group)
+        public Category(CategoryType type, string name, string? group, string? aiHint = null)
         {
             Type = type;
             Name = name;
             Group = group;
+            AiHint = aiHint;
         }
 
         public void AddDocument(IDocument document, bool insertSorted)

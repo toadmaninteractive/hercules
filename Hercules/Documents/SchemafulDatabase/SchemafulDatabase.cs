@@ -81,7 +81,7 @@ namespace Hercules.Documents
 
                 CategoryGroupNames = Schema.Groups.Select(x => x.Key).ToList();
 
-                Categories = Schema.Variant?.Children.OrderBy(child => child.TagValue!).Select(child => new Category(CategoryType.Schemaful, child.TagValue!, child.Group)).ToList() ?? new List<Category>();
+                Categories = Schema.Variant?.Children.OrderBy(child => child.TagValue!).Select(child => new Category(CategoryType.Schemaful, child.TagValue!, child.Group, child.AiHint)).ToList() ?? new List<Category>();
                 categoriesByName = Categories.ToDictionary(cat => cat.Name, cat => cat);
             }
             else

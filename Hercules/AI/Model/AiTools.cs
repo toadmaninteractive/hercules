@@ -4,6 +4,7 @@ using Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Hercules.AI
 {
@@ -61,8 +62,17 @@ namespace Hercules.AI
         [AiTool("Gets the list of Hercules design document categories.", ReadOnly = true)]
         public string GetCategoryList(string category)
         {
-            var strings = core.Project.SchemafulDatabase.Categories.Select(c => c.Name).ToArray();
-            return string.Join(Environment.NewLine, strings);
+            var sb = new StringBuilder();
+            foreach (var cat in core.Project.SchemafulDatabase.Categories)
+            {
+                sb.Append(cat.Name);
+                if (!string.IsNullOrEmpty(cat.AiHint))
+                {
+                    sb.Append($" (comment: {cat.AiHint})");
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
         }
 
         [AiTool("Gets the list of all Hercules design document IDs.", ReadOnly = true)]
