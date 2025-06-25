@@ -31,7 +31,7 @@
                     <Setter Property="PagePadding" Value="4" />
                     <Setter Property="FontFamily" Value="Segoe UI" />
                     <Setter Property="FontWeight" Value="Regular" />
-                    <Setter Property="Foreground" Value="DimGray" />
+                    <Setter Property="Foreground" Value="#202020" />
                     <Setter Property="FontSize" Value="13" />
                 </Style>
             </FlowDocumentScrollViewer.Resources>

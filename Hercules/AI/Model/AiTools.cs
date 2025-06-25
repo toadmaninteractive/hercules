@@ -156,7 +156,7 @@ namespace Hercules.AI
                     }
                 }
                 core.Workspace.Scheduler.ScheduleForegroundJob(() => core.GetModule<DocumentsModule>().EditDocuments(updatedDocs));
-                return "Batch document update succeeded.";
+                return "Batch document update succeeded. User must manually save modified documents.";
             }
             catch (Exception exception)
             {
