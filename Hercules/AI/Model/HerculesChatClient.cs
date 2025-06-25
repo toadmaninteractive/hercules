@@ -1,11 +1,10 @@
 ﻿using Anthropic.SDK;
 using Anthropic.SDK.Messaging;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Media;
+using System.Reflection;
 
 namespace Hercules.AI
 {
@@ -33,19 +32,11 @@ namespace Hercules.AI
         {
             chatClient = new AnthropicClient(new APIAuthentication(settings.AnthropicApiKey.Value));
 
-            tools = new List<Anthropic.SDK.Common.Tool>
-            {
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetSchema), "Gets Hercules design document for the given id."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetDocument), "Gets Hercules design document for the given id."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetDocuments), "Gets Hercules design documents for the given list of ids. Prefer GetPropertyValuesForMultipleDocuments instead if you are only interested in the subset of document properties."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetCategoryList), "Gets the list of Hercules design document categories."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetAllDocumentIds), "Gets the list of all Hercules design document IDs."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetOpenedDocumentIds), "Gets the list of Hercules design document IDs which are currently opened."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetDocumentIdsByCategory), "Gets the list of Hercules design document IDs belonging to the category."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetPropertyValuesForMultipleDocuments), "Gets values for the specified property path for multiple Hercules documents. Returns the list of objects with document ID and property values."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.BatchUpdateDocuments), "Updates multiple values in Hercules documents. Accepts the list of JSON objects as input. Each object has three properties: id is document ID, path is the dot separated path to the property, and value is new JSON value of updated property."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.CreateDocument), "Create new Hercules document with the given id and json content."),
-            };
+            tools = new(
+                from methodInfo in aiTools.GetType().GetMethods()
+                let attr = methodInfo.GetCustomAttribute<AiToolAttribute>()
+                where attr != null
+                select Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, methodInfo.Name, attr.Description));
         }
 
         public async Task WaitForAnswer()
@@ -81,6 +72,8 @@ namespace Hercules.AI
                     {
                         foreach (var toolCall in result.ToolCalls)
                         {
+                            Hercules.Logger.LogDebug(toolCall.Name);
+                            Hercules.Logger.LogDebug(toolCall.Arguments.ToString());
                             var response = toolCall.Invoke<string>();
                             chatLog.AddHerculesMessage(response);                            
                             messages.Add(new Message(toolCall, response));

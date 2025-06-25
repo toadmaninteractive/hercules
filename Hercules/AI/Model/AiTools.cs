@@ -7,6 +7,18 @@ using System.Linq;
 
 namespace Hercules.AI
 {
+    public class AiToolAttribute : Attribute
+    {
+        public string Description { get; }
+        public bool ReadOnly { get; set; }
+        public bool Destructive { get; set; }
+        public bool OpenWorld { get; set; }
+        public AiToolAttribute(string description)
+        {
+            Description = description;
+        }
+    }
+
     public class AiTools
     {
         private readonly Core core;
@@ -16,11 +28,13 @@ namespace Hercules.AI
             this.core = core;
         }
 
+        [AiTool("Gets Hercules design database schema as JSON.", ReadOnly = true)]
         public string GetSchema()
         {
             return core.Project.Database.Documents["schema"].Json.ToString();
         }
 
+        [AiTool("Gets Hercules design document for the given id.", ReadOnly = true)]
         public string? GetDocument(string id)
         {
             if (core.Project.Database.Documents.TryGetValue(id, out var doc))
@@ -30,6 +44,7 @@ namespace Hercules.AI
             return null;
         }
 
+        [AiTool("Gets Hercules design documents for the given list of ids. Prefer GetPropertyValuesForMultipleDocuments instead if you are only interested in the subset of document properties.", ReadOnly = true)]
         public string GetDocuments(string[] ids)
         {
             var result = new List<string>();
@@ -43,18 +58,21 @@ namespace Hercules.AI
             return string.Join(Environment.NewLine, result);
         }
 
+        [AiTool("Gets the list of Hercules design document categories.", ReadOnly = true)]
         public string GetCategoryList(string category)
         {
             var strings = core.Project.SchemafulDatabase.Categories.Select(c => c.Name).ToArray();
             return string.Join(Environment.NewLine, strings);
         }
 
+        [AiTool("Gets the list of all Hercules design document IDs.", ReadOnly = true)]
         public string GetAllDocumentIds()
         {
             var strings = core.Project.Database.Documents.Select(d => d.Key).ToArray();
             return string.Join(Environment.NewLine, strings);
         }
 
+        [AiTool("Gets the list of opened Hercules document IDs.", ReadOnly = true)]
         public string GetOpenedDocumentIds()
         {
             var documentIds = core.Workspace.WindowService.Pages.OfType<DocumentEditorPage>().Select(d => d.Document.DocumentId).ToArray();
@@ -64,6 +82,7 @@ namespace Hercules.AI
                 return "There're no opened documents";
         }
 
+        [AiTool("Gets the list of Hercules design document IDs belonging to the category.", ReadOnly = true)]
         public string GetDocumentIdsByCategory(string category)
         {
             var categoryObject = core.Project.SchemafulDatabase.Categories.FirstOrDefault(c => string.Equals(c.Name, category, StringComparison.CurrentCultureIgnoreCase));
@@ -76,6 +95,7 @@ namespace Hercules.AI
             }
         }
 
+        [AiTool("Gets values for the specified property path for multiple Hercules documents. Returns the list of objects with document ID and property values.", ReadOnly = true)]
         public string GetPropertyValuesForMultipleDocuments(string[] ids, string[] jsonPropertyPaths)
         {
             JsonArray result = new();
@@ -100,6 +120,7 @@ namespace Hercules.AI
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Protocol usage")]
         public record BatchDocumentUpdateEntry(string id, string path, string value);
 
+        [AiTool("Updates multiple values in Hercules documents. Accepts the list of JSON objects as input. Each object has three properties: id is document ID, path is the dot separated path to the property, and value is new JSON value of updated property.")]
         public string BatchUpdateDocuments(List<BatchDocumentUpdateEntry> updates)
         {
             try
@@ -134,6 +155,7 @@ namespace Hercules.AI
             }
         }
 
+        [AiTool("Create new Hercules document with the given id and JSON content. When using this function, make sure either to clone existing document or check schema document to ensure that properties are correct.")]
         public string CreateDocument(string id, string jsonString)
         {
             var json = JsonParser.Parse(jsonString);
