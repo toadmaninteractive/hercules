@@ -15,16 +15,16 @@ namespace Hercules.AI
         private readonly IAiChatLog chatLog;
         private AnthropicClient? chatClient;
         private List<Anthropic.SDK.Common.Tool>? tools;
-        private readonly McpServer mcpServer;
+        private readonly AiTools aiTools;
         private readonly AiSettings settings;
         private readonly ObservableValue<bool> isGenerating;
 
         public bool IsConnected => chatClient != null;
 
-        public HerculesChatClient(IAiChatLog chatLog, McpServer mcpServer, AiSettings settings, ObservableValue<bool> isGenerating)
+        public HerculesChatClient(IAiChatLog chatLog, AiTools aiTools, AiSettings settings, ObservableValue<bool> isGenerating)
         {
             this.chatLog = chatLog;
-            this.mcpServer = mcpServer;
+            this.aiTools = aiTools;
             this.settings = settings;
             this.isGenerating = isGenerating;
         }
@@ -35,16 +35,16 @@ namespace Hercules.AI
 
             tools = new List<Anthropic.SDK.Common.Tool>
             {
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.GetSchema), "Gets Hercules design document for the given id."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.GetDocument), "Gets Hercules design document for the given id."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.GetDocuments), "Gets Hercules design documents for the given list of ids. Prefer GetPropertyValuesForMultipleDocuments instead if you are only interested in the subset of document properties."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.GetCategoryList), "Gets the list of Hercules design document categories."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.GetAllDocumentIds), "Gets the list of all Hercules design document IDs."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.GetOpenedDocumentIds), "Gets the list of Hercules design document IDs which are currently opened."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.GetDocumentIdsByCategory), "Gets the list of Hercules design document IDs belonging to the category."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.GetPropertyValuesForMultipleDocuments), "Gets values for the specified property path for multiple Hercules documents. Returns the list of objects with document ID and property values."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.BatchUpdateDocuments), "Updates multiple values in Hercules documents. Accepts the list of JSON objects as input. Each object has three properties: id is document ID, path is the dot separated path to the property, and value is new JSON value of updated property."),
-                Anthropic.SDK.Common.Tool.GetOrCreateTool(mcpServer, nameof(McpServer.CreateDocument), "Create new Hercules document with the given id and json content."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetSchema), "Gets Hercules design document for the given id."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetDocument), "Gets Hercules design document for the given id."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetDocuments), "Gets Hercules design documents for the given list of ids. Prefer GetPropertyValuesForMultipleDocuments instead if you are only interested in the subset of document properties."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetCategoryList), "Gets the list of Hercules design document categories."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetAllDocumentIds), "Gets the list of all Hercules design document IDs."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetOpenedDocumentIds), "Gets the list of Hercules design document IDs which are currently opened."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetDocumentIdsByCategory), "Gets the list of Hercules design document IDs belonging to the category."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.GetPropertyValuesForMultipleDocuments), "Gets values for the specified property path for multiple Hercules documents. Returns the list of objects with document ID and property values."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.BatchUpdateDocuments), "Updates multiple values in Hercules documents. Accepts the list of JSON objects as input. Each object has three properties: id is document ID, path is the dot separated path to the property, and value is new JSON value of updated property."),
+                Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, nameof(AiTools.CreateDocument), "Create new Hercules document with the given id and json content."),
             };
         }
 

@@ -11,8 +11,9 @@ namespace Hercules.AI
             : base(core)
         {
             Settings = new();
+            aiTools = new(core);
             var settingsCommand = Commands.Execute(() => core.Workspace.ShowSettings("AI"));
-            aiChatTool = new AiChatTool(this, new McpServer(core), settingsCommand);
+            aiChatTool = new AiChatTool(this, aiTools, settingsCommand);
             Workspace.WindowService.AddTool(aiChatTool);
             var aiChatCommand = Commands.Execute(() => aiChatTool.Show());
             var searchOption = new UiCommandOption("AI Chat", Fugue.Icons.Robot, aiChatCommand);
@@ -24,6 +25,7 @@ namespace Hercules.AI
         private McpServer? mcpServer;
         private readonly AiChatTool aiChatTool;
         private readonly IDisposable settingsPageSubscription;
+        private readonly AiTools aiTools;
 
         public AiSettings Settings { get; }
 
@@ -31,7 +33,7 @@ namespace Hercules.AI
         {
             if (Core.HasCliArgument("-mcp"))
             {
-                mcpServer = new McpServer(Core);
+                mcpServer = new McpServer(aiTools);
                 mcpServer.RunMcpAsync().Track();
             }
         }

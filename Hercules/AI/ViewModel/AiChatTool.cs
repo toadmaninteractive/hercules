@@ -24,11 +24,11 @@ namespace Hercules.AI
         public ICommand ResetChatCommand { get; }
         public ICommand SettingsCommand { get; }
 
-        public AiChatTool(AiModule aiModule, McpServer mcpServer, ICommand settingsCommand)
+        public AiChatTool(AiModule aiModule, AiTools aiTools, ICommand settingsCommand)
         {
             ChatLog = new();
             IsGenerating = new(false);
-            herculesChatClient = new(ChatLog, mcpServer, aiModule.Settings, IsGenerating);
+            herculesChatClient = new(ChatLog, aiTools, aiModule.Settings, IsGenerating);
             Title = "AI Chat";
             userPrompt = "";
             SubmitCommand = Commands.Execute(Submit).If(() => !string.IsNullOrEmpty(UserPrompt));
