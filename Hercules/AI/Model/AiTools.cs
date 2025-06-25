@@ -135,6 +135,9 @@ namespace Hercules.AI
         {
             try
             {
+                bool hasErrors = false;
+                bool hasSuccess = false;
+                var sb = new StringBuilder();
                 Dictionary<string, ImmutableJsonObject> updatedDocs = new();
                 foreach (var update in updates)
                 {
@@ -149,14 +152,33 @@ namespace Hercules.AI
                         }
                         else
                         {
+                            sb.AppendLine($"Error: Document {id} not found.");
+                            hasErrors = true;
                             continue;
                         }
                         updatedJson = updatedJson.ForceUpdate(path, json).AsObject;
                         updatedDocs[id] = updatedJson;
+                        hasSuccess = true;
                     }
                 }
                 core.Workspace.Scheduler.ScheduleForegroundJob(() => core.GetModule<DocumentsModule>().EditDocuments(updatedDocs));
-                return "Batch document update succeeded. User must manually save modified documents.";
+                if (hasSuccess)
+                {
+                    if (hasErrors)
+                    {
+                        sb.AppendLine("Some of updates failed.");
+                        return sb.ToString();
+                    }
+                    else
+                    {
+                        return "Batch document update succeeded. User must manually save modified documents.";
+                    }
+                }
+                else
+                {
+                    sb.AppendLine("Failed to perform batch update. Try another approach.");
+                    return sb.ToString();
+                }
             }
             catch (Exception exception)
             {
