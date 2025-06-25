@@ -36,13 +36,13 @@ namespace Hercules.AI
         }
 
         [AiTool("Gets Hercules design document for the given id.", ReadOnly = true)]
-        public string? GetDocument(string id)
+        public string GetDocument(string id)
         {
             if (core.Project.Database.Documents.TryGetValue(id, out var doc))
             {
                 return doc.Json.ToString();
             }
-            return null;
+            return $"Document {id} not found";
         }
 
         [AiTool("Gets Hercules design documents for the given list of ids. Prefer GetPropertyValuesForMultipleDocuments instead if you are only interested in the subset of document properties.", ReadOnly = true)]
@@ -117,7 +117,7 @@ namespace Hercules.AI
                 {
                     foreach (var jsonPropertyPath in jsonPropertyPaths)
                     {
-                        var path = JsonPath.Parse(jsonPropertyPath.RemovePrefix("$."));
+                        var path = LooseParseJsonPath(jsonPropertyPath);
                         if (doc.Json.TryFetch(path, out var value))
                             obj[jsonPropertyPath] = value?.ToString() ?? "null";
                     }
@@ -142,7 +142,7 @@ namespace Hercules.AI
                 foreach (var update in updates)
                 {
                     var id = update.id;
-                    var path = JsonPath.Parse(update.path.RemovePrefix("$."));
+                    var path = LooseParseJsonPath(update.path);
                     ImmutableJson json = JsonParser.Parse(update.value);
                     if (!updatedDocs.TryGetValue(id, out var updatedJson))
                     {
@@ -156,10 +156,10 @@ namespace Hercules.AI
                             hasErrors = true;
                             continue;
                         }
-                        updatedJson = updatedJson.ForceUpdate(path, json).AsObject;
-                        updatedDocs[id] = updatedJson;
-                        hasSuccess = true;
                     }
+                    updatedJson = updatedJson.ForceUpdate(path, json).AsObject;
+                    updatedDocs[id] = updatedJson;
+                    hasSuccess = true;
                 }
                 core.Workspace.Scheduler.ScheduleForegroundJob(() => core.GetModule<DocumentsModule>().EditDocuments(updatedDocs));
                 if (hasSuccess)
@@ -194,6 +194,33 @@ namespace Hercules.AI
             var draft = new DocumentDraft(json.AsObject);
             core.Workspace.Scheduler.ScheduleForegroundJob(() => core.GetModule<DocumentsModule>().CreateDocument(id, draft));
             return $"Document {id} created.";
+        }
+
+        private JsonPath LooseParseJsonPath(string pathString)
+        {
+            pathString = pathString.RemovePrefix("$.");
+            var path = JsonPath.Empty;
+            foreach (var node in JsonPath.Parse(pathString).Nodes)
+            {
+                switch (node)
+                {
+                    case JsonObjectPathNode objectNode:
+                        if (int.TryParse(objectNode.Key, out var index))
+                        {
+                            path = path.AppendArray(index);
+                        }
+                        else
+                        {
+                            path = path.AppendObject(objectNode.Key);
+                        }
+                        break;
+
+                    case JsonArrayPathNode arrayNode:
+                        path = path.AppendArray(arrayNode.Index);
+                        break;
+                }
+            }
+            return path;
         }
     }
 }
