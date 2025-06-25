@@ -54,7 +54,8 @@ namespace Hercules.AI
             expandedSection.Inlines.Add(new LineBreak());
             expandedSection.Inlines.Add(new LineBreak());
             expandedSection.Inlines.Add(new Run(response));
-            hyperlink.Command = Commands.Execute(() =>
+            hyperlink.NavigateUri = new Uri($"hercules:{function}");
+            hyperlink.RequestNavigate += (object sender, System.Windows.Navigation.RequestNavigateEventArgs e) =>
             {
                 bool isExpanded = paragraph.Inlines.Contains(expandedSection);
                 if (isExpanded)
@@ -67,7 +68,7 @@ namespace Hercules.AI
                     glyphRun.Text = "- ";
                     paragraph.Inlines.Add(expandedSection);
                 }
-            });
+            };
             Document.Blocks.Add(paragraph);
             OnChanged?.Invoke();
         }
