@@ -245,12 +245,30 @@ namespace Hercules.AI
             return $"Document {id} created.";
         }
 
-        [AiTool("Expose the CSV table to the user.")]
+        [AiTool("Expose/open the CSV table to the user.")]
         public string ShowCsvTable(string title, string csv)
         {
             core.Workspace.Scheduler.ScheduleForegroundJob(() =>
                 core.Workspace.WindowService.OpenPage(new TablePage(title, CustomTable.LoadFromCsv(csv))));
             return "Csv table opened";
+        }
+
+        [AiTool("Get the content of exposed (currently opened) table as CSV.")]
+        public string GetOpenedTable()
+        {
+            Func<string> GetTableContent = () =>
+            {
+                var table = core.Workspace.WindowService.Pages.OfType<TablePage>().FirstOrDefault();
+                switch (table)
+                {
+                    case TablePage tablePage:
+                        return tablePage.Table.AsCsv();
+                    default:
+                        return "There's no currently opened table";
+                }
+                ;
+            };
+            return core.Workspace.Scheduler.ScheduleForegroundJob(GetTableContent);
         }
 
         private JsonPath LooseParseJsonPath(string pathString)

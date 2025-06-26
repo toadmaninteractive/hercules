@@ -10,6 +10,25 @@ namespace Hercules.Scripting
     {
         public ObservableCollection<ExpandoObject> Rows { get; }
 
+        public string AsCsv(char delimiter = '\t')
+        {
+            var rows = new List<List<string>>();
+            var colCount = Rows[0].Count();
+            for (int i = 0; i < Rows.Count; i++)
+            {
+                var data = new List<string>(colCount);
+                foreach (var cell in Rows[i])
+                {
+                    var value = cell.ToString();
+                    if (i == 0)
+                        value = value.Replace(U2024, ".");
+                    data.Add(value);
+                }
+                rows.Add(data);
+            }
+            return CsvUtils.SaveToString(rows, delimiter);
+        }
+
         private CustomTable(ObservableCollection<ExpandoObject> rows)
         {
             Rows = rows;
