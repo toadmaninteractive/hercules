@@ -35,7 +35,7 @@ namespace Hercules.AI
             return core.Project.Database.Documents["schema"].Json.ToString();
         }
 
-        [AiTool("Gets Hercules design document for the given id.", ReadOnly = true)]
+        [AiTool("Gets Hercules document for the given id.", ReadOnly = true)]
         public string GetDocument(string id)
         {
             if (core.Project.Database.Documents.TryGetValue(id, out var doc))
@@ -45,7 +45,7 @@ namespace Hercules.AI
             return $"Document {id} not found";
         }
 
-        [AiTool("Gets Hercules design documents for the given list of ids. Prefer GetPropertyValuesForMultipleDocuments instead if you are only interested in the subset of document properties.", ReadOnly = true)]
+        [AiTool("Gets Hercules documents for the given list of ids. Prefer GetPropertyValuesForMultipleDocuments instead if you are only interested in the subset of document properties.", ReadOnly = true)]
         public string GetDocuments(string[] ids)
         {
             var result = new List<string>();
@@ -59,7 +59,7 @@ namespace Hercules.AI
             return string.Join(Environment.NewLine, result);
         }
 
-        [AiTool("Gets the list of Hercules design document categories.", ReadOnly = true)]
+        [AiTool("Gets the list of Hercules document categories.", ReadOnly = true)]
         public string GetCategoryList(string category)
         {
             var sb = new StringBuilder();
@@ -75,7 +75,7 @@ namespace Hercules.AI
             return sb.ToString();
         }
 
-        [AiTool("Gets the list of all Hercules design document IDs.", ReadOnly = true)]
+        [AiTool("Gets the list of all Hercules document IDs.", ReadOnly = true)]
         public string GetAllDocumentIds()
         {
             var strings = core.Project.Database.Documents.Select(d => d.Key).ToArray();
@@ -92,7 +92,7 @@ namespace Hercules.AI
                 return "There're no opened documents";
         }
 
-        [AiTool("Gets the list of Hercules design document IDs belonging to the category.", ReadOnly = true)]
+        [AiTool("Gets the list of Hercules document IDs belonging to the category.", ReadOnly = true)]
         public string GetDocumentIdsByCategory(string category)
         {
             var categoryObject = core.Project.SchemafulDatabase.Categories.FirstOrDefault(c => string.Equals(c.Name, category, StringComparison.CurrentCultureIgnoreCase));
