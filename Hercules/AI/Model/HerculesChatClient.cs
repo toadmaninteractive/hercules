@@ -74,8 +74,23 @@ namespace Hercules.AI
                     {
                         foreach (var toolCall in result.ToolCalls)
                         {
-                            var response = toolCall.Invoke<string>();
+                            string response;
+                            Exception? exception = null;
+                            try
+                            {
+                                response = toolCall.Invoke<string>();
+                            }
+                            catch (Exception ex)
+                            {
+                                exception = ex;
+                                response = $"Tool call error: {ex.Message}";
+                            }
                             chatLog.AddToolCall(toolCall.MethodInfo.Name, toolCall.Arguments.ToString(), response);
+                            if (exception != null)
+                            {
+                                chatLog.AddException(exception);
+                                Logger.LogException($"Tool call {toolCall.MethodInfo.Name} error", exception);
+                            }
                             messages.Add(new Message(toolCall, response));
                         }
                         continue;
