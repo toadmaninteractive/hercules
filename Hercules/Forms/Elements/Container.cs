@@ -28,7 +28,7 @@ namespace Hercules.Forms.Elements
         {
         }
 
-        protected abstract IEnumerable<Element> GetChildren();
+        public abstract IEnumerable<Element> GetChildren();
 
         protected override void Validate(bool invalidateChildren, ITransaction transaction, out bool isValid, out bool isModified)
         {
@@ -148,6 +148,6 @@ namespace Hercules.Forms.Elements
             protected set => SetField(ref caption, value);
         }
 
-        protected override IEnumerable<Element> GetChildren() => Children;
+        public override IEnumerable<Element> GetChildren() => Children;
     }
 }

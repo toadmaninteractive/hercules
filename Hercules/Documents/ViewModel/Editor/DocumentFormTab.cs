@@ -36,6 +36,8 @@ namespace Hercules.Documents.Editor
         public ICommand RevertToBaseCommand { get; }
         public ICommand RevertToOriginalCommand { get; }
         public ICommand SortCommand { get; }
+        public ICommand NextDifferenceCommand { get; }
+        public ICommand PreviousDifferenceCommand { get; }
 
         public DocumentForm Form { get; }
         public FormPresentation Presentation { get; }
@@ -77,6 +79,8 @@ namespace Hercules.Documents.Editor
             RevertToBaseCommand = Commands.Execute(() => RevertToBase(Presentation.SelectedElement!)).If(() => Presentation.SelectedElement != null && Editor.PatchHandler.IsPatch && !Presentation.SelectedElement.IsInherited);
             RevertToOriginalCommand = Commands.Execute(() => RevertToOriginal(Presentation.SelectedElement!)).If(() => Presentation.SelectedElement != null && Presentation.SelectedElement.IsModified);
             SortCommand = Commands.Execute(() => ((ISortableElement)Presentation.SelectedElement!).Sort()).If(() => Presentation.SelectedElement is ISortableElement { CanSort: true });
+            NextDifferenceCommand = Commands.Execute(NextDifference).If(() => Editor.IsDirty);
+            PreviousDifferenceCommand = Commands.Execute(PreviousDifference).If(() => Editor.IsDirty);
 
             OptionalFieldVisibilityChangeCommand = Commands.Execute(() => Form.IsOptionFieldsVisible = !Form.IsOptionFieldsVisible);
 
@@ -188,6 +192,97 @@ namespace Hercules.Documents.Editor
                 result = search.Before.Last();
             else if (search.After.Any())
                 result = search.After.Last();
+            if (result != null)
+                GoToPath(result.Path);
+        }
+
+        private List<Element> FindDifferences()
+        {
+            var modifiedElements = new List<Element>();
+            bool Visitor(Element element)
+            {
+                if (!element.IsModified)
+                    return true;
+                switch (element)
+                {
+                    case ProxyElement proxyElement:
+                        {
+                            int currentIndex = modifiedElements.Count;
+                            bool isMixed = Visitor(proxyElement.Element);
+                            if (!isMixed)
+                            {
+                                modifiedElements.RemoveRange(currentIndex, modifiedElements.Count - currentIndex);
+                                modifiedElements.Add(element);
+                            }
+                            return isMixed;
+                        }
+
+                    case Container container:
+                        {
+                            int currentIndex = modifiedElements.Count;
+                            bool isMixed = false;
+                            foreach (var child in container.GetChildren())
+                            {
+                                if (Visitor(child))
+                                    isMixed = true;
+                            }
+                            if (!isMixed)
+                            {
+                                modifiedElements.RemoveRange(currentIndex, modifiedElements.Count - currentIndex);
+                                modifiedElements.Add(element);
+                            }
+                            return isMixed;
+                        }
+
+                    default:
+                        modifiedElements.Add(element);
+                        return false;
+                }
+            }
+
+            if (Form.Root.IsModified)
+                Visitor(Form.Root);
+            return modifiedElements;
+        }
+
+        private void NextDifference()
+        {
+            List<Element> diffs = FindDifferences();
+            Element? result = null;
+            if (diffs.Count > 0)
+            {
+                var current = Presentation.SelectedElement;
+                if (current != null)
+                {
+                    var index = (diffs.IndexOf(current) + 1) % diffs.Count;
+                    result = diffs[index];
+                }
+                else
+                {
+                    result = diffs[0];
+                }
+            }
+            if (result != null)
+                GoToPath(result.Path);
+        }
+
+        private void PreviousDifference()
+        {
+            List<Element> diffs = FindDifferences();
+            Element? result = null;
+            if (diffs.Count > 0)
+            {
+                var current = Presentation.SelectedElement;
+                if (current != null)
+                {
+                    var index = (diffs.IndexOf(current) - 1 + diffs.Count) % diffs.Count;
+                    result = diffs[index];
+                }
+                else
+                {
+                    result = diffs[0];
+                }
+            }
             if (result != null)
                 GoToPath(result.Path);
         }

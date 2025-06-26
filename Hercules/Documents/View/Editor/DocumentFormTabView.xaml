@@ -33,6 +33,13 @@
                 <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-toggle}" />
             </Button>
             <Separator />
+            <Button ToolTip="Previous Difference" Command="{Binding PreviousDifferenceCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-arrow-skip-090}" />
+            </Button>
+            <Button ToolTip="Next Difference" Command="{Binding NextDifferenceCommand}" Style="{StaticResource ToolButton}">
+                <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-arrow-skip-270}" />
+            </Button>
+            <Separator/>
             <Button ToolTip="Convert Category" Command="{Binding Editor.ConvertCategoryCommand}" Style="{StaticResource ToolButton}">
                 <Image Style="{StaticResource MenuIcon}" Source="{StaticResource fugue-ui-combo-box}" />
             </Button>

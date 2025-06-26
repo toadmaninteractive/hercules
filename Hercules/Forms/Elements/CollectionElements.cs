@@ -605,7 +605,7 @@ namespace Hercules.Forms.Elements
 
         public int Index { get; set; }
 
-        protected override IEnumerable<Element> GetChildren()
+        public override IEnumerable<Element> GetChildren()
         {
             yield return KeyElement;
             yield return ValueElement;

@@ -269,7 +269,7 @@ namespace Hercules.Forms.Elements
             }
         }
 
-        protected override IEnumerable<Element> GetChildren()
+        public override IEnumerable<Element> GetChildren()
         {
             yield return Record;
             foreach (var schemalessField in schemalessFields)
