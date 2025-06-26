@@ -227,20 +227,32 @@ namespace Hercules.Scripting
         {
             var contentJson = Host.JsValueToJson(content);
             var optionsJson = options == null ? ImmutableJsonObject.Empty : Host.JsValueToJson(options).AsObject;
-            var type = optionsJson.GetValueOrNull("type").AsStringOrNull() ?? (contentJson.IsString ? "text" : "json");
-            var syntax = optionsJson.GetValueOrNull("syntax").AsStringOrNull() ??
-                type switch { "text" => null, "json" => "JSON", "xml" => "XML", _ => null };
             var background = optionsJson.GetValueOrNull("background").Equals(ImmutableJson.True);
-            var text = type switch
+            var type = optionsJson.GetValueOrNull("type").AsStringOrNull() ?? (contentJson.IsString ? "text" : "json");
+            if (type == "csv")
             {
-                "json" => contentJson.ToString(JsonFormat.Multiline),
-                _ when contentJson.IsString => contentJson.AsString,
-                _ => contentJson.ToString(JsonFormat.Multiline),
-            };
-            if (background)
-                Context.Invoke(() => Context.Core.Workspace.WindowService.AddPage(new TextPage(title, text, syntax)));
+                var csv = contentJson.AsString;
+                var table = CustomTable.LoadFromCsv(csv);
+                if (background)
+                    Context.Invoke(() => Context.Core.Workspace.WindowService.AddPage(new TablePage(title, table)));
+                else
+                    Context.Invoke(() => Context.Core.Workspace.WindowService.OpenPage(new TablePage(title, table)));
+            }
             else
-                Context.Invoke(() => Context.Core.Workspace.WindowService.OpenPage(new TextPage(title, text, syntax)));
+            {
+                var syntax = optionsJson.GetValueOrNull("syntax").AsStringOrNull() ??
+                    type switch { "text" => null, "json" => "JSON", "xml" => "XML", _ => null };
+                var text = type switch
+                {
+                    "json" => contentJson.ToString(JsonFormat.Multiline),
+                    _ when contentJson.IsString => contentJson.AsString,
+                    _ => contentJson.ToString(JsonFormat.Multiline),
+                };
+                if (background)
+                    Context.Invoke(() => Context.Core.Workspace.WindowService.AddPage(new TextPage(title, text, syntax)));
+                else
+                    Context.Invoke(() => Context.Core.Workspace.WindowService.OpenPage(new TextPage(title, text, syntax)));
+            }
         }
 
         [ScriptingApi("getenv", "Returns environment variable.")]

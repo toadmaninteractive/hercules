@@ -1,5 +1,6 @@
 ﻿using Hercules.Documents;
 using Hercules.Documents.Editor;
+using Hercules.Scripting;
 using Hercules.Search;
 using Json;
 using System;
@@ -242,6 +243,14 @@ namespace Hercules.AI
             var draft = new DocumentDraft(json.AsObject);
             core.Workspace.Scheduler.ScheduleForegroundJob(() => core.GetModule<DocumentsModule>().CreateDocument(id, draft));
             return $"Document {id} created.";
+        }
+
+        [AiTool("Expose the CSV table to the user.")]
+        public string ShowCsvTable(string title, string csv)
+        {
+            core.Workspace.Scheduler.ScheduleForegroundJob(() =>
+                core.Workspace.WindowService.OpenPage(new TablePage(title, CustomTable.LoadFromCsv(csv))));
+            return "Csv table opened";
         }
 
         private JsonPath LooseParseJsonPath(string pathString)
