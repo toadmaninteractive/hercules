@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Threading;
 
 namespace Hercules.AI
 {
@@ -39,7 +40,7 @@ namespace Hercules.AI
                 select Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, methodInfo.Name, attr.Description));
         }
 
-        public async Task WaitForAnswer()
+        public async Task WaitForAnswer(CancellationToken ct)
         {
             isGenerating.Value = true;
             try
@@ -59,9 +60,9 @@ namespace Hercules.AI
                     new SystemMessage("You're the assistant in the tool called Hercules. This is the design data database frontend and editor for game development. Each database entry is a JSON document, and a single document describes a single game entity. Documents are identified by their _id property, and contain their type in category property. Special schema document defines which other properties are available. Answer user's questions.")
                 }
                 };
-                while (true)
+                while (!ct.IsCancellationRequested)
                 {
-                    var result = await chatClient!.Messages.GetClaudeMessageAsync(parameters);
+                    var result = await chatClient!.Messages.GetClaudeMessageAsync(parameters, ct);
                     // result.Message.Content.First().CacheControl = new Anthropic.SDK.Messaging.CacheControl() { Type = CacheControlType.ephemeral };
 
                     messages.Add(result.Message);
@@ -99,12 +100,12 @@ namespace Hercules.AI
             }
         }
 
-        public void Ask(string userPrompt)
+        public void Ask(string userPrompt, CancellationToken ct)
         {
             userPrompt = userPrompt.Trim();
             messages.Add(new Message(RoleType.User, userPrompt));
             chatLog.AddUserMessage(userPrompt);
-            WaitForAnswer().Track();
+            WaitForAnswer(ct).Track();
         }
 
         public void Reset()

@@ -40,7 +40,12 @@
         <telerik:RadWatermarkTextBox Grid.Row="3" WatermarkContent="Start conversation with AI" VerticalContentAlignment="Top" Text="{Binding UserPrompt, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" TextWrapping="Wrap" />
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button IsDefault="True" HorizontalAlignment="Right" Command="{Binding SubmitCommand}" Margin="4" Height="20" Width="120"  Content="Submit" />
-            <Button HorizontalAlignment="Right" Command="{Binding ResetChatCommand}" Margin="4" Height="20" Width="80"  Content="Reset Chat" />
+            <Button Style="{StaticResource FlatBorder}" Command="{Binding StopCommand}" Margin="4" Height="20" Width="20">
+                <Image Source="{StaticResource fugue-control-stop-square}" />
+            </Button>
+            <Button Style="{StaticResource FlatBorder}" HorizontalAlignment="Right" Command="{Binding ResetChatCommand}" Margin="4" Height="20" Width="20" >
+                <Image Source="{StaticResource fugue-cross-script}" />
+            </Button>
         </StackPanel>
         <Button Style="{StaticResource FlatBorder}" Command="{Binding SettingsCommand}" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0" Height="20" Width="20" SnapsToDevicePixels="True">
             <Image Source="{StaticResource fugue-gear}"/>
