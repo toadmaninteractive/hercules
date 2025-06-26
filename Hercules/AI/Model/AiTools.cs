@@ -1,5 +1,6 @@
 ﻿using Hercules.Documents;
 using Hercules.Documents.Editor;
+using Hercules.Search;
 using Json;
 using System;
 using System.Collections.Generic;
@@ -105,6 +106,45 @@ namespace Hercules.AI
             }
         }
 
+        [AiTool("Search inside Hercules documents", ReadOnly = true)]
+        public string SearchInDocuments(string text)
+        {
+            var search = new CustomSearchVisitor
+            {
+                Text = text,
+                SearchText = true,
+                SearchEnums = true,
+                SearchKeys = true,
+                SearchNumbers = false,
+                SearchFields = false,
+                MatchCase = false,
+                WholeWord = false,
+            };
+            search.Search(core.Project.SchemafulDatabase.Schema, core.Project.SchemafulDatabase.SchemafulDocuments);
+            if (search.Results.Documents.Count == 0)
+                return "Nothing found";
+            var json = new JsonArray();
+            foreach (var result in search.Results.Documents)
+            {
+                var refArray = new JsonArray();
+                foreach (var reference in result.Value.References)
+                {
+                    refArray.Add(new JsonObject
+                    {
+                        ["path"] = reference.Entry,
+                        ["text"] = reference.Text,
+                    });
+                }
+                var jsonObject = new JsonObject
+                {
+                    ["id"] = result.Key,
+                    ["matches"] = refArray,
+                };
+                json.Add(jsonObject);
+            }
+            return json.ToString();
+        }
+
         [AiTool("Gets values for the specified property path for multiple Hercules documents. Returns the list of objects with document ID and property values.", ReadOnly = true)]
         public string GetPropertyValuesForMultipleDocuments(string[] ids, string[] jsonPropertyPaths)
         {
@@ -143,7 +183,15 @@ namespace Hercules.AI
                 {
                     var id = update.id;
                     var path = LooseParseJsonPath(update.path);
-                    ImmutableJson json = JsonParser.Parse(update.value);
+                    ImmutableJson json;
+                    try
+                    {
+                        json = JsonParser.Parse(update.value);
+                    }
+                    catch
+                    {
+                        json = ImmutableJson.Create(update.value);
+                    }
                     if (!updatedDocs.TryGetValue(id, out var updatedJson))
                     {
                         if (core.Project.Database.Documents.TryGetValue(id, out var doc))
