@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Threading;
+using System.IO;
 
 namespace Hercules.AI
 {
@@ -74,7 +75,7 @@ namespace Hercules.AI
                         foreach (var toolCall in result.ToolCalls)
                         {
                             var response = toolCall.Invoke<string>();
-                            chatLog.AddToolCall(toolCall.MethodInfo.Name, toolCall.Arguments.ToString(), response);                            
+                            chatLog.AddToolCall(toolCall.MethodInfo.Name, toolCall.Arguments.ToString(), response);
                             messages.Add(new Message(toolCall, response));
                         }
                         continue;
@@ -100,10 +101,51 @@ namespace Hercules.AI
             }
         }
 
-        public void Ask(string userPrompt, CancellationToken ct)
+        public void Ask(string userPrompt, IReadOnlyCollection<string> attachments, CancellationToken ct)
         {
             userPrompt = userPrompt.Trim();
-            messages.Add(new Message(RoleType.User, userPrompt));
+            var message = new Message(RoleType.User, userPrompt);
+            foreach (var attachment in attachments)
+            {
+                switch (Path.GetExtension(attachment).ToLowerInvariant())
+                {
+                    case ".pdf":
+                        message.Content.Add(new DocumentContent()
+                        {
+                            Source = new DocumentSource()
+                            {
+                                Type = SourceType.base64,
+                                Data = Convert.ToBase64String(File.ReadAllBytes(attachment)),
+                                MediaType = "application/pdf"
+                            },
+                            CacheControl = new CacheControl()
+                            {
+                                Type = CacheControlType.ephemeral
+                            }
+                        });
+                        break;
+
+                    case ".png":
+                    case ".jpg":
+                    case ".jpeg":
+                    case ".gif":
+                    case ".webp":
+                        message.Content.Add(new ImageContent()
+                        {
+                            Source = new ImageSource
+                            {
+                                Data = Convert.ToBase64String(File.ReadAllBytes(attachment)),
+                                MediaType = MimeMapping.MimeUtility.GetMimeMapping(attachment)
+                            }
+                        });
+                        break;
+
+                    default:
+                        message.Content.Add(new TextContent { Text = File.ReadAllText(attachment) });
+                        break;
+                }
+            }
+            messages.Add(message);
             chatLog.AddUserMessage(userPrompt);
             WaitForAnswer(ct).Track();
         }

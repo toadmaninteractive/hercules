@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -64,7 +65,7 @@ namespace Hercules.AI
 
         public void AddSpecialMessage(string message)
         {
-            Document.Blocks.Add(new Paragraph(new Run(message)) { Foreground = Brushes.Yellow });
+            Document.Blocks.Add(new Paragraph(new Run(message)) { Foreground = Brushes.Orange });
             OnChanged?.Invoke();
         }
 
@@ -78,6 +79,12 @@ namespace Hercules.AI
         public void Clear()
         {
             Document.Blocks.Clear();
+        }
+
+        public void AddAttachment(string fileName)
+        {
+            Document.Blocks.Add(new Paragraph(new Run($"Attached: {fileName}")) { Foreground = Brushes.Brown });
+            OnChanged?.Invoke();
         }
     }
 }
