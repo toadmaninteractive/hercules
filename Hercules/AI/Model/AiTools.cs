@@ -1,6 +1,7 @@
 ﻿using Hercules.Documents;
 using Hercules.Documents.Editor;
 using Hercules.Scripting;
+using Hercules.Scripting.JavaScript;
 using Hercules.Search;
 using Json;
 using System;
@@ -266,9 +267,68 @@ namespace Hercules.AI
                     default:
                         return "There's no currently opened table";
                 }
-                ;
             };
             return core.Workspace.Scheduler.ScheduleForegroundJob(GetTableContent);
+        }
+
+        [AiTool(@"Run JavaScript code in the context of Hercules. Use it for batch document api.
+            Prefer this tool when you need to update more than 10 documents at once.
+            Note that documents are JSON objects and have their id in ""_id"" property and categry in ""category"" property.
+            Useful API: 
+            hercules.db.get(id) returns document by id.
+            hercules.db.update(doc) updates doc with the new content. Doc parameter should be the full modified JSON document. To update multiple documents call it for each document individually.
+            hercules.db.idsByCategory(""my_category"") gets the list of document ids by category.
+            hercules.db.getAllDocs() gets the list of all (full) documents.
+            hercules.log(message) outputs message.
+            You can use ECMAScript 2023 API. Don't use console api.")]
+        public string RunJavaScript(string script)
+        {
+            return core.Workspace.Scheduler.ScheduleForegroundJob(() =>
+            {
+                bool result;
+                string? error = null;
+                var context = core.GetModule<ScriptingModule>().CreateScriptContext();
+                var errors = JsHost.SyntaxCheck(script);
+                if (errors == null)
+                {
+                    var host = new JsHost(context.ScriptingModuleProvider);
+                    host.SetValue("hercules", new HerculesJsApi(context, host).Api);
+                    try
+                    {
+                        host.Execute(script);
+                        result = true;
+                    }
+                    catch (Exception e)
+                    {
+                        error = e.Message;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    error = errors[0].Message;
+                    result = false;
+                }
+
+                if (result)
+                {
+                    context.ActiveDatabaseContext.Flush();
+                    core.GetModule<DocumentsModule>().EditDocuments(context.ActiveDatabaseContext.DocumentCache);
+                }
+
+                if (result)
+                {
+                    var sb = new StringBuilder();
+                    foreach (var message in context.LogMessages)
+                    {
+                        sb.AppendLine(message);
+                    }
+                    sb.AppendLine("JavaScript code executed successfully.");
+                    return sb.ToString();
+                }
+                else
+                    return $"Script execution error: {error}";
+            });
         }
 
         private JsonPath LooseParseJsonPath(string pathString)

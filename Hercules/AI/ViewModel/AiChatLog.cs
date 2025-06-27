@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Json;
+using System;
+using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Documents;
@@ -27,7 +29,7 @@ namespace Hercules.AI
             OnChanged?.Invoke();
         }
 
-        public void AddToolCall(string function, string arguments, string response)
+        public void AddToolCall(string function, ImmutableJsonObject arguments, string response)
         {
             var glyphRun = new Run("+ ");
             var functionRun = new Run(function);
@@ -40,7 +42,22 @@ namespace Hercules.AI
             paragraph.Inlines.Add(functionRun);
             expandedSection.Inlines.Add(new LineBreak());
             expandedSection.Inlines.Add(new LineBreak());
-            expandedSection.Inlines.Add(new Run(arguments));
+            foreach (var argument in arguments)
+            {
+                static string FormatValue(ImmutableJson value)
+                {
+                    if (value.IsString)
+                        return value.AsString;
+                    if (value.IsNumber)
+                        return value.AsNumber.ToString(CultureInfo.InvariantCulture);
+                    if (value.IsBool)
+                        return value.AsBool.ToString();
+                    return value.ToString();
+                }
+                expandedSection.Inlines.Add(new Run(argument.Key + ": ") { FontWeight = FontWeights.Bold });
+                expandedSection.Inlines.Add(new Run(FormatValue(argument.Value)));
+                expandedSection.Inlines.Add(new LineBreak());
+            }
             expandedSection.Inlines.Add(new LineBreak());
             expandedSection.Inlines.Add(new LineBreak());
             expandedSection.Inlines.Add(new Run(response));

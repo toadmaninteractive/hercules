@@ -141,6 +141,48 @@ namespace Json
                     return ImmutableJson.Null;
             }
         }
+
+        public static ImmutableJson ToImmutableJson(this System.Text.Json.Nodes.JsonNode jsonNode)
+        {
+            if (jsonNode is System.Text.Json.Nodes.JsonObject jsonObject)
+            {
+                var immutableObject = new JsonObject();
+                foreach (var kvp in jsonObject)
+                {
+                    immutableObject[kvp.Key] = kvp.Value.ToImmutableJson();
+                }
+                return immutableObject;
+            }
+            else if (jsonNode is System.Text.Json.Nodes.JsonArray jsonArray)
+            {
+                var immutableArray = new JsonArray();
+                foreach (var item in jsonArray)
+                {
+                    immutableArray.Add(item.ToImmutableJson());
+                }
+                return immutableArray;
+            }
+            else if (jsonNode is System.Text.Json.Nodes.JsonValue jsonValue)
+            {
+                switch (jsonValue.GetValueKind())
+                {
+                    case JsonValueKind.String:
+                        return ImmutableJson.Create(jsonValue.GetValue<string>()!);
+                    case JsonValueKind.Number:
+                        return ImmutableJson.Create(jsonValue.GetValue<double>());
+                    case JsonValueKind.True:
+                        return ImmutableJson.True;
+                    case JsonValueKind.False:
+                        return ImmutableJson.False;
+                    default:
+                        return ImmutableJson.Null;
+                }
+            }
+            else
+            {
+                return ImmutableJson.Null;
+            }
+        }
     }
 
     public class JsonPathSerializer : IJsonSerializer<JsonPath>

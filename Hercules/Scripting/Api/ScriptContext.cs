@@ -151,6 +151,7 @@ namespace Hercules.Scripting
         public SearchResults SearchResults { get; } = new();
         private readonly List<Func<Task>> actions = new();
         public ScriptingModuleProvider ScriptingModuleProvider { get; }
+        public List<string> LogMessages { get; } = new();
 
         public ScriptContext(Core core, Dispatcher dispatcher)
         {
@@ -183,21 +184,25 @@ namespace Hercules.Scripting
 
         public void Log(string text)
         {
+            LogMessages.Add(text);
             Logger.LogUser(text);
         }
 
         public void Warning(string text)
         {
+            LogMessages.Add(text);
             Logger.LogWarning(text);
         }
 
         public void Error(string text)
         {
+            LogMessages.Add(text);
             Logger.LogError(text);
         }
 
         public void Debug(string text)
         {
+            LogMessages.Add(text);
             Logger.LogDebug(text);
         }
 

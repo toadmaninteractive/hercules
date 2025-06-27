@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Threading;
 using System.IO;
+using Json;
 
 namespace Hercules.AI
 {
@@ -85,7 +86,7 @@ namespace Hercules.AI
                                 exception = ex;
                                 response = $"Tool call error: {ex.Message}";
                             }
-                            chatLog.AddToolCall(toolCall.MethodInfo.Name, toolCall.Arguments.ToString(), response);
+                            chatLog.AddToolCall(toolCall.MethodInfo.Name, toolCall.Arguments.ToImmutableJson().AsObject, response);
                             if (exception != null)
                             {
                                 chatLog.AddException(exception);

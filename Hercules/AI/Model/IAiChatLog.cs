@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Json;
+using System;
 
 namespace Hercules.AI
 {
@@ -8,7 +9,7 @@ namespace Hercules.AI
 
         void AddAiMessage(string message);
         void AddUserMessage(string message);
-        void AddToolCall(string function, string arguments, string response);
+        void AddToolCall(string function, ImmutableJsonObject arguments, string response);
         void AddException(Exception exception);
         void AddSpecialMessage(string message);
     }
