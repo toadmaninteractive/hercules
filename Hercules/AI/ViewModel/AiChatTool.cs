@@ -21,7 +21,7 @@ namespace Hercules.AI
             set => SetField(ref userPrompt, value);
         }
 
-        private readonly HerculesChatClient herculesChatClient;
+        private readonly IHerculesAiChat herculesChat;
 
         public ICommand SubmitCommand { get; }
         public ICommand ResetChatCommand { get; }
@@ -35,7 +35,7 @@ namespace Hercules.AI
         {
             ChatLog = new();
             IsGenerating = new(false);
-            herculesChatClient = new(ChatLog, aiTools, aiModule.Settings, IsGenerating);
+            herculesChat = new AnthropicChat(ChatLog, aiTools, aiModule.Settings, IsGenerating);
             Title = "AI Chat";
             userPrompt = "";
             SubmitCommand = Commands.Execute(Submit).If(() => !string.IsNullOrEmpty(UserPrompt));
@@ -72,21 +72,21 @@ namespace Hercules.AI
 
         private void Submit()
         {
-            if (!herculesChatClient.IsConnected)
+            if (!herculesChat.IsConnected)
             {
-                herculesChatClient.Init();
+                herculesChat.Init();
             }
 
             Stop();
             cts = new CancellationTokenSource();
-            herculesChatClient.Ask(userPrompt, attachments, cts.Token);
+            herculesChat.Ask(userPrompt, attachments, cts.Token);
             attachments.Clear();
         }
 
         private void ResetChat()
         {
             ChatLog.Clear();
-            herculesChatClient.Reset();
+            herculesChat.Reset();
         }
     }
 }

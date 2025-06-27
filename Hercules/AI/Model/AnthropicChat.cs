@@ -11,7 +11,7 @@ using Json;
 
 namespace Hercules.AI
 {
-    public class HerculesChatClient
+    public class AnthropicChat : IHerculesAiChat
     {
         private readonly List<Message> messages = new();
         private readonly IAiChatLog chatLog;
@@ -23,7 +23,7 @@ namespace Hercules.AI
 
         public bool IsConnected => chatClient != null;
 
-        public HerculesChatClient(IAiChatLog chatLog, AiTools aiTools, AiSettings settings, ObservableValue<bool> isGenerating)
+        public AnthropicChat(IAiChatLog chatLog, AiTools aiTools, AiSettings settings, ObservableValue<bool> isGenerating)
         {
             this.chatLog = chatLog;
             this.aiTools = aiTools;
