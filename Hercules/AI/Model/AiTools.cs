@@ -194,7 +194,7 @@ namespace Hercules.AI
                 bool hasErrors = false;
                 bool hasSuccess = false;
                 var sb = new StringBuilder();
-                Dictionary<string, ImmutableJsonObject> updatedDocs = new();
+                Dictionary<string, EditDocumentRequest> updatedDocs = new();
                 foreach (var update in updates)
                 {
                     var id = update.id;
@@ -208,11 +208,12 @@ namespace Hercules.AI
                     {
                         json = ImmutableJson.Create(update.value);
                     }
-                    if (!updatedDocs.TryGetValue(id, out var updatedJson))
+                    EditDocumentRequest updateRequest;
+                    if (!updatedDocs.TryGetValue(id, out updateRequest))
                     {
                         if (core.Project.Database.Documents.TryGetValue(id, out var doc))
                         {
-                            updatedJson = doc.Json;
+                            updateRequest = new EditDocumentRequest(doc, Json: doc.Json, Path: path);
                         }
                         else
                         {
@@ -221,11 +222,11 @@ namespace Hercules.AI
                             continue;
                         }
                     }
-                    updatedJson = updatedJson.ForceUpdate(path, json).AsObject;
-                    updatedDocs[id] = updatedJson;
+                    updateRequest = updateRequest with { Json = updateRequest.Json!.ForceUpdate(path, json).AsObject };
+                    updatedDocs[id] = updateRequest;
                     hasSuccess = true;
                 }
-                core.Workspace.Scheduler.ScheduleForegroundJob(() => core.GetModule<DocumentsModule>().EditDocuments(updatedDocs));
+                core.Workspace.Scheduler.ScheduleForegroundJob(() => core.GetModule<DocumentsModule>().EditDocuments(updatedDocs.Values.ToList()));
                 if (hasSuccess)
                 {
                     if (hasErrors)
