@@ -7,6 +7,7 @@ using Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Hercules.AI
@@ -14,12 +15,25 @@ namespace Hercules.AI
     public class AiToolAttribute : Attribute
     {
         public string Description { get; }
-        public bool ReadOnly { get; set; }
-        public bool Destructive { get; set; }
-        public bool OpenWorld { get; set; }
+        public string? DescriptionProperty { get; init; }
+        public bool ReadOnly { get; init; }
+        public bool Destructive { get; init; }
+        public bool OpenWorld { get; init; }
         public AiToolAttribute(string description)
         {
             Description = description;
+        }
+
+        public string GetDescription(object instance)
+        {
+            if (DescriptionProperty != null)
+            {
+                var property = instance.GetType().GetProperty(DescriptionProperty);
+                if (property == null)
+                    throw new InvalidOperationException($"{instance.GetType()} has no property {DescriptionProperty}");
+                return property.GetValue(instance)!.ToString()!;
+            }
+            return Description;
         }
     }
 
@@ -271,16 +285,37 @@ namespace Hercules.AI
             return core.Workspace.Scheduler.ScheduleForegroundJob(GetTableContent);
         }
 
-        [AiTool(@"Run JavaScript code in the context of Hercules. Use it for batch document api.
-            Prefer this tool when you need to update more than 10 documents at once.
-            Note that documents are JSON objects and have their id in ""_id"" property and categry in ""category"" property.
-            Useful API: 
-            hercules.db.get(id) returns document by id.
-            hercules.db.update(doc) updates doc with the new content. Doc parameter should be the full modified JSON document. To update multiple documents call it for each document individually.
-            hercules.db.idsByCategory(""my_category"") gets the list of document ids by category.
-            hercules.db.getAllDocs() gets the list of all (full) documents.
-            hercules.log(message) outputs message.
-            You can use ECMAScript 2023 API. Don't use console api.")]
+        public string RunJavaScriptDescription
+        {
+            get
+            {
+                var category = core.Project.SchemafulDatabase.Schema.Variant.Tag;
+                var sb = new StringBuilder();
+                sb.AppendLine($@"Run JavaScript (ECMAScript 2023) code in the context of Hercules. 
+Use it for batch document api.
+Prefer this tool when you need to update more than 10 documents at once.
+DO NOT use console API.
+Note that documents are JSON objects and have their id in ""_id"" property and categry in ""{category}"" property.
+Useful API:");
+                GetApiDescriptionForAI<HerculesDbApi>(sb);
+                GetApiDescriptionForAI<HerculesJsApi>(sb);
+                return sb.ToString();
+            }
+        }
+
+        private static void GetApiDescriptionForAI<T>(StringBuilder sb)
+        {
+            foreach (var member in typeof(T).GetMembers())
+            {
+                var attr = member.GetCustomAttribute<ScriptingApiAttribute>();
+                if (attr != null && !string.IsNullOrEmpty(attr.AiHint))
+                {
+                    sb.AppendLine(attr.AiHint);
+                }
+            }
+        }
+
+        [AiTool("", DescriptionProperty = nameof(RunJavaScriptDescription))]
         public string RunJavaScript(string script)
         {
             return core.Workspace.Scheduler.ScheduleForegroundJob(() =>

@@ -39,7 +39,8 @@ namespace Hercules.AI
                 from methodInfo in aiTools.GetType().GetMethods()
                 let attr = methodInfo.GetCustomAttribute<AiToolAttribute>()
                 where attr != null
-                select Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, methodInfo.Name, attr.Description));
+                let description = attr.GetDescription(aiTools)
+                select Anthropic.SDK.Common.Tool.GetOrCreateTool(aiTools, methodInfo.Name, description));
         }
 
         public async Task WaitForAnswer(CancellationToken ct)

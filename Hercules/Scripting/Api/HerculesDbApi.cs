@@ -31,7 +31,8 @@ namespace Hercules.Scripting
         public JsValue Connection => Host.JsonToJsValue(HerculesJsApi.ConnectionToJson(databaseContext.Connection));
 
         [ScriptingApi("get", "Get document by id.",
-            Example = "hercules.db.get(\"my_document\");")]
+            Example = "hercules.db.get(\"my_document\");",
+            AiHint = "hercules.db.get(id) returns document by id.")]
         public JsValue Get(string documentId, string? rev = null)
         {
             if (rev == null)
@@ -41,7 +42,8 @@ namespace Hercules.Scripting
         }
 
         [ScriptingApi("update", "Update document.",
-            Example = "hercules.db.update(\"doc\");")]
+            Example = "hercules.db.update(\"doc\");",
+            AiHint = "hercules.db.update(doc) updates doc with the new content.Doc parameter should be the full modified JSON document.To update multiple documents call it for each document individually.")]
         public void Update(JsValue data)
         {
             var json = Host.JsValueToJson(data);
@@ -108,7 +110,8 @@ namespace Hercules.Scripting
         }
 
         [ScriptingApi("idsByCategory", "Get the list of document ids by category.",
-            Example = "hercules.db.idsByCategory(\"my_category\");")]
+            Example = "hercules.db.idsByCategory(\"my_category\");",
+            AiHint = @"hercules.db.idsByCategory(""my_category"") gets the list of document ids by category.")]
         public JsValue IdsByCategory(string category)
         {
             var cat = databaseContext.SchemafulDatabase.GetCategory(category);
@@ -133,7 +136,8 @@ namespace Hercules.Scripting
         }
 
         [ScriptingApi("getAllDocs", "Get the list of all documents.",
-            Example = "hercules.db.getAllDocs(includeSchemaless);")]
+            Example = "hercules.db.getAllDocs(includeSchemaless);",
+            AiHint = "hercules.db.getAllDocs() gets the list of all (full) documents.")]
         public JsValue GetAllDocs(bool includeSchemaless = false)
         {
             var docs = databaseContext.SchemafulDatabase.SchemafulDocuments.Select(doc => doc.Json);

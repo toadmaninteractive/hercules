@@ -42,7 +42,7 @@ namespace Hercules.AI
                 select McpServerTool.Create(ReflectionHelper.CreateDelegate(methodIndo, tools), new()
                 {
                     Name = methodIndo.Name,
-                    Description = attr.Description,
+                    Description = attr.GetDescription(tools),
                     ReadOnly = attr.ReadOnly,
                     Destructive = attr.Destructive,
                     OpenWorld = attr.OpenWorld,

@@ -81,7 +81,8 @@ namespace Hercules.Scripting
         }
 
         [ScriptingApi("log", "Log string.",
-            Example = "hercules.log(\"Hello world\");")]
+            Example = "hercules.log(\"Hello world\");",
+            AiHint = "hercules.log(message) outputs message.")]
         public void Log(JsValue text)
         {
             var json = Host.JsValueToJson(text);

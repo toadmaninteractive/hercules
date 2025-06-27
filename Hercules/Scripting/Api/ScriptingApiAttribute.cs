@@ -8,7 +8,8 @@ namespace Hercules.Scripting
         public string Name { get; }
         public string Description { get; }
 
-        public string? Example { get; set; }
+        public string? Example { get; init; }
+        public string? AiHint { get; init; }
 
         public ScriptingApiAttribute(string name, string description)
         {
