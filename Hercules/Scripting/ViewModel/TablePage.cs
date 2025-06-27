@@ -43,8 +43,8 @@ namespace Hercules.Scripting
             var rows = new ObservableCollection<ExpandoObject>();
             if (data.Count > 0)
             {
-                var header = data[0].ToArray();
-                for (int j = 0; j < header.Length; j++)
+                var header = data[0].ToList();
+                for (int j = 0; j < header.Count; j++)
                 {
                     header[j] = header[j].Replace(".", U2024);
                 }
@@ -54,6 +54,10 @@ namespace Hercules.Scripting
                     var row = new ExpandoObject();
                     for (int j = 0; j < rowData.Count; j++)
                     {
+                        if (header.Count <= j)
+                        {
+                            header.Add($"col{j}");
+                        }
                         row.TryAdd(header[j], rowData[j]);
                     }
                     rows.Add(row);
