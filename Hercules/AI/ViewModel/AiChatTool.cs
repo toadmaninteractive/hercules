@@ -21,7 +21,7 @@ namespace Hercules.AI
             set => SetField(ref userPrompt, value);
         }
 
-        private readonly IHerculesAiChat herculesChat;
+        private IHerculesAiChat? herculesChat;
 
         public ICommand SubmitCommand { get; }
         public ICommand ResetChatCommand { get; }
@@ -30,18 +30,21 @@ namespace Hercules.AI
         public ICommand AttachCommand { get; }
         private CancellationTokenSource? cts;
         private readonly List<string> attachments = new();
+        private readonly AiModule aiModule;
+        private readonly AiTools aiTools;
 
         public AiChatTool(AiModule aiModule, AiTools aiTools, ICommand settingsCommand)
         {
             ChatLog = new();
             IsGenerating = new(false);
-            herculesChat = new AnthropicChat(ChatLog, aiTools, aiModule.Settings, IsGenerating);
             Title = "AI Chat";
             userPrompt = "";
             SubmitCommand = Commands.Execute(Submit).If(() => !string.IsNullOrEmpty(UserPrompt));
             ResetChatCommand = Commands.Execute(ResetChat);
             StopCommand = Commands.Execute(Stop).If(() => cts != null);
             AttachCommand = Commands.Execute(Attach);
+            this.aiModule = aiModule;
+            this.aiTools = aiTools;
             SettingsCommand = settingsCommand;
         }
 
@@ -72,9 +75,14 @@ namespace Hercules.AI
 
         private void Submit()
         {
-            if (!herculesChat.IsConnected)
+            if (herculesChat == null)
             {
-                herculesChat.Init();
+                herculesChat = aiModule.Settings.AiModelProvider.Value switch
+                {
+                    AiModelProvider.Ollama => new OllamaAiChat(ChatLog, aiTools, aiModule.Settings, IsGenerating),
+                    AiModelProvider.Anthropic => new AnthropicAiChat(ChatLog, aiTools, aiModule.Settings, IsGenerating),
+                    _ => throw new NotSupportedException($"AI model provider {aiModule.Settings.AiModelProvider.Value} is not supported.")
+                };
             }
 
             Stop();
@@ -86,7 +94,7 @@ namespace Hercules.AI
         private void ResetChat()
         {
             ChatLog.Clear();
-            herculesChat.Reset();
+            herculesChat?.Reset();
         }
     }
 }

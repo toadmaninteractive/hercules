@@ -1,5 +1,6 @@
 ﻿using Json;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Windows;
@@ -29,7 +30,7 @@ namespace Hercules.AI
             OnChanged?.Invoke();
         }
 
-        public void AddToolCall(string function, ImmutableJsonObject arguments, string response)
+        public void AddToolCall(string function, IReadOnlyCollection<KeyValuePair<string, ImmutableJson>> arguments, string response)
         {
             var glyphRun = new Run("+ ");
             var functionRun = new Run(function);

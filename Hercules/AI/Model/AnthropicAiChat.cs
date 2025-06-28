@@ -11,28 +11,20 @@ using Json;
 
 namespace Hercules.AI
 {
-    public class AnthropicChat : IHerculesAiChat
+    public class AnthropicAiChat : IHerculesAiChat
     {
         private readonly List<Message> messages = new();
         private readonly IAiChatLog chatLog;
-        private AnthropicClient? chatClient;
-        private List<Anthropic.SDK.Common.Tool>? tools;
-        private readonly AiTools aiTools;
+        private readonly AnthropicClient chatClient;
+        private readonly List<Anthropic.SDK.Common.Tool> tools;
         private readonly AiSettings settings;
         private readonly ObservableValue<bool> isGenerating;
 
-        public bool IsConnected => chatClient != null;
-
-        public AnthropicChat(IAiChatLog chatLog, AiTools aiTools, AiSettings settings, ObservableValue<bool> isGenerating)
+        public AnthropicAiChat(IAiChatLog chatLog, AiTools aiTools, AiSettings settings, ObservableValue<bool> isGenerating)
         {
             this.chatLog = chatLog;
-            this.aiTools = aiTools;
             this.settings = settings;
             this.isGenerating = isGenerating;
-        }
-
-        public void Init()
-        {
             chatClient = new AnthropicClient(new APIAuthentication(settings.AnthropicApiKey.Value));
 
             tools = new(
@@ -86,6 +78,11 @@ namespace Hercules.AI
                             {
                                 exception = ex;
                                 response = $"Tool call error: {ex.Message}";
+                            }
+                            var arguments = new Dictionary<string, object>();
+                            foreach (var argument in (System.Text.Json.Nodes.JsonObject)toolCall.Arguments)
+                            {
+                                arguments.Add(argument.Key, argument.Value.ToImmutableJson());
                             }
                             chatLog.AddToolCall(toolCall.MethodInfo.Name, toolCall.Arguments.ToImmutableJson().AsObject, response);
                             if (exception != null)

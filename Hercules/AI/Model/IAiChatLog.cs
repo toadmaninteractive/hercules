@@ -1,5 +1,6 @@
 ﻿using Json;
 using System;
+using System.Collections.Generic;
 
 namespace Hercules.AI
 {
@@ -9,7 +10,7 @@ namespace Hercules.AI
 
         void AddAiMessage(string message);
         void AddUserMessage(string message);
-        void AddToolCall(string function, ImmutableJsonObject arguments, string response);
+        void AddToolCall(string function, IReadOnlyCollection<KeyValuePair<string, ImmutableJson>> arguments, string response);
         void AddException(Exception exception);
         void AddSpecialMessage(string message);
     }
