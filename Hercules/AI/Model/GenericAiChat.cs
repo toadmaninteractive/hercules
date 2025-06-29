@@ -14,9 +14,9 @@ namespace Hercules.AI
     {
         private readonly IAiChatLog chatLog;
         private readonly ObservableValue<bool> isGenerating;
-        private readonly List<ChatMessage> messages = new();
-        private readonly IChatClient chatClient;
-        private readonly ChatOptions chatOptions;
+        protected readonly List<ChatMessage> messages = new();
+        protected readonly IChatClient chatClient;
+        protected readonly ChatOptions chatOptions;
         private readonly Dictionary<string, AIFunction> functions;
 
         public GenericAiChat(IChatClient chatClient, IAiChatLog chatLog, AiTools aiTools, AiSettings settings, ObservableValue<bool> isGenerating)
