@@ -895,6 +895,14 @@ namespace Hercules.Forms.Elements
             }
         }
 
+        public override void CollectIssues(IList<FormIssue> issues)
+        {
+            if (Children.Select(p => p.KeyElement.JsonKey).Distinct().Count() != Children.Count)
+            {
+                issues.Add(new FormIssue(FormIssueSeverity.Error, Path, "Dictionary contains duplicate keys"));
+            }
+        }
+
         public void Sort()
         {
             Form.Run(transaction =>

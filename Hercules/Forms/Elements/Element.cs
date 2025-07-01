@@ -2,10 +2,25 @@
 using Hercules.Forms.Schema;
 using Json;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Hercules.Forms.Elements
 {
+    public enum FormIssueSeverity
+    {
+        Warning,
+        Error,
+    }
+
+    public record struct FormIssue(FormIssueSeverity Severity, JsonPath Path, string Message, IEnumerable<string>? SupportedValues = null)
+    {
+        public override string ToString()
+        {
+            return $"[{Severity}] {Path}: {Message}";
+        }
+    }
+
     [Flags]
     public enum VisitOptions
     {
@@ -308,5 +323,9 @@ namespace Hercules.Forms.Elements
         public abstract void Present(PresentationContext context);
 
         public virtual int CompareTo(Element? other) => 0;
+
+        public virtual void CollectIssues(IList<FormIssue> issues)
+        {
+        }
     }
 }

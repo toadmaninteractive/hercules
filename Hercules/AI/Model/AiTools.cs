@@ -273,9 +273,14 @@ namespace Hercules.AI
                 var root = editor.FormTab.Form.Root;
                 if (!root.IsValid)
                 {
-                    foreach (var error in editor.FormTab.GetErrorList())
+                    foreach (var issue in editor.FormTab.GetIssues())
                     {
-                        sb.AppendLine($"ERROR: {error}");
+                        sb.Append($"[{issue.Severity}] {issue.Path}: {issue.Message}.");
+                        if (issue.SupportedValues != null)
+                        {
+                            sb.Append($"Supported values: {string.Join(", ", issue.SupportedValues)}.");
+                        }
+                        sb.AppendLine();
                     }
                 }
                 sb.AppendLine($"Document {id} created.");

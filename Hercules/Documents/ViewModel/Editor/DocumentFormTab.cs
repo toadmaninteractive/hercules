@@ -104,12 +104,20 @@ namespace Hercules.Documents.Editor
         public IReadOnlyList<string> GetErrorList()
         {
             List<string> errors = new List<string>();
+           
             foreach (var entry in Form.Root.Record.Children)
             {
                 if (!entry.IsValid)
                     errors.Add($"Invalid value for element <{entry.Name}>");
             }
             return errors;
+        }
+
+        public IReadOnlyList<FormIssue> GetIssues()
+        {
+            List<FormIssue> issues = new List<FormIssue>();
+            Form.Root.Visit(element => element.CollectIssues(issues), VisitOptions.None);
+            return issues;
         }
 
         public void GoToPath(JsonPath path)

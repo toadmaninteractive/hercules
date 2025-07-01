@@ -80,6 +80,14 @@ namespace Hercules.Forms.Elements
         {
             originalJson = newOriginalJson;
         }
+
+        public override void CollectIssues(IList<FormIssue> issues)
+        {
+            if (!IsValid)
+            {
+                issues.Add(new FormIssue(FormIssueSeverity.Error, Path, "Invalid value"));
+            }
+        }
     }
 
     public abstract class SimpleElement<TValueType, TSchemaType> : SimpleElement<TValueType> where TSchemaType : SimpleSchemaType<TValueType>
@@ -322,6 +330,14 @@ namespace Hercules.Forms.Elements
             }
             return false;
         }
+
+        public override void CollectIssues(IList<FormIssue> issues)
+        {
+            if (!IsValid)
+            {
+                issues.Add(new FormIssue(FormIssueSeverity.Error, Path, "Invalid document ID", SimpleType.Items.Select(d => d.DocumentId)));
+            }
+        }
     }
 
     public class BoolElement : SimpleElement<bool, BoolSchemaType>
@@ -424,6 +440,17 @@ namespace Hercules.Forms.Elements
         {
             var proxy = context.GetProxy(this);
             context.AddItem(proxy.Item0 ??= new VirtualRowItem(this, ControlPools.GetPool("StringElementPreview"), editorPool: ControlPools.GetPool("StringElementEditor"), dock: context.FillDock));
+        }
+
+        public override void CollectIssues(IList<FormIssue> issues)
+        {
+            if (!IsValid)
+            {
+                if (SimpleType.NotEmpty && string.IsNullOrEmpty(Value))
+                    issues.Add(new FormIssue(FormIssueSeverity.Error, Path, "Not empty string required"));
+                else
+                    base.CollectIssues(issues);
+            }
         }
     }
 
@@ -581,6 +608,17 @@ namespace Hercules.Forms.Elements
             var proxy = context.GetProxy(this);
             context.AddItem(proxy.Item0 ??= new VirtualRowItem(this, ControlPools.GetPool(GetType()), isTabStop: true, dock: context.FillDock), height: EditorHeight);
         }
+
+        public override void CollectIssues(IList<FormIssue> issues)
+        {
+            if (!IsValid)
+            {
+                if (SimpleType.NotEmpty && string.IsNullOrEmpty(Value))
+                    issues.Add(new FormIssue(FormIssueSeverity.Error, Path, "Not empty string required"));
+                else
+                    base.CollectIssues(issues);
+            }
+        }
     }
 
     public class AvalonTextElement : NullableReferenceElement<string, TextSchemaType>
@@ -687,6 +725,14 @@ namespace Hercules.Forms.Elements
             }
             return false;
         }
+
+        public override void CollectIssues(IList<FormIssue> issues)
+        {
+            if (!IsValid)
+            {
+                issues.Add(new FormIssue(FormIssueSeverity.Error, Path, "Invalid value", SimpleType.Items));
+            }
+        }
     }
 
     public class EnumElement : NullableReferenceElement<string, EnumSchemaType>, IAutoCompleteElement
@@ -736,6 +782,14 @@ namespace Hercules.Forms.Elements
                 return false;
             }
             return false;
+        }
+
+        public override void CollectIssues(IList<FormIssue> issues)
+        {
+            if (!IsValid)
+            {
+                issues.Add(new FormIssue(FormIssueSeverity.Error, Path, "Invalid enum value", SimpleType.Enum.Values));
+            }
         }
     }
 

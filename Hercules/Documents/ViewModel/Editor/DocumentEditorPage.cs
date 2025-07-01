@@ -348,7 +348,7 @@ namespace Hercules.Documents.Editor
 
         private async Task ValidateAndSave()
         {
-            var validationResult = FormTab.GetErrorList();
+            var validationResult = FormTab.GetIssues();
 
             if (validationResult.Count == 0)
                 await Save().ConfigureAwait(true);
