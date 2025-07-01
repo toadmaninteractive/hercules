@@ -47,9 +47,9 @@ namespace Hercules.Forms.Schema
         }
     }
 
-    internal sealed class FormSchemaBuilder
+    internal sealed class IgorFormSchemaBuilder
     {
-        public FormSchemaBuilder(ImmutableJson json, FormSettings formSettings, ProjectSettings? projectSettings, IDialogService dialogServise, TextSizeService textSizeService, ShortcutService shortcutService, CustomTypeRegistry customTypeRegistry, SchemafulDatabase? schemafulDatabase)
+        public IgorFormSchemaBuilder(ImmutableJson json, FormSettings formSettings, ProjectSettings? projectSettings, IDialogService dialogServise, TextSizeService textSizeService, ShortcutService shortcutService, CustomTypeRegistry customTypeRegistry, SchemafulDatabase? schemafulDatabase)
         {
             SchemafulDatabase = schemafulDatabase;
             FormSettings = formSettings;

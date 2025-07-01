@@ -15,7 +15,7 @@ namespace Hercules.Forms.Schema
     {
         public FormSchema CreateFormSchema(ImmutableJson json, SchemafulDatabase? schemafulDatabase)
         {
-            return new FormSchemaBuilder(json, FormSettings, ProjectSettings, DialogService, TextSizeService, ShortcutService, CustomTypeRegistry, schemafulDatabase).FormSchema;
+            return new IgorFormSchemaBuilder(json, FormSettings, ProjectSettings, DialogService, TextSizeService, ShortcutService, CustomTypeRegistry, schemafulDatabase).FormSchema;
         }
     }
 }
