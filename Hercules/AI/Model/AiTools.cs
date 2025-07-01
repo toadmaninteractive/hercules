@@ -79,7 +79,7 @@ namespace Hercules.AI
         }
 
         [AiTool("Gets the list of Hercules document categories.", ReadOnly = true)]
-        public string GetCategories(string category)
+        public string GetCategories()
         {
             var sb = new StringBuilder();
             foreach (var cat in core.Project.SchemafulDatabase.Categories)
@@ -258,15 +258,22 @@ namespace Hercules.AI
         public string CreateDocument(string id, string jsonString)
         {
             var json = JsonParser.Parse(jsonString);
-            var draft = new DocumentDraft(json.AsObject);
             var result = core.Workspace.Scheduler.ScheduleForegroundJob(() =>
             {
                 var sb = new StringBuilder();
-                var doc = core.GetModule<DocumentsModule>().CreateDocument(id, draft);
-                var root = doc.FormTab.Form.Root;
+                DocumentEditorPage editor;
+                if (core.Project.Database.Documents.TryGetValue(id, out var doc))
+                {
+                    editor = core.GetModule<DocumentsModule>().EditDocument(id, json.AsObject);
+                }
+                else
+                {
+                    editor = core.GetModule<DocumentsModule>().CreateDocument(id, new DocumentDraft(json.AsObject));
+                }
+                var root = editor.FormTab.Form.Root;
                 if (!root.IsValid)
                 {
-                    foreach (var error in doc.FormTab.GetErrorList())
+                    foreach (var error in editor.FormTab.GetErrorList())
                     {
                         sb.AppendLine($"ERROR: {error}");
                     }

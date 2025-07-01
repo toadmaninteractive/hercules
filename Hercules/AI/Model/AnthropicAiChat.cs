@@ -57,7 +57,19 @@ namespace Hercules.AI
                 };
                 while (!ct.IsCancellationRequested)
                 {
-                    var result = await chatClient!.Messages.GetClaudeMessageAsync(parameters, ct);
+                    MessageResponse result;
+                    try
+                    {
+                        result = await chatClient!.Messages.GetClaudeMessageAsync(parameters, ct);
+                    }
+                    catch (RateLimitsExceeded rateLimitsExceeded)
+                    {
+                        var retryAfter = rateLimitsExceeded.RateLimits.RetryAfter ?? TimeSpan.FromSeconds(30);
+                        Logger.LogException(rateLimitsExceeded);
+                        chatLog.AddSpecialMessage($"Rate limits exceeded. Retry in {retryAfter.TotalSeconds:0.##}s");
+                        await Task.Delay(retryAfter, ct);
+                        continue;
+                    }
                     // result.Message.Content.First().CacheControl = new Anthropic.SDK.Messaging.CacheControl() { Type = CacheControlType.ephemeral };
 
                     messages.Add(result.Message);
