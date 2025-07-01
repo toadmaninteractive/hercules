@@ -79,7 +79,7 @@ namespace Hercules.AI
         }
 
         [AiTool("Gets the list of Hercules document categories.", ReadOnly = true)]
-        public string GetCategoryList(string category)
+        public string GetCategories(string category)
         {
             var sb = new StringBuilder();
             foreach (var cat in core.Project.SchemafulDatabase.Categories)
@@ -259,8 +259,22 @@ namespace Hercules.AI
         {
             var json = JsonParser.Parse(jsonString);
             var draft = new DocumentDraft(json.AsObject);
-            core.Workspace.Scheduler.ScheduleForegroundJob(() => core.GetModule<DocumentsModule>().CreateDocument(id, draft));
-            return $"Document {id} created.";
+            var result = core.Workspace.Scheduler.ScheduleForegroundJob(() =>
+            {
+                var sb = new StringBuilder();
+                var doc = core.GetModule<DocumentsModule>().CreateDocument(id, draft);
+                var root = doc.FormTab.Form.Root;
+                if (!root.IsValid)
+                {
+                    foreach (var error in doc.FormTab.GetErrorList())
+                    {
+                        sb.AppendLine($"ERROR: {error}");
+                    }
+                }
+                sb.AppendLine($"Document {id} created.");
+                return sb.ToString();
+            });
+            return result;
         }
 
         [AiTool("Expose/open the CSV table to the user.")]
