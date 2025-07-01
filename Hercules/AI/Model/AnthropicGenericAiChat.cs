@@ -9,7 +9,7 @@ namespace Hercules.AI
             : base(new AnthropicClient(settings.AnthropicApiKey.Value).Messages, chatLog, aiTools, settings, isGenerating)
         {
             chatOptions.ModelId = settings.AiModel.Value;
-            chatOptions.MaxOutputTokens = 2048;
+            chatOptions.MaxOutputTokens = settings.MaxTokens.Value;
         }
     }
 }

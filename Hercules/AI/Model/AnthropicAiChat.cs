@@ -44,7 +44,7 @@ namespace Hercules.AI
                 var parameters = new MessageParameters()
                 {
                     Messages = messages,
-                    MaxTokens = 2048,
+                    MaxTokens = settings.MaxTokens.Value,
                     Model = settings.AiModel.Value,
                     Stream = false,
                     Temperature = (decimal)settings.AiTemperature.Value,
