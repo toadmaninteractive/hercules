@@ -49,7 +49,9 @@ namespace Hercules.AI
         [AiTool("Gets Hercules design database schema as JSON.", ReadOnly = true)]
         public string GetSchema()
         {
-            return core.Project.Database.Documents["schema"].Json.ToString();
+            if (core.Project!.Database.Documents.TryGetValue(CouchUtils.JsonSchemaDocumentId, out var doc))
+                return doc.Json.ToString();
+            return core.Project.Database.Documents[CouchUtils.SchemaDocumentId].Json.ToString();
         }
 
         [AiTool("Gets Hercules document for the given id.", ReadOnly = true)]

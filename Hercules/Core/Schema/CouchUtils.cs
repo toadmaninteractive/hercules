@@ -8,6 +8,7 @@ namespace Hercules
     {
         public const string SchemaDocumentId = "schema";
         public const string DiagramSchemaDocumentId = "diagram_schema";
+        public const string JsonSchemaDocumentId = "json_schema";
         public const string HerculesBase = "hercules_base";
         public static readonly string[] BaseJsonExcludedKeys = { "_rev", "_attachments", HerculesBase, "hercules_metadata" };
 

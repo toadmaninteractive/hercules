@@ -242,7 +242,7 @@ namespace Hercules.Documents
 
         private static bool IsSchemaDocument(string documentId, ImmutableJsonObject json)
         {
-            if (documentId == CouchUtils.SchemaDocumentId || documentId == CouchUtils.DiagramSchemaDocumentId)
+            if (documentId == CouchUtils.SchemaDocumentId || documentId == CouchUtils.DiagramSchemaDocumentId || documentId == CouchUtils.JsonSchemaDocumentId)
                 return true;
             var scope = CouchUtils.GetScope(json);
             return scope == "editor";

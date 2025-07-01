@@ -58,7 +58,7 @@ namespace Hercules
 
         bool IsSchemaDocument(IDocument document)
         {
-            return document.DocumentId == CouchUtils.SchemaDocumentId || CouchUtils.GetScope(document.Json) == "schema";
+            return document.DocumentId == CouchUtils.SchemaDocumentId || document.DocumentId == CouchUtils.JsonSchemaDocumentId || CouchUtils.GetScope(document.Json) == "schema";
         }
 
         public void Close()
