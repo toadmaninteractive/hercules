@@ -89,6 +89,10 @@ namespace Hercules.AI
                             catch (Exception ex)
                             {
                                 exception = ex;
+                                if (exception is TargetInvocationException targetInocation && targetInocation.InnerException != null)
+                                {
+                                    exception = targetInocation.InnerException;
+                                }
                                 response = $"Tool call error: {ex.Message}";
                             }
                             var arguments = new Dictionary<string, object>();
@@ -100,7 +104,7 @@ namespace Hercules.AI
                             if (exception != null)
                             {
                                 chatLog.AddException(exception);
-                                Logger.LogException($"Tool call {toolCall.MethodInfo.Name} error", exception);
+                                Logger.LogException($"AI tool {toolCall.MethodInfo.Name} call error", exception);
                             }
                             messages.Add(new Message(toolCall, response));
                         }
