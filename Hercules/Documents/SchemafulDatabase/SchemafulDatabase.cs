@@ -57,11 +57,6 @@ namespace Hercules.Documents
 
             if (Schema != null)
             {
-                if (Schema.SchemaVersion < RecommendedSchemaVersion)
-                {
-                    Logger.LogWarning($"Schema version {Schema.SchemaVersion} is lower than recommended {RecommendedSchemaVersion}. Some functions may be missing or work incorrectly. Please consider updating Igor Compiler.");
-                }
-
                 if (AllDocuments.TryGetValue(CouchUtils.DiagramSchemaDocumentId, out var diagramDocument))
                 {
                     try

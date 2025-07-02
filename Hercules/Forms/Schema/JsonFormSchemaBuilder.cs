@@ -11,65 +11,100 @@ using System.Linq;
 
 namespace Hercules.Forms.Schema
 {
-    internal sealed class GenericRecordInstance : IEquatable<GenericRecordInstance>
+    internal struct JsonSchemaObject
     {
-        public string PrototypeName { get; }
-        public List<SchemaType> Arguments { get; }
-
-        public GenericRecordInstance(string prototypeName, List<SchemaType> arguments)
-        {
-            this.PrototypeName = prototypeName;
-            this.Arguments = arguments;
-        }
-
-        public override int GetHashCode()
-        {
-            var hash = new HashCode();
-            hash.Add(PrototypeName);
-            foreach (var argument in Arguments)
-                hash.Add(argument.GetHashCode());
-            return hash.ToHashCode();
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is GenericRecordInstance that)
-                return Equals(that);
-            else
-                return false;
-        }
-
-        public bool Equals(GenericRecordInstance? other)
-        {
-            if (other is null)
-                return false;
-            return PrototypeName == other.PrototypeName && Enumerable.SequenceEqual(Arguments, other.Arguments);
-        }
+        public string? Type;
     }
 
-    internal sealed class IgorFormSchemaBuilder
+    internal sealed class JsonFormSchemaBuilder
     {
-        public IgorFormSchemaBuilder(ImmutableJson json, FormSettings formSettings, ProjectSettings? projectSettings, IDialogService dialogServise, TextSizeService textSizeService, ShortcutService shortcutService, CustomTypeRegistry customTypeRegistry, SchemafulDatabase? schemafulDatabase)
+        public JsonFormSchemaBuilder(ImmutableJson json, FormSettings formSettings, ProjectSettings? projectSettings, IDialogService dialogServise, TextSizeService textSizeService, ShortcutService shortcutService, CustomTypeRegistry customTypeRegistry, SchemafulDatabase? schemafulDatabase)
         {
             SchemafulDatabase = schemafulDatabase;
+            this.jsonSchema = json;
             FormSettings = formSettings;
             this.projectSettings = projectSettings;
             DialogService = dialogServise;
             TextSizeService = textSizeService;
             this.customTypeRegistry = customTypeRegistry;
             ShortcutService = shortcutService;
-            IgorSchema = SchemaJsonSerializer.Instance.Deserialize(json);
-            var version = Version.Parse(IgorSchema.Version);
 
-            InitSchema();
+            ParseEnums();
+            ParseRecords();
 
             FormSchema = new FormSchema(enums, records, GetStruct(IgorSchema.DocumentType));
+        }
+
+        private void ParseEnums()
+        {
+            var definitions = jsonSchema["$defs"].AsObject;
+            foreach (var definition in definitions)
+            {
+                if (definition.Value.AsObject.TryGetValue("enum", out var enumValues))
+                {
+                    var enumType = new SchemaEnum(definition.Key, enumValues.AsArray.Select(v => v.AsString).ToArray());
+                    enums.Add(definition.Key, enumType);
+                }
+            }
+        }
+
+        private void ParseRecords()
+        {
+            Dictionary<string, string> parents = new();
+            var definitions = jsonSchema["$defs"].AsObject;
+            foreach (var definition in definitions)
+            {
+                if (definition.Value.AsObject.TryGetValue("oneOf", out var oneOf))
+                {
+                    foreach (var child in oneOf.AsArray)
+                    {
+                        if (child.AsObject.TryGetValue("$ref", out var childRef))
+                        {
+                            var childName = GetNameByRef(childRef.AsString);
+                            parents[childName] = definition.Key;
+                        }
+                    }
+                }
+            }
+            foreach (var definition in definitions)
+            {
+
+            }
+        }
+
+        private string GetNameByRef(string refName)
+        {
+            return refName.RemovePrefix("#/$defs/");
+        }
+
+        private ImmutableJsonObject GetRef(string @ref)
+        {
+            var parts = @ref.Split('/');
+            ImmutableJson result = ImmutableJson.EmptyObject;
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (parts[i] == "#")
+                    result = jsonSchema;
+                else
+                    result = jsonSchema[parts[i]];
+            }
+            return result.AsObject;
+        }
+
+        private void ParseJsonSchemaObject(ImmutableJsonObject json, ref JsonSchemaObject schema)
+        {
+            if (json.TryGetValue("$ref", out var refJson) && refJson.IsString)
+                ParseJsonSchemaObject(GetRef(refJson.AsString), ref schema);
+            if (json.TryGetValue("type", out var typeJson) && typeJson.IsString)
+                schema.Type = typeJson.AsString;
         }
 
         public FormSchema FormSchema { get; }
 
         private SchemafulDatabase? SchemafulDatabase { get; }
         private FormSettings FormSettings { get; }
+
+        private readonly ImmutableJson jsonSchema;
         private readonly ProjectSettings? projectSettings;
         private Igor.Schema.Schema IgorSchema { get; }
         private TextSizeService TextSizeService { get; }
@@ -82,115 +117,6 @@ namespace Hercules.Forms.Schema
         private readonly Dictionary<string, SchemaRecord> localizedRecords = new Dictionary<string, SchemaRecord>();
         private readonly Dictionary<string, SchemaRecord> multilineLocalizedRecords = new Dictionary<string, SchemaRecord>();
         private readonly Dictionary<GenericRecordInstance, SchemaRecord> genericRecordInstances = new Dictionary<GenericRecordInstance, SchemaRecord>();
-
-        void InitSchema()
-        {
-            foreach (var pair in IgorSchema.CustomTypes)
-            {
-                var name = pair.Key;
-                if (pair.Value is EnumCustomType customType)
-                {
-                    List<string> values;
-                    if (FormSettings.SortEnumValues.Value)
-                        values = new List<string>(customType.Values.OrderBy(a => a));
-                    else
-                        values = new List<string>(customType.Values);
-                    var schemaEnum = new SchemaEnum(name, values);
-                    enums.Add(name, schemaEnum);
-                }
-                else if (pair.Value is RecordCustomType recordCustomType && recordCustomType.GenericArguments != null)
-                {
-                    // do not create SchemaRecord for generic records
-                }
-                else
-                {
-                    GetStruct(name);
-                }
-            }
-
-            foreach (var variant in records.Values.OfType<SchemaVariant>())
-            {
-                var customType = IgorSchema.CustomTypes[variant.Name];
-                foreach (var pair in ((VariantCustomType)customType).Children)
-                {
-                    var child = (SchemaRecord)GetStruct(pair.Value);
-                    child.TagValue = pair.Key;
-                    variant.Children.Add(child);
-                }
-            }
-
-            var emptyGenericArgsCache = new Dictionary<string, SchemaType>();
-
-            foreach (var record in records.Values)
-            {
-                var customType = (StructCustomType)IgorSchema.CustomTypes[record.Name];
-                foreach (var pair in customType.Fields)
-                {
-                    var name = pair.Key;
-                    var descriptor = pair.Value;
-                    var isTag = (record is SchemaVariant) && ((SchemaVariant)record).Tag == name;
-                    var caption = pair.Key + ":";
-                    var field = new SchemaField(pair.Key, caption, Create(descriptor, emptyGenericArgsCache), TextSizeService.GetWidth(caption), isTag);
-                    record.Fields.Add(field);
-                    if (descriptor.GetBoolMetadata("record_caption"))
-                        record.CaptionField = field;
-                    if (descriptor.GetBoolMetadata("record_enabled"))
-                        record.EnabledField = field;
-                    if (descriptor.GetBoolMetadata("key"))
-                        field.IsKey = true;
-                }
-
-                if (record is SchemaRecord sr)
-                {
-                    DetectColorRecord(sr);
-                    if (customType.GetBoolMetadata("dialog_replica"))
-                        sr.IsReplica = true;
-
-                    if (customType.GetBoolMetadata("dialog"))
-                        sr.IsDialog = true;
-
-                    if (customType.TryGetStringMetadata("ai_hint", out var aiHint))
-                        sr.AiHint = aiHint;
-                }
-
-                var captionPath = customType.GetStringMetadata("caption_path");
-                if (captionPath != null)
-                    record.CaptionPath = JsonPath.Parse(captionPath);
-                var imagePath = customType.GetStringMetadata("image_path");
-                if (imagePath != null)
-                    record.ImagePath = JsonPath.Parse(imagePath);
-            }
-
-            foreach (var localized in localizedRecords.Values)
-            {
-                var record = GetStruct(localized.Name);
-                foreach (var field in record.Fields)
-                {
-                    if (field.Name == "text" || field.Name == "approved_text")
-                    {
-                        var newField = new SchemaField(field.Name, field.Caption, FixMultiline(field.Type, false), field.TextWidth, field.IsTag);
-                        localized.Fields.Add(newField);
-                    }
-                    else
-                        localized.Fields.Add(field);
-                }
-            }
-
-            foreach (var localized in multilineLocalizedRecords.Values)
-            {
-                var record = GetStruct(localized.Name);
-                foreach (var field in record.Fields)
-                {
-                    if (field.Name == "text" || field.Name == "approved_text")
-                    {
-                        var newField = new SchemaField(field.Name, field.Caption, FixMultiline(field.Type, true), field.TextWidth, field.IsTag);
-                        localized.Fields.Add(newField);
-                    }
-                    else
-                        localized.Fields.Add(field);
-                }
-            }
-        }
 
         SchemaStruct GetStruct(string name)
         {

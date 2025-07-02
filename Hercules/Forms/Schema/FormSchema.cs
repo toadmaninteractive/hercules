@@ -24,7 +24,6 @@ namespace Hercules.Forms.Schema
         public IReadOnlyDictionary<string, SchemaEnum> Enums { get; }
         public IReadOnlyDictionary<string, SchemaStruct> Structs { get; }
         public IReadOnlyDictionary<string, SchemaGroup> Groups { get; }
-        public Version SchemaVersion { get; }
 
         public RecordSchemaType DocumentRoot(string category)
         {
@@ -36,12 +35,11 @@ namespace Hercules.Forms.Schema
             return new RecordSchemaType(record);
         }
 
-        public FormSchema(IReadOnlyDictionary<string, SchemaEnum> enums, IReadOnlyDictionary<string, SchemaStruct> structs, SchemaStruct root, Version schemaVersion)
+        public FormSchema(IReadOnlyDictionary<string, SchemaEnum> enums, IReadOnlyDictionary<string, SchemaStruct> structs, SchemaStruct root)
         {
             Enums = enums;
             Structs = structs;
             Root = root;
-            SchemaVersion = schemaVersion;
             Variant = Root as SchemaVariant;
 
             if (Variant != null)
