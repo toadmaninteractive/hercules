@@ -459,6 +459,7 @@ namespace Hercules.Forms.Elements
         public PathElement(IContainer parent, PathSchemaType type, ImmutableJson? json, ImmutableJson? originalJson, ITransaction transaction)
             : base(parent, type, json, originalJson, transaction)
         {
+            DropCommand = Commands.Execute<IDataObject>(Drop).If(AllowDrop);
             ClearCommand = Commands.Execute(() => Value = SimpleType.Default);
             OpenFileCommand = Commands.Execute(DoOpenFile);
             SetFlag(ElementFlags.HasPreview, HasPreview());
@@ -466,6 +467,7 @@ namespace Hercules.Forms.Elements
 
         public ICommand ClearCommand { get; }
         public ICommand OpenFileCommand { get; }
+        public ICommand DropCommand { get; }
 
         private IReadOnlyObservableValue<BitmapSource>? image;
         public IReadOnlyObservableValue<BitmapSource>? Image
@@ -521,19 +523,24 @@ namespace Hercules.Forms.Elements
                 InitialFileName: fileName, DefaultExtension: defaultExtension, Preview: SimpleType.Preview);
             if (SimpleType.ProjectSettings.Repository.Browse($"Pick file: {Path}", dialogParams, out var relativePath))
             {
-                if (!SimpleType.IncludeExtension)
-                {
-                    relativePath = System.IO.Path.ChangeExtension(relativePath, null);
-                }
-
-                if (SimpleType.UnrealClassPath || SimpleType.UnrealAssetPath)
-                {
-                    relativePath = relativePath.TryReplacePrefix("Content", "/Game", StringComparison.OrdinalIgnoreCase);
-                    var suffix = SimpleType.UnrealClassPath ? "_C" : "";
-                    relativePath = System.IO.Path.ChangeExtension(relativePath, System.IO.Path.GetFileNameWithoutExtension(relativePath) + suffix);
-                }
-                Value = relativePath;
+                SetRelativePathValue(relativePath);
             }
+        }
+
+        private void SetRelativePathValue(string relativePath)
+        {
+            if (!SimpleType.IncludeExtension)
+            {
+                relativePath = System.IO.Path.ChangeExtension(relativePath, null);
+            }
+
+            if (SimpleType.UnrealClassPath || SimpleType.UnrealAssetPath)
+            {
+                relativePath = relativePath.TryReplacePrefix("Content", "/Game", StringComparison.OrdinalIgnoreCase);
+                var suffix = SimpleType.UnrealClassPath ? "_C" : "";
+                relativePath = System.IO.Path.ChangeExtension(relativePath, System.IO.Path.GetFileNameWithoutExtension(relativePath) + suffix);
+            }
+            Value = relativePath;
         }
 
         public double PreviewWidth => SimpleType.PreviewWidth ?? 200;
@@ -547,20 +554,39 @@ namespace Hercules.Forms.Elements
         {
             var proxy = context.GetProxy(this);
             var left = context.Left;
-            context.AddItem(editItem ??= new VirtualRowItem(this, ControlPools.GetPool("StringElementPreview"), editorPool: ControlPools.GetPool("StringElementEditor"), dock: context.FillDock));
+            context.AddItem(editItem ??= new VirtualRowItem(this, ControlPools.GetPool("PathElementPreview"), editorPool: ControlPools.GetPool("PathElementEditor"), dock: context.FillDock));
             context.AddItem(pathButtonItem ??= new VirtualRowItem(this, ControlPools.GetPool("PathElementButton"), dock: context.RightDock, width: 24));
             if (GetFlag(ElementFlags.HasPreview))
             {
                 if (!context.IsPropertyEditor)
                     context.Indent(left);
                 context.AddRow(proxy);
-                context.AddItem(previewItem ??= new VirtualRowItem(this, ControlPools.GetPool("PathElementPreview")), height: PreviewHeight + 2);
+                context.AddItem(previewItem ??= new VirtualRowItem(this, ControlPools.GetPool("PathElementPreviewImage")), height: PreviewHeight + 2);
                 if (!context.IsPropertyEditor)
                     context.Outdent();
             }
         }
 
         private bool HasPreview() => SimpleType.Preview && SimpleType.ProjectSettings?.Repository != null && !string.IsNullOrWhiteSpace(value);
+
+        bool AllowDrop(IDataObject data)
+        {
+            return SimpleType.ProjectSettings?.Repository is LocalRepository && data.GetDataPresent(DataFormats.FileDrop);
+        }
+
+        void Drop(IDataObject data)
+        {
+            if (data.GetData(DataFormats.FileDrop) is IEnumerable<string> files)
+            {
+                foreach (var file in files)
+                {
+                    var repo = (LocalRepository)SimpleType.ProjectSettings!.Repository!;
+                    var rootPath = PathStyle.Backslash.Join(repo.RepositoryPath, SimpleType.Root);
+                    SetRelativePathValue(PathStyle.Backslash.GetRelativePath(rootPath, file).Replace('\\', '/'));
+                    break;
+                }
+            }
+        }
 
         protected override void OnValueUpdate(ITransaction transaction)
         {

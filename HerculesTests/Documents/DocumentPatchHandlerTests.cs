@@ -114,8 +114,7 @@ namespace Hercules.Documents.Editor.Tests
             return new FormSchema(
                 new Dictionary<string, SchemaEnum> { [categoryEnum.Name] = categoryEnum },
                 new Dictionary<string, SchemaStruct> { [testCardSchema.Name] = testCardSchema, [rootVariantSchema.Name] = rootVariantSchema },
-                rootVariantSchema,
-                new Version(1, 0));
+                rootVariantSchema);
         }
     }
 }

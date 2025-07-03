@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xaml.Behaviors;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -23,6 +24,8 @@ namespace Hercules.Controls
         {
             AssociatedObject.Drop += Drop;
             AssociatedObject.DragOver += DragOver;
+            if (AssociatedObject is TextBox)
+                AssociatedObject.PreviewDragOver += PreviewDragOver;
             // Wild hack to allow dropping to editable combo box
             if (AssociatedObject is ComboBox comboBox)
             {
@@ -75,10 +78,18 @@ namespace Hercules.Controls
             }
         }
 
+        private void PreviewDragOver(object sender, DragEventArgs e)
+        {
+            DragOver(sender, e);
+            e.Handled = true;
+        }
+
         protected override void OnDetaching()
         {
             AssociatedObject.Drop -= Drop;
             AssociatedObject.DragOver -= DragOver;
+            if (AssociatedObject is TextBox)
+                AssociatedObject.PreviewDragOver -= PreviewDragOver;
             if (comboBoxEditableScrollViewer != null)
             {
                 comboBoxEditableScrollViewer.Drop -= Drop;

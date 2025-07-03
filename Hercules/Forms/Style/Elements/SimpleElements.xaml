@@ -187,7 +187,51 @@
             Style="{StaticResource OpenFile}" 
             Command="{Binding OpenFileCommand}" />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type elements:PathElement}" x:Key="PathElementPreview" >
+    <DataTemplate DataType="{x:Type elements:PathElement}" x:Key="PathElementEditor">
+        <TextBox
+            AllowDrop="True"
+            ContextMenu="{StaticResource DefaultContextMenu}"
+            BorderBrush="Transparent"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="1,0,0,0"
+            Height="20" MaxHeight="20" MinHeight="20"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch"
+            VerticalContentAlignment="Center"
+            FontSize="{StaticResource ElementFontSize}"
+            FontFamily="{StaticResource ElementFont}"
+            FontStretch="Normal"
+            FontWeight="Regular"
+            Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}">
+            <i:Interaction.Behaviors>
+                <hc:DropTargetBehavior DropCommand="{Binding DropCommand}" />
+            </i:Interaction.Behaviors>            
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:PathElement}" x:Key="PathElementPreview">
+        <Border
+            Height="20" MaxHeight="20" MinHeight="20"
+            Cursor="IBeam"
+            AllowDrop="True"
+            Style="{StaticResource FocusableElementBorder}"
+            Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
+            VerticalAlignment = "Top"
+            HorizontalAlignment = "Stretch">
+            <TextBlock
+                Style="{StaticResource ElementText}"
+                Margin="2,2,2,0"
+                Height="20"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Stretch"
+                Text="{Binding Value}" />
+            <i:Interaction.Behaviors>
+                <hc:DropTargetBehavior DropCommand="{Binding DropCommand}" />
+            </i:Interaction.Behaviors>
+        </Border>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type elements:PathElement}" x:Key="PathElementPreviewImage" >
         <Image
             Opacity="{Binding IsActive, Converter={StaticResource ActiveOpacityConverter}}"
             Width="{Binding PreviewWidth}"
