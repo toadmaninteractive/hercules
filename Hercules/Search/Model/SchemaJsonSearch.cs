@@ -45,9 +45,11 @@ namespace Hercules.Search
                     {
                         foreach (var field in record.Record.Fields)
                         {
-                            visitor.VisitPath(path.AppendObjectKey(field.Name), SearchDataType.Field, field.Name);
-                            if (data.AsObject.TryGetValue(field.Name, out var val))
+                            if (data.AsObject.TryGetValue(field.Name, out var val) && !val.IsNull)
+                            {
+                                visitor.VisitPath(path.AppendObjectKey(field.Name), SearchDataType.Field, field.Name);
                                 Visit(path.AppendObject(field.Name), val, field.Type);
+                            }
                         }
                     }
                     break;
@@ -63,9 +65,11 @@ namespace Hercules.Search
                             {
                                 foreach (var field in child.AllFields)
                                 {
-                                    visitor.VisitPath(path.AppendObjectKey(field.Name), SearchDataType.Field, field.Name);
-                                    if (data.AsObject.TryGetValue(field.Name, out var val))
+                                    if (data.AsObject.TryGetValue(field.Name, out var val) && !val.IsNull)
+                                    {
+                                        visitor.VisitPath(path.AppendObjectKey(field.Name), SearchDataType.Field, field.Name);
                                         Visit(path.AppendObject(field.Name), val, field.Type);
+                                    }
                                 }
                             }
                         }
