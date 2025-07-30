@@ -18,7 +18,7 @@ namespace Hercules.AI
         public Setting<AiModelProvider> AiModelProvider { get; } = new Setting<AiModelProvider>(nameof(AiModelProvider), Hercules.AI.AiModelProvider.Anthropic);
         public Setting<string> OllamaUri { get; } = new Setting<string>(nameof(OllamaUri), "http://localhost:11434");
         public Setting<string> OllamaModel { get; } = new Setting<string>(nameof(OllamaModel), "llama3.1");
-        public Setting<int> MaxTokens { get; } = new Setting<int>(nameof(MaxTokens), 2048);
+        public Setting<int> MaxTokens { get; } = new Setting<int>(nameof(MaxTokens), 4096);
 
         public IEnumerable<ISetting> GetSettings()
         {
