@@ -41,15 +41,15 @@
     <PackageReference Include="AutomaticGraphLayout.WpfGraphControl" Version="1.1.12" />
     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
     <PackageReference Include="CsvHelper" Version="33.1.0" />
-    <PackageReference Include="Jint" Version="4.4.1" />
+    <PackageReference Include="Jint" Version="4.5.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageReference Include="MimeMapping" Version="3.1.0" />
+    <PackageReference Include="MimeMapping" Version="3.2.0" />
     <PackageReference Include="ModelContextProtocol.Core" Version="0.3.0-preview.1" />
     <PackageReference Include="NPOI" Version="2.7.4" />
     <PackageReference Include="OllamaSharp" Version="5.3.3" />
-    <PackageReference Include="Pfim" Version="0.11.3" />
-    <PackageReference Include="System.Reactive" Version="6.0.1" />
-    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.70.0.3819" />
+    <PackageReference Include="Pfim" Version="0.11.4" />
+    <PackageReference Include="System.Reactive" Version="6.1.0" />
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.72.0.3966" />
     <PackageReference Include="VYaml" Version="1.2.0" />
   </ItemGroup>
 

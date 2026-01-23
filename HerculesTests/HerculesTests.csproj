@@ -8,9 +8,9 @@
         <RootNamespace>Hercules</RootNamespace>
      </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Jint" Version="4.4.1" />
+      <PackageReference Include="Jint" Version="4.5.0" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-      <PackageReference Include="Microsoft.Reactive.Testing" Version="6.0.1" />
+      <PackageReference Include="Microsoft.Reactive.Testing" Version="6.1.0" />
       <PackageReference Include="Moq" Version="4.20.72" />
       <PackageReference Include="NUnit" Version="4.3.0" />
       <PackageReference Include="NUnit3TestAdapter" Version="4.6.0">
