@@ -100,11 +100,12 @@ namespace Hercules.AI
                             {
                                 arguments.Add(argument.Key, argument.Value.ToImmutableJson());
                             }
-                            chatLog.AddToolCall(toolCall.MethodInfo.Name, toolCall.Arguments.ToImmutableJson().AsObject, response);
+                            var methodInfo = tools.First(t => t.Function.Name == toolCall.Name).Function.MethodInfo;
+                            chatLog.AddToolCall(methodInfo.Name, toolCall.Arguments.ToImmutableJson().AsObject, response);
                             if (exception != null)
                             {
                                 chatLog.AddException(exception);
-                                Logger.LogException($"AI tool {toolCall.MethodInfo.Name} call error", exception);
+                                Logger.LogException($"AI tool {methodInfo.Name} call error", exception);
                             }
                             messages.Add(new Message(toolCall, response));
                         }
