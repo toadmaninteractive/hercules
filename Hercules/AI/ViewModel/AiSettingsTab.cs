@@ -1,29 +1,39 @@
-﻿using Anthropic.SDK.Constants;
+﻿using Anthropic.SDK;
+using Anthropic.SDK.Constants;
 using Hercules.Shell;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Hercules.AI
 {
     public class AiSettingsTab : PageTab
     {
-        public List<string> AiModels { get; }
+        public ObservableCollection<string> AiModels { get; private set; } = new();
         public AiSettings Settings { get; }
+        public ICommand RefreshModelsCommand { get; }
 
         public AiSettingsTab(AiSettings settings)
         {
             Title = "AI";
-            AiModels = new List<string>
-            {
-                AnthropicModels.Claude3Opus,
-                AnthropicModels.Claude35Sonnet,
-                AnthropicModels.Claude37Sonnet,
-                AnthropicModels.Claude4Sonnet,
-                AnthropicModels.Claude4Opus,
-                AnthropicModels.Claude35Haiku,
-                AnthropicModels.Claude3Haiku,
-            };
             Settings = settings;
+            RefreshModelsCommand = Commands.ExecuteAsync(RefreshModels);
+        }
+
+        public override void OnActivate()
+        {
+            if (!AiModels.Contains(Settings.AiModel.Value))
+                AiModels.Add(Settings.AiModel.Value);
+            RefreshModels().Track();
+        }
+
+        private async Task RefreshModels()
+        {
+            using var anthropicClient = new AnthropicClient(new APIAuthentication(Settings.AnthropicApiKey.Value));
+            var response = await anthropicClient.Models.ListModelsAsync();
+            AiModels.SynchronizeOrdered(response.Models.ConvertAll(m => m.Id));
         }
     }
 }

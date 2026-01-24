@@ -25,5 +25,10 @@ namespace Hercules.AI.View
         {
             InitializeComponent();
         }
+
+        private void AntropicModel_DropDownOpened(object sender, EventArgs e)
+        {
+            ((AiSettingsTab)DataContext).RefreshModelsCommand.Execute(null);
+        }
     }
 }

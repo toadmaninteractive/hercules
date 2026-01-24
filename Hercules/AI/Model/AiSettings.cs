@@ -13,7 +13,7 @@ namespace Hercules.AI
     public class AiSettings : ISettingGroup
     {
         public Setting<string> AnthropicApiKey { get; } = new Setting<string>(nameof(AnthropicApiKey), "");
-        public Setting<string> AiModel { get; } = new Setting<string>(nameof(AiModel), AnthropicModels.Claude35Sonnet);
+        public Setting<string> AiModel { get; } = new Setting<string>(nameof(AiModel), AnthropicModels.Claude37Sonnet);
         public Setting<double> AiTemperature { get; } = new Setting<double>(nameof(AiTemperature), 0.5);
         public Setting<AiModelProvider> AiModelProvider { get; } = new Setting<AiModelProvider>(nameof(AiModelProvider), Hercules.AI.AiModelProvider.Anthropic);
         public Setting<string> OllamaUri { get; } = new Setting<string>(nameof(OllamaUri), "http://localhost:11434");
