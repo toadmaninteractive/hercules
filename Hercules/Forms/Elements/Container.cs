@@ -83,7 +83,6 @@ namespace Hercules.Forms.Elements
             : base(parent, transaction)
         {
             this.originalJson = originalJson;
-            ToggleCommand = Commands.Execute(() => IsExpanded = !IsExpanded);
             bool isExpanded = false;
             if (IsActive)
             {
@@ -108,8 +107,6 @@ namespace Hercules.Forms.Elements
         private ImmutableJson? originalJson;
 
         public ObservableCollection<T> Children { get; } = new ObservableCollection<T>();
-
-        public ICommand ToggleCommand { get; }
 
         public bool IsExpanded
         {
