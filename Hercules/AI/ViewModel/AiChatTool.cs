@@ -1,10 +1,8 @@
 ﻿using Hercules.Shell;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Threading;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace Hercules.AI

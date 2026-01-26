@@ -1,5 +1,4 @@
 ﻿using Hercules.ApplicationUpdate;
-using Hercules.Diagrams;
 using Hercules.Documents;
 using Hercules.Documents.Dialogs;
 using Hercules.Documents.Editor;
@@ -9,7 +8,6 @@ using Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Hercules.Documents;
+﻿using Hercules.Documents;
 using Hercules.Shell;
 using Json;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Input;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Hercules.Localization
 {

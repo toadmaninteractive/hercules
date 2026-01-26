@@ -1,7 +1,9 @@
 ﻿using AvalonDock;
+using Hercules.AI;
 using Hercules.Analysis;
 using Hercules.ApplicationUpdate;
 using Hercules.Bookmarks;
+using Hercules.Cards;
 using Hercules.Connections;
 using Hercules.DatabaseExplorer;
 using Hercules.Diagrams;
@@ -10,8 +12,10 @@ using Hercules.Documents;
 using Hercules.History;
 using Hercules.Import;
 using Hercules.InteractiveMaps;
+using Hercules.Localization;
 using Hercules.Plots;
 using Hercules.Replication;
+using Hercules.Repository;
 using Hercules.Scripting;
 using Hercules.Search;
 using Hercules.ServerBrowser;
@@ -26,10 +30,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using Hercules.Repository;
-using Hercules.Localization;
-using Hercules.Cards;
-using Hercules.AI;
 
 namespace Hercules
 {

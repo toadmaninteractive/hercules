@@ -6,7 +6,6 @@ using Igor.Schema;
 using Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Hercules.Forms.Schema

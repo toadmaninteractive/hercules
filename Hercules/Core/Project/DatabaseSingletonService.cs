@@ -1,5 +1,4 @@
-﻿using Hercules.Documents;
-using Hercules.Shell;
+﻿using Hercules.Shell;
 using System;
 
 namespace Hercules

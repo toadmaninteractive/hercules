@@ -1,5 +1,4 @@
 ﻿using Anthropic.SDK;
-using System;
 
 namespace Hercules.AI
 {

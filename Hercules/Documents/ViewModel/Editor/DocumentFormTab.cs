@@ -104,7 +104,7 @@ namespace Hercules.Documents.Editor
         public IReadOnlyList<string> GetErrorList()
         {
             List<string> errors = new List<string>();
-           
+
             foreach (var entry in Form.Root.Record.Children)
             {
                 if (!entry.IsValid)

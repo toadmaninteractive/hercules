@@ -1,5 +1,5 @@
-﻿using Hercules.Documents.Editor;
-using Hercules.Documents;
+﻿using Hercules.Documents;
+using Hercules.Documents.Editor;
 using Hercules.Forms.Schema;
 
 namespace Hercules.Scripting

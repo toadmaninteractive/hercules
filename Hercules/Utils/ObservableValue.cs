@@ -1,9 +1,7 @@
-﻿using NPOI.SS.Formula.Functions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reactive.Linq;
-using System.Windows.Media.TextFormatting;
 
 namespace Hercules
 {

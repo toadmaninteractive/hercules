@@ -1,18 +1,14 @@
 ﻿using Hercules.Documents;
 using Hercules.Repository;
-using Hercules.Shell;
 using Hercules.Shortcuts;
 using Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows.Media.Imaging;
 
 namespace Hercules.Forms.Schema
 {

@@ -1,6 +1,5 @@
 ﻿using Hercules.Shell;
 using Microsoft.Msagl.Drawing;
-using Microsoft.Msagl.Routing.ConstrainedDelaunayTriangulation;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;

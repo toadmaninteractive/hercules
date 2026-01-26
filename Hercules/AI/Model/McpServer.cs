@@ -1,15 +1,7 @@
-﻿using Hercules.Documents;
-using Hercules.Documents.Editor;
-using Json;
-using Microsoft.Extensions.AI;
-using ModelContextProtocol.Server;
+﻿using ModelContextProtocol.Server;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,7 +27,7 @@ namespace Hercules.AI
                 ListChanged = true,
                 ToolCollection = []
             };
-            var mcpTools = 
+            var mcpTools =
                 from methodIndo in tools.GetType().GetMethods()
                 let attr = methodIndo.GetCustomAttribute<AiToolAttribute>()
                 where attr != null

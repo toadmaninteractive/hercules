@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Windows.Input;
-using Hercules.Forms.Presentation;
+﻿using Hercules.Forms.Presentation;
 using Hercules.Forms.Schema;
 using Json;
+using System.Linq;
+using System.Windows.Input;
 
 namespace Hercules.Forms.Elements
 {

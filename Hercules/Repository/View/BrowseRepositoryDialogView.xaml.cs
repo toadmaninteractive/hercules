@@ -1,7 +1,6 @@
-﻿using System.IO;
-using System.Windows;
-using Telerik.Windows.Controls;
+﻿using System.Windows;
 using Telerik.Windows;
+using Telerik.Windows.Controls;
 
 namespace Hercules.Repository.View
 {

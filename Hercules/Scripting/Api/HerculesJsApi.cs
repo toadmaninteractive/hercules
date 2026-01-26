@@ -1,11 +1,11 @@
-﻿using System;
-using Hercules.Connections;
+﻿using Hercules.Connections;
 using Hercules.Documents.Editor;
 using Hercules.Forms;
 using Hercules.Scripting.JavaScript;
 using Hercules.Shell;
 using Jint.Native;
 using Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;

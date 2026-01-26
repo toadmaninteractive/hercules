@@ -1,6 +1,6 @@
-﻿using System;
-using ICSharpCode.AvalonEdit;
+﻿using ICSharpCode.AvalonEdit;
 using Microsoft.Xaml.Behaviors;
+using System;
 using System.Windows;
 
 namespace Hercules.Controls

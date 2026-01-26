@@ -38,12 +38,12 @@ namespace Hercules.Shell
         {
             var e = (LogEvent)obj;
             if (!(e.Level switch
-                {
-                    LogLevel.Error => ShowErrors,
-                    LogLevel.Warning => ShowWarnings,
-                    LogLevel.Debug => ShowDebug,
-                    _ => ShowInfo
-                }))
+            {
+                LogLevel.Error => ShowErrors,
+                LogLevel.Warning => ShowWarnings,
+                LogLevel.Debug => ShowDebug,
+                _ => ShowInfo
+            }))
                 return false;
             if (!string.IsNullOrEmpty(filter) && !e.Message.Contains(filter))
                 return false;

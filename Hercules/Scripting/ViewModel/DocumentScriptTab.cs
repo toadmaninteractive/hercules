@@ -1,10 +1,10 @@
 ﻿using Hercules.Documents.Editor;
+using Hercules.Forms.Elements;
 using Hercules.Shell;
 using ICSharpCode.AvalonEdit.Document;
+using Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Hercules.Forms.Elements;
-using Json;
 
 namespace Hercules.Scripting
 {

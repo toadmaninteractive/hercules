@@ -237,7 +237,7 @@ namespace Hercules.Scripting
             }
 
             if (node is Acornima.Ast.Identifier id && !(position >= id.Location.Start && position <= id.Location.End))
-            { 
+            {
                 result.Add(new CompletionData(id.Name, ""));
             }
         }

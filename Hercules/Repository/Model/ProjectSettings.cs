@@ -1,5 +1,5 @@
-﻿using System;
-using Hercules.Shell;
+﻿using Hercules.Shell;
+using System;
 
 namespace Hercules.Repository
 {

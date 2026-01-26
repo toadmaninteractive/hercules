@@ -8,7 +8,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using Hercules.Forms.Schema;
 
 namespace Hercules.Dialogs
 {
@@ -41,7 +40,7 @@ namespace Hercules.Dialogs
         public ICommand RemoveElement { get; }
         public ICommand UpElement { get; }
         public ICommand DownElement { get; }
-        
+
         private readonly IDisposable elementListSubscription;
         private readonly DocumentForm form;
         private readonly RefElement startElement;
@@ -131,7 +130,7 @@ namespace Hercules.Dialogs
             anchor.IsContentEnabled = true;
             IsAnchorSelectState = false;
 
-            var jsonAnswer = new JsonObject {["ref"] = replica.Element.RefValue.Value, ["is_virtual"] = true };
+            var jsonAnswer = new JsonObject { ["ref"] = replica.Element.RefValue.Value, ["is_virtual"] = true };
 
             form.Run(transaction => anchor.Element.AnswerList.PasteElement(jsonAnswer, transaction));
             anchor = null;

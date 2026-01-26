@@ -1,8 +1,8 @@
 ﻿using Jint;
 using Jint.Native;
+using Jint.Runtime.Modules;
 using Json;
 using System.Collections.Generic;
-using Jint.Runtime.Modules;
 
 namespace Hercules.Scripting.JavaScript
 {

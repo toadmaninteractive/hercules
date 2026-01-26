@@ -1,6 +1,6 @@
-﻿using System.Windows.Input;
-using Hercules.Documents;
+﻿using Hercules.Documents;
 using Hercules.Shell;
+using System.Windows.Input;
 
 namespace Hercules.Localization
 {

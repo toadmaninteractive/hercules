@@ -71,7 +71,7 @@ namespace Hercules.Documents
                 return null;
         }
 
-        public static bool TryGetDatabaseHerculesUrl(Uri source, [MaybeNullWhen(returnValue: false)]out Uri dbUrl)
+        public static bool TryGetDatabaseHerculesUrl(Uri source, [MaybeNullWhen(returnValue: false)] out Uri dbUrl)
         {
             dbUrl = null;
             if (source.Scheme != "hercules" || string.IsNullOrEmpty(source.Host) || source.Segments.Length < 2)
