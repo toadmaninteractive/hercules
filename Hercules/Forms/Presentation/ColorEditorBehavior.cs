@@ -15,16 +15,16 @@ namespace Hercules.Forms.Presentation
             get
             {
                 Color color = Colors.Black;
-                foreach (var field in Element.Children)
+                foreach (var f in Element.Children)
                 {
-                    if (field.SchemaField == ColorSchema.Red)
-                        color.R = GetColorChannel(field);
-                    if (field.SchemaField == ColorSchema.Green)
-                        color.G = GetColorChannel(field);
-                    if (field.SchemaField == ColorSchema.Blue)
-                        color.B = GetColorChannel(field);
-                    if (field.SchemaField == ColorSchema.Alpha)
-                        color.A = GetColorChannel(field);
+                    if (f.SchemaField == ColorSchema.Red)
+                        color.R = GetColorChannel(f);
+                    if (f.SchemaField == ColorSchema.Green)
+                        color.G = GetColorChannel(f);
+                    if (f.SchemaField == ColorSchema.Blue)
+                        color.B = GetColorChannel(f);
+                    if (f.SchemaField == ColorSchema.Alpha)
+                        color.A = GetColorChannel(f);
                 }
                 return color;
             }
@@ -33,16 +33,16 @@ namespace Hercules.Forms.Presentation
                 Element.Form.Run(transaction =>
                 {
                     setterTransactionId = transaction.TransactionId;
-                    foreach (var field in Element.Children)
+                    foreach (var f in Element.Children)
                     {
-                        if (field.SchemaField == ColorSchema.Red)
-                            SetColorChannel(field, value.R, transaction);
-                        if (field.SchemaField == ColorSchema.Green)
-                            SetColorChannel(field, value.G, transaction);
-                        if (field.SchemaField == ColorSchema.Blue)
-                            SetColorChannel(field, value.B, transaction);
-                        if (field.SchemaField == ColorSchema.Alpha)
-                            SetColorChannel(field, value.A, transaction);
+                        if (f.SchemaField == ColorSchema.Red)
+                            SetColorChannel(f, value.R, transaction);
+                        if (f.SchemaField == ColorSchema.Green)
+                            SetColorChannel(f, value.G, transaction);
+                        if (f.SchemaField == ColorSchema.Blue)
+                            SetColorChannel(f, value.B, transaction);
+                        if (f.SchemaField == ColorSchema.Alpha)
+                            SetColorChannel(f, value.A, transaction);
                     }
                 });
             }
