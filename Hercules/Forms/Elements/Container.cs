@@ -113,11 +113,13 @@ namespace Hercules.Forms.Elements
             set
             {
                 if (IsExpanded != value)
-                    Form.Run(transaction => Expand(value, transaction));
+                {
+                    Form.Run(transaction => Expand(value, transaction, value));
+                }
             }
         }
 
-        public void Expand(bool expanded, ITransaction transaction)
+        public void Expand(bool expanded, ITransaction transaction, bool expandIntoView = false)
         {
             if (SetFlag(ElementFlags.Expanded, expanded, nameof(IsExpanded)))
             {
@@ -128,6 +130,8 @@ namespace Hercules.Forms.Elements
                 }
 
                 transaction.RefreshPresentation();
+                if (expandIntoView && Form.Settings.AutoScrollExpandedElements.Value)
+                    transaction.ExpandIntoView = this;
             }
         }
 

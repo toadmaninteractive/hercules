@@ -129,7 +129,7 @@ namespace Hercules.Documents.Editor
                 while (container != null)
                 {
                     if (container is IExpandableElement expandableElement)
-                        expandableElement.Expand(true, transaction);
+                        expandableElement.Expand(true, transaction, false);
                     if (container is LocalizedElement localizedElement && element != localizedElement.Text)
                         localizedElement.RecordView = true;
                     if (container is Element el)

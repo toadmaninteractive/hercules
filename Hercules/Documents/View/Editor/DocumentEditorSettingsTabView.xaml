@@ -17,6 +17,7 @@
         <ComboBox MinWidth="300" HorizontalAlignment="Left" ItemsSource="{hc:EnumDescriptions {x:Type forms:ExpandElementType}}" SelectedValuePath="Value" SelectedValue="{Binding Settings.ExpandNewDocument.Value}" />
         <TextBlock TextWrapping="Wrap" Margin="0,8,0,2" Text="Expand newly created complex elements:" />
         <ComboBox MinWidth="300" HorizontalAlignment="Left" ItemsSource="{hc:EnumDescriptions {x:Type forms:ExpandElementType}}" SelectedValuePath="Value" SelectedValue="{Binding Settings.ExpandNewElement.Value}" />
+        <CheckBox Margin="0,8,0,0" Content="Auto Scroll Expanded Elements" IsChecked="{Binding Settings.AutoScrollExpandedElements.Value}" />
         <StackPanel Margin="0,8,0,8" Orientation="Horizontal">
             <TextBlock Text="Max nested value offset:" 
                        VerticalAlignment="Center"/>

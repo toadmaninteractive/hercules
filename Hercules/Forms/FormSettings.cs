@@ -23,6 +23,7 @@ namespace Hercules.Forms
         public Setting<ExpandElementType> ExpandNewElement { get; } = new(nameof(ExpandNewElement), ExpandElementType.Expand);
 
         public Setting<ExpandElementType> ExpandNewDocument { get; } = new(nameof(ExpandNewDocument), ExpandElementType.DoNotExpand);
+        public Setting<bool> AutoScrollExpandedElements { get; } = new(nameof(AutoScrollExpandedElements), true);
 
         public Setting<HorizontalAlignment> NumberTextAlignment { get; } = new(nameof(NumberTextAlignment), HorizontalAlignment.Left);
 
@@ -45,6 +46,7 @@ namespace Hercules.Forms
         {
             yield return ExpandNewElement;
             yield return ExpandNewDocument;
+            yield return AutoScrollExpandedElements;
             yield return NumberTextAlignment;
             yield return SortEnumValues;
             yield return MaxStructFieldLabelSize;

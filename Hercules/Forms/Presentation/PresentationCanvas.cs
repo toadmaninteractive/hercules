@@ -37,7 +37,7 @@ namespace Hercules.Forms.Presentation
             RefreshVisuals(presentation.FirstRow);
             if (presentation.SelectedItem != null)
             {
-                ScrollIntoView(presentation.SelectedItem.Row);
+                ScrollIntoView(presentation.SelectedItem.Row, null);
                 presentation.SelectedItem.Select();
             }
         }
@@ -55,9 +55,9 @@ namespace Hercules.Forms.Presentation
                 SetFocus(inputElement);
         }
 
-        private void Presentation_OnScrollIntoView(VirtualRow row)
+        private void Presentation_OnScrollIntoView(VirtualRow row, VirtualRow? toRow)
         {
-            ScrollIntoView(row);
+            ScrollIntoView(row, toRow);
         }
 
         private void Presentation_OnRefreshItems()

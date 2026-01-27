@@ -327,5 +327,12 @@ namespace Hercules.Forms.Elements
         public virtual void CollectIssues(IList<FormIssue> issues)
         {
         }
+
+        public bool IsChildOf(Element otherElement)
+        {
+            if (Parent is Element parentElement)
+                return parentElement == otherElement || parentElement.IsChildOf(otherElement);
+            return false;
+        }
     }
 }

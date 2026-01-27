@@ -40,7 +40,7 @@
                 element =>
                 {
                     if (element is IExpandableElement expandableElement)
-                        expandableElement.Expand(isExpanded, transaction);
+                        expandableElement.Expand(isExpanded, transaction, false);
                 }, VisitOptions.ChildrenFirst);
         }
 
@@ -54,7 +54,7 @@
                     exp = expandableElement;
                 }
             }, VisitOptions.ChildrenFirst);
-            exp?.Expand(true, transaction);
+            exp?.Expand(true, transaction, false);
         }
     }
 }

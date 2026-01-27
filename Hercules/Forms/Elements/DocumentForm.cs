@@ -49,6 +49,7 @@ namespace Hercules.Forms.Elements
         public event Action<ITransaction>? OnTransactionStarted;
         public event Action<ITransaction>? OnTransactionFinished;
         public event Action? OnRefreshPresentation;
+        public event Action<Element>? OnExpandIntoView;
 
         public DocumentForm(ImmutableJsonObject data, ImmutableJson? originalJson, SchemaRecord record, IElementFactory factory, FormSettings settings)
         {
@@ -146,6 +147,8 @@ namespace Hercules.Forms.Elements
                 transaction.PostUpdate();
                 if (transaction.ShouldRefreshPresentation)
                     RefreshPresentation();
+                if (transaction.ExpandIntoView != null)
+                    ExpandIntoView(transaction.ExpandIntoView);
                 if (transaction is Transaction { HasUndoRedo: true } t)
                     PushUndoRedo(t);
                 OnTransactionFinished?.Invoke(transaction);
@@ -156,6 +159,11 @@ namespace Hercules.Forms.Elements
         public void RefreshPresentation()
         {
             OnRefreshPresentation?.Invoke();
+        }
+
+        public void ExpandIntoView(Element element)
+        {
+            OnExpandIntoView?.Invoke(element);
         }
 
         private void PushUndoRedo(Transaction transaction)

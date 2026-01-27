@@ -12,7 +12,7 @@ namespace Hercules.Forms.Elements
     public interface IExpandableElement
     {
         bool IsExpanded { get; set; }
-        void Expand(bool isExpanded, ITransaction transaction);
+        void Expand(bool isExpanded, ITransaction transaction, bool expandIntoView);
     }
 
     public interface IDuplicateElement

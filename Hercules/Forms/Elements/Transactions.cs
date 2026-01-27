@@ -75,6 +75,7 @@ namespace Hercules.Forms.Elements
         void PostUpdate();
         void RequestFullInvalidation();
         void RefreshPresentation();
+        Element? ExpandIntoView { get; set; }
     }
 
     public class UndoRedoTransaction : ITransaction
@@ -115,6 +116,7 @@ namespace Hercules.Forms.Elements
         public IReadOnlyList<Warning> Warnings => Array.Empty<Warning>();
 
         public bool ShouldRefreshPresentation { get; private set; }
+        public Element? ExpandIntoView { get; set; }
     }
 
     public class Transaction : ITransaction
@@ -148,6 +150,7 @@ namespace Hercules.Forms.Elements
         public IReadOnlyList<Warning> Warnings => warnings;
 
         private readonly List<Warning> warnings = new List<Warning>();
+        public Element? ExpandIntoView { get; set; }
 
         public void AddWarning(JsonPath path, string text)
         {

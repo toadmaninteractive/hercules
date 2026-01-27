@@ -132,10 +132,20 @@ namespace Hercules.Controls
                 SetVerticalOffset(Math.Max(index.Height - ViewportHeight, 0));
         }
 
-        public void ScrollIntoView(IVirtualRow row)
+        public void ScrollIntoView(IVirtualRow row, IVirtualRow? toRow)
         {
-            if (VerticalOffset >= row.Top || VerticalOffset + ActualHeight - 20 <= row.Top)
-                SetVerticalOffset(row.Top);
+            if (toRow == null)
+            {
+                if (VerticalOffset >= row.Top || VerticalOffset + ActualHeight - 20 <= row.Top)
+                    SetVerticalOffset(row.Top);
+            }
+            else
+            {
+                if (VerticalOffset >= row.Top)
+                    SetVerticalOffset(row.Top);
+                else if (VerticalOffset + ActualHeight - 20 <= toRow.Top)
+                    SetVerticalOffset(Math.Max(row.Top, VerticalOffset + ActualHeight - 20 - (toRow.Top - row.Top)));
+            }
             EnsureVisual(row);
         }
 

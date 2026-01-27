@@ -1,8 +1,10 @@
 ﻿using Hercules.Controls;
 using Hercules.Forms.Elements;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 
@@ -19,13 +21,14 @@ namespace Hercules.Forms.Presentation
         {
             Form = form;
             Form.OnRefreshPresentation += RefreshPresentation;
+            Form.OnExpandIntoView += ExpandIntoView;
         }
 
         public Element? SelectedElement => SelectedItem?.Element;
         public VirtualRowItem? SelectedItem { get; private set; }
 
         public event Action<VirtualRowItem>? OnFocusItem;
-        public event Action<VirtualRow>? OnScrollIntoView;
+        public event Action<VirtualRow, VirtualRow?>? OnScrollIntoView;
         public event Action? OnRefreshItems;
         public int ViewVersion { get; private set; }
 
@@ -50,7 +53,7 @@ namespace Hercules.Forms.Presentation
                 SelectedItem = item;
                 if (item != null)
                 {
-                    ScrollIntoView(item.Row);
+                    ScrollIntoView(item.Row, null);
                     item.Row.Pinned = true;
                     item.Select();
                     OnFocusItem?.Invoke(item);
@@ -70,6 +73,12 @@ namespace Hercules.Forms.Presentation
             {
                 ClearSelection();
             }
+        }
+
+        private void ExpandIntoView(Element element)
+        {
+            if (GetRowRange(element, out var fromRow, out var toRow))
+                ScrollIntoView(fromRow, toRow);
         }
 
         protected virtual void Present(PresentationContext context)
@@ -92,9 +101,9 @@ namespace Hercules.Forms.Presentation
             HorizontalDockPanelPool.Release(rootPanel);
         }
 
-        private void ScrollIntoView(VirtualRow row)
+        private void ScrollIntoView(VirtualRow row, VirtualRow? toRow)
         {
-            OnScrollIntoView?.Invoke(row);
+            OnScrollIntoView?.Invoke(row, toRow);
         }
 
         public void ClearSelection()
@@ -116,6 +125,32 @@ namespace Hercules.Forms.Presentation
             }
 
             return null;
+        }
+
+        private bool GetRowRange(Element element, [MaybeNullWhen(returnValue: false)] out VirtualRow fromRow, [MaybeNullWhen(returnValue: false)] out VirtualRow toRow)
+        {
+            var row = FirstRow;
+            bool found = false;
+            fromRow = null!;
+            toRow = null!;
+            while (row != null)
+            {
+                bool isInRange = element == row.OwnerElement || row.OwnerElement.IsChildOf(element) || row.Items.Any(item => item.Element == element || item.Element.IsChildOf(element));
+                if (isInRange)
+                {
+                    if (!found)
+                    {
+                        fromRow = row;
+                        found = true;
+                    }
+                    toRow = row;
+                }
+                else if (found)
+                    return true;
+                row = row.Next;
+            }
+
+            return false;
         }
 
         private bool GetPrevTabItem(VirtualRowItem? currentItem, [MaybeNullWhen(false)] out VirtualRowItem prevItem)
