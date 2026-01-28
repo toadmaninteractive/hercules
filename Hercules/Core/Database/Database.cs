@@ -212,7 +212,6 @@ namespace Hercules.DB
             if (!(document is DatabaseDocument dbDocument))
                 throw new ArgumentException($"Document is not a {nameof(DatabaseDocument)}", nameof(document));
             ArgumentNullException.ThrowIfNull(draft);
-            ArgumentNullException.ThrowIfNull(metadataDraft);
 
             var shortcut = new DocumentShortcut(document.DocumentId);
             Logger.Log($"Saving document <{document.DocumentId}>", shortcut);

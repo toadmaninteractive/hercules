@@ -20,14 +20,13 @@ namespace Hercules.History
 
         public static readonly string[] IgnoredKeys = { "_rev", "hercules_metadata", "_attachments" };
 
-        DocumentCommit revision = default!;
 
         private readonly ScriptingModule scriptingModule;
 
         public DocumentCommit Revision
         {
-            get => revision;
-            set => SetField(ref revision, value);
+            get => field;
+            set => SetField(ref field, value);
         }
 
         public TextDocument JsonEditor { get; }

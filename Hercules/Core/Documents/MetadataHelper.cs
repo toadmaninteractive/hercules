@@ -3,7 +3,7 @@ using System;
 
 namespace Hercules.Documents
 {
-    public sealed class MetadataDraft
+    public readonly struct MetadataDraft
     {
         public string Timestamp { get; }
         public DateTime Time { get; }

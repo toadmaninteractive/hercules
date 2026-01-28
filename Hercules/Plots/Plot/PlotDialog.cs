@@ -10,20 +10,16 @@ namespace Hercules.Plots
 {
     public class PlotPoint : NotifyPropertyChanged
     {
-        Point position;
-
         public Point Position
         {
-            get => position;
-            set => SetField(ref position, value);
+            get => field;
+            set => SetField(ref field, value);
         }
-
-        Brush? brush;
 
         public Brush? Brush
         {
-            get => brush;
-            set => SetField(ref brush, value);
+            get => field;
+            set => SetField(ref field, value);
         }
 
         public PlotDialog Dialog { get; }

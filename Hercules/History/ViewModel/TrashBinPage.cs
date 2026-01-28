@@ -27,11 +27,9 @@ namespace Hercules.History
         public DatabaseHistory History { get; }
         public bool IsLoading
         {
-            get => isLoading;
-            set => SetField(ref isLoading, value);
+            get => field;
+            set => SetField(ref field, value);
         }
-
-        private bool isLoading;
 
         private readonly Action<string, DocumentDraft> createDocumentAction;
 

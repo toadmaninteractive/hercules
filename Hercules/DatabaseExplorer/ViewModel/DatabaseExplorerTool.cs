@@ -13,8 +13,8 @@ namespace Hercules.DatabaseExplorer
     {
         public DatabaseExplorerTree? Tree
         {
-            get => tree;
-            set => SetField(ref tree, value);
+            get => field;
+            set => SetField(ref field, value);
         }
         public string Filter
         {
@@ -35,7 +35,6 @@ namespace Hercules.DatabaseExplorer
         public ICommand ClearFilterCommand { get; }
         public HashSet<string> CollapsedCategories { get; } = new HashSet<string>();
 
-        private DatabaseExplorerTree? tree;
         private readonly IDisposable schemafulDatabaseSubscription;
         private string filter = string.Empty;
         private bool isUpdatingFilter = false;

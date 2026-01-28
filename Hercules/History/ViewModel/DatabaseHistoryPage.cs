@@ -24,22 +24,20 @@ namespace Hercules.History
         public ObservableCollection<DocumentHistorySummary> Summary { get; } = new();
         public DatabaseHistory History { get; }
 
-        DateTime since;
 
         public DateTime Since
         {
-            get => since;
-            set => SetField(ref since, value);
+            get => field;
+            set => SetField(ref field, value);
         }
 
         public ICommand RefreshCommand { get; }
         public ICommand ExportTableCommand { get; }
 
-        private bool summaryMode;
         public bool SummaryMode
         {
-            get => summaryMode;
-            set => SetField(ref summaryMode, value);
+            get => field;
+            set => SetField(ref field, value);
         }
 
         IDisposable? listener;
@@ -63,7 +61,7 @@ namespace Hercules.History
             listener?.Dispose();
             Revisions.Clear();
             Summary.Clear();
-            listener = History.GetHistory(since).Subscribe(Revisions.Add, OnComplete);
+            listener = History.GetHistory(Since).Subscribe(Revisions.Add, OnComplete);
         }
 
         private void OnComplete()

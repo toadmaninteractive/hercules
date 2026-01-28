@@ -5,21 +5,8 @@ using System.Globalization;
 
 namespace Hercules.Documents
 {
-    public class HerculesMetadata
+    public readonly record struct HerculesMetadata(DateTime? Time, string? Timestamp, string? User, string? PrevRev)
     {
-        public DateTime? Time { get; }
-        public string? Timestamp { get; }
-        public string? User { get; }
-        public string? PrevRev { get; }
-
-        public HerculesMetadata(DateTime? time, string? timestamp, string? user, string? prevRev)
-        {
-            Time = time;
-            Timestamp = timestamp;
-            User = user;
-            PrevRev = prevRev;
-        }
-
         public static readonly HerculesMetadata Empty = new(null, null, null, null);
     }
 

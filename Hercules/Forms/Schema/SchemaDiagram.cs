@@ -23,7 +23,7 @@ namespace Hercules.Forms.Schema
 
         public IReadOnlyList<SchemaBlock> Palette { get; }
 
-        public SchemaField LinksField { get; }
+        public SchemaField? LinksField { get; }
 
         public SchemaField GetFieldByBlock(SchemaBlock block)
         {
