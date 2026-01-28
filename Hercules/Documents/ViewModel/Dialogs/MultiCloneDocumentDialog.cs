@@ -38,7 +38,7 @@ namespace Hercules.Documents.Dialogs
 
         public List<string> SplitDocumentNames()
         {
-            return DocumentNames.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l)).ToList();
+            return DocumentNames.Split([Environment.NewLine], StringSplitOptions.None).Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l)).ToList();
         }
 
         string? ValidateDocumentName(string name)

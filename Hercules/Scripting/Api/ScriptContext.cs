@@ -45,7 +45,7 @@ namespace Hercules.Scripting
         public SchemafulDatabase SchemafulDatabase { get; }
         public Dictionary<string, ImmutableJsonObject> DocumentCache { get; } = new();
         public List<string> DeletedDocumentIds { get; } = new List<string>();
-        private static readonly EqualityComparer<ImmutableJson> jsonEqualityComparer = new JsonPartialEqualityComparer(excludeKeys: new[] { "_id", "_rev", "_attachments", CouchUtils.HerculesBase, "hercules_metadata" });
+        private static readonly EqualityComparer<ImmutableJson> jsonEqualityComparer = new JsonPartialEqualityComparer(excludeKeys: ["_id", "_rev", "_attachments", CouchUtils.HerculesBase, "hercules_metadata"]);
         public ScriptContext ScriptContext { get; }
 
         public DatabaseScriptContext(ScriptContext scriptContext, Database database, DbConnection connection, SchemafulDatabase schemafulDatabase)

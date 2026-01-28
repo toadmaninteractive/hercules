@@ -98,7 +98,7 @@ namespace Hercules.Scripting.JavaScript
             }
             catch (Acornima.ParseErrorException ex)
             {
-                return new[] { ex };
+                return [ex];
             }
         }
     }

@@ -33,7 +33,7 @@ namespace Hercules.Scripting
             else
             {
                 var recordFields = schema.Structs.Values.SelectMany(f => f.Fields);
-                fields = recordFields.Select(f => f.Name).Concat(new[] { "_id" }).Distinct().Select(f => new CompletionData(f, "Field")).ToList();
+                fields = recordFields.Select(f => f.Name).Concat(["_id"]).Distinct().Select(f => new CompletionData(f, "Field")).ToList();
                 enums = schema.Enums.Values.SelectMany(f => f.Values.Select(v => new CompletionData(v, "Enumeration"))).ToList();
             }
         }
@@ -135,7 +135,7 @@ namespace Hercules.Scripting
             }
             else
             {
-                var sepIndex = line.LastIndexOfAny(new[] { '\"', '\'' });
+                var sepIndex = line.LastIndexOfAny(['\"', '\'']);
                 if (sepIndex >= 0)
                 {
                     var quoteCount = line.Count(c => c == line[sepIndex]);

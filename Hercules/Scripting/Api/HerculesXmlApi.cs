@@ -78,7 +78,7 @@ namespace Hercules.Scripting
             ImmutableJson other => throw new InvalidOperationException($"Unsupported attribute value {key}={other.ToString(JsonFormat.Compact)}")
         };
 
-        private static readonly char[] SpecialChars = new char[] { '<', '>', '&', '\n', '\r' };
+        private static readonly char[] SpecialChars = ['<', '>', '&', '\n', '\r'];
 
         private static void WriteNode(XmlWriter xml, ImmutableJson json, string name, XmlFromJsonOptions options, string? ns = null)
         {

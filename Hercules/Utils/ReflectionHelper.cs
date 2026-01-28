@@ -20,7 +20,7 @@ namespace Hercules
             else
             {
                 getType = Expression.GetFuncType;
-                types = types.Concat(new[] { methodInfo.ReturnType });
+                types = types.Concat([methodInfo.ReturnType]);
             }
 
             if (methodInfo.IsStatic)

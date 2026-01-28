@@ -27,7 +27,7 @@ namespace Hercules
             var i = 0;
             while (true)
             {
-                i = line.IndexOfAny(new[] { '\t', ';', ',', '"' }, i);
+                i = line.IndexOfAny(['\t', ';', ',', '"'], i);
                 if (i < 0)
                     return null;
                 var c = line[i];

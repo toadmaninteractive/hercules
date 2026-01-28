@@ -15,7 +15,7 @@ namespace Hercules.Forms.Tests
         public void CategoryTest()
         {
             var rootVariantSchema = new SchemaVariant("Card", "category", null, null);
-            var categoryEnum = new SchemaEnum("Category", new[] { "test" });
+            var categoryEnum = new SchemaEnum("Category", ["test"]);
             rootVariantSchema.Fields.Add(new SchemaField("category", "category:", new EnumSchemaType(categoryEnum), 0, true));
             var testCardSchema = new SchemaRecord("CardTest", rootVariantSchema, null, "test");
             rootVariantSchema.Children.Add(testCardSchema);

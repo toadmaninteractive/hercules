@@ -30,7 +30,7 @@ namespace Hercules.Repository
                 OpenPathAsync(defaultPath, null, startOpenCts.Token).Track();
             }
             SelectedFolder = RootFolder;
-            Root = new[] { RootFolder };
+            Root = [RootFolder];
             ForwardCommand = Commands.Execute(NavigateForward).If(CanNavigateForward);
             BackCommand = Commands.Execute(NavigateBack).If(CanNavigateBack);
         }

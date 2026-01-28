@@ -48,7 +48,7 @@ namespace Hercules.Plots
         public ICommand<Point> AddPointCommand { get; }
 
         public const int LerpPointsNumber = 10;
-        public static readonly Color[] LerpColors = new[] { Colors.Gold, Colors.Orange, Colors.Red, Colors.BlueViolet, Colors.RoyalBlue, Colors.Blue, Colors.Brown, Colors.Green };
+        public static readonly Color[] LerpColors = [Colors.Gold, Colors.Orange, Colors.Red, Colors.BlueViolet, Colors.RoyalBlue, Colors.Blue, Colors.Brown, Colors.Green];
 
         public EditorPlotData Result => new EditorPlotData(this.Points.Select(p => p.Position).ToList());
 

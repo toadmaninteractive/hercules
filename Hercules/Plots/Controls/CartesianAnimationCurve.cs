@@ -17,7 +17,7 @@ namespace Hercules.Controls
             if (Elements.Count < 2)
                 return;
             var pathFigure = new PathFigure { IsClosed = false, IsFilled = false };
-            var geometry = new PathGeometry(new[] { pathFigure });
+            var geometry = new PathGeometry([pathFigure]);
             var panel = (CartesianPanel)VisualParent;
             Point? lastPosition = null;
             double? lastTangent = null;

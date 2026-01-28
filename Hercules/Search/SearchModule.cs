@@ -14,7 +14,7 @@ namespace Hercules.Search
             Workspace.WindowService.AddTool(SearchTool = new SearchTool(this, core.ProjectObservable));
             Workspace.WindowService.AddTool(SearchResultsTool = new SearchResultsTool((documentId, path) => Core.GetModule<DocumentsModule>().EditDocument(documentId, null, path)));
 
-            FindReferencesCommand = Commands.Execute<IDocument>(doc => FindReferences(new[] { doc })).IfNotNull().AsBulk(FindReferences);
+            FindReferencesCommand = Commands.Execute<IDocument>(doc => FindReferences([doc])).IfNotNull().AsBulk(FindReferences);
             var findReferencesGesture = new KeyGesture(Key.F6);
             var findReferencesOption = new UiCommandOption("Find References", null, FindReferencesCommand.ForContext(Workspace), findReferencesGesture);
             Workspace.OptionManager.AddMenuOption(findReferencesOption, "Document#10");

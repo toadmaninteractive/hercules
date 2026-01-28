@@ -31,9 +31,9 @@ namespace Hercules.Controls
                 if (parameters.Length == 0)
                     this.methodInfo.Invoke(this.Target, null);
                 else if (parameters.Length == 1)
-                    this.methodInfo.Invoke(this.Target, new[] { parameter });
+                    this.methodInfo.Invoke(this.Target, [parameter]);
                 else if (parameters.Length == 2)
-                    this.methodInfo.Invoke(this.Target, new[] { AssociatedObject, parameter });
+                    this.methodInfo.Invoke(this.Target, [AssociatedObject, parameter]);
             }
         }
 

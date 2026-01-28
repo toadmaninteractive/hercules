@@ -105,7 +105,7 @@ namespace Hercules.Documents.Editor.Tests
         FormSchema GetTestFormSchema()
         {
             var rootVariantSchema = new SchemaVariant("Card", "category", null, null);
-            var categoryEnum = new SchemaEnum("Category", new[] { "spell" });
+            var categoryEnum = new SchemaEnum("Category", ["spell"]);
             rootVariantSchema.Fields.Add(new SchemaField("category", "category:", new EnumSchemaType(categoryEnum), 0, true));
             var testCardSchema = new SchemaRecord("CardSpell", rootVariantSchema, null, "spell");
             testCardSchema.Fields.Add(new SchemaField("name", "name:", new StringSchemaType(), 0, false));
