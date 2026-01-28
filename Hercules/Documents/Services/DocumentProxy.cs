@@ -54,7 +54,7 @@ namespace Hercules.Documents
                     {
                         var isUpdated = true;
                         if (saveTimestamp != null)
-                            isUpdated = document.CurrentRevision.Metadata.Timestamp != saveTimestamp;
+                            isUpdated = document.CurrentRevision!.Metadata.Timestamp != saveTimestamp;
                         if (isUpdated)
                             editor.RemoteUpdated(document.CurrentRevision!);
                     }

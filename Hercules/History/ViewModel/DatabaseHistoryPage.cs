@@ -24,7 +24,6 @@ namespace Hercules.History
         public ObservableCollection<DocumentHistorySummary> Summary { get; } = new();
         public DatabaseHistory History { get; }
 
-
         public DateTime Since
         {
             get => field;

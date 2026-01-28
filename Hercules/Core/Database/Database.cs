@@ -236,9 +236,9 @@ namespace Hercules.DB
                     Cache.SaveAttachment(document.DocumentId, attachment.Name, CouchUtils.GetRevisionNumber(newRevision), stream);
                 }
                 // We need to fetch attachment digests for new attachments, if there're any
-                ImmutableJsonObject cacheDocument = attachmentStreams.Count == 0 ?
-                    draft.GetFullDocumentJson(document.DocumentId, newRevision, metadata) :
-                    await Backend.GetDocumentAsync(document.DocumentId, newRevision, cancellationTokenSource.Token).ConfigureAwait(true);
+                ImmutableJsonObject cacheDocument = attachmentStreams.Count == 0 
+                    ? draft.GetFullDocumentJson(document.DocumentId, newRevision, metadata) 
+                    : await Backend.GetDocumentAsync(document.DocumentId, newRevision, cancellationTokenSource.Token).ConfigureAwait(true);
                 DocumentUpdated(dbDocument, newRevision, cacheDocument);
                 Logger.Log($"Document saved: <{document.DocumentId}>", shortcut);
             }

@@ -34,7 +34,6 @@ namespace Hercules
         {
             ViewModelTypes.CacheTypes(GetType().Assembly);
             ApplicationCommands.Close.InputGestures.Add(new KeyGesture(Key.W, ModifierKeys.Control));
-            ServicePointManager.DefaultConnectionLimit = 1024;
             StyleManager.ApplicationTheme = new Windows7Theme();
 
             CultureInfo culture = CultureInfo.InvariantCulture;

@@ -72,7 +72,7 @@ namespace Hercules
             using (var csv = new CsvParser(reader, config))
             {
                 while (csv.Read())
-                    result.Add(csv.Record);
+                    result.Add(csv.Record!);
             }
             return result;
         }
