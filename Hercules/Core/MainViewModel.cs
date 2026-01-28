@@ -11,7 +11,6 @@ using Hercules.Dialogs;
 using Hercules.Documents;
 using Hercules.History;
 using Hercules.Import;
-using Hercules.InteractiveMaps;
 using Hercules.Localization;
 using Hercules.Plots;
 using Hercules.Replication;
@@ -83,7 +82,6 @@ namespace Hercules
             Core.AddModule(new DialogModule(Core));
             Core.AddModule(new PlotsModule(Core));
             Core.AddModule(new ServerBrowserModule(Core));
-            Core.AddModule(new InteractiveMapModule(Core));
             Core.AddModule(new CardsModule(Core));
             Workspace.BuildUI();
             if (File.Exists(settingsFileName))
