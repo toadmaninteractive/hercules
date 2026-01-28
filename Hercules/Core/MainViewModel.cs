@@ -7,7 +7,6 @@ using Hercules.Cards;
 using Hercules.Connections;
 using Hercules.DatabaseExplorer;
 using Hercules.Diagrams;
-using Hercules.Dialogs;
 using Hercules.Documents;
 using Hercules.History;
 using Hercules.Import;
@@ -79,7 +78,6 @@ namespace Hercules
             Core.AddModule(new ImportModule(Core));
             Core.AddModule(new ReplicationModule(Core));
             Core.AddModule(new DiagramModule(Core));
-            Core.AddModule(new DialogModule(Core));
             Core.AddModule(new PlotsModule(Core));
             Core.AddModule(new ServerBrowserModule(Core));
             Core.AddModule(new CardsModule(Core));

@@ -180,8 +180,6 @@ namespace Hercules.Forms.Elements
             {
                 if (recordSchemaType.Record.IsLink)
                     return new LinkListItem(parent, itemType, json, originalJson, index, originalIndex, transaction);
-                if (recordSchemaType.Record.IsReplica)
-                    return new ReplicaListItem(parent, itemType, json, originalJson, index, originalIndex, transaction);
             }
 
             return new ListItem(parent, itemType, json, originalJson, index, originalIndex, transaction);

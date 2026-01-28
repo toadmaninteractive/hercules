@@ -11,11 +11,11 @@ namespace Hercules.Forms.Schema
         FormSchema CreateFormSchema(ImmutableJson json, SchemafulDatabase? schemafulDatabase);
     }
 
-    public sealed record FormSchemaFactory(FormSettings FormSettings, TextSizeService TextSizeService, ProjectSettings? ProjectSettings, IDialogService DialogService, ShortcutService ShortcutService, CustomTypeRegistry CustomTypeRegistry) : IFormSchemaFactory
+    public sealed record FormSchemaFactory(FormSettings FormSettings, TextSizeService TextSizeService, ProjectSettings? ProjectSettings, ShortcutService ShortcutService, CustomTypeRegistry CustomTypeRegistry) : IFormSchemaFactory
     {
         public FormSchema CreateFormSchema(ImmutableJson json, SchemafulDatabase? schemafulDatabase)
         {
-            return new IgorFormSchemaBuilder(json, FormSettings, ProjectSettings, DialogService, TextSizeService, ShortcutService, CustomTypeRegistry, schemafulDatabase).FormSchema;
+            return new IgorFormSchemaBuilder(json, FormSettings, ProjectSettings, TextSizeService, ShortcutService, CustomTypeRegistry, schemafulDatabase).FormSchema;
         }
     }
 }

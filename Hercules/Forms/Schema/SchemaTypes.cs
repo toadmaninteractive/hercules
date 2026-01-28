@@ -131,8 +131,6 @@ namespace Hercules.Forms.Schema
         public string? Group { get; set; }
         public SchemaBlock? Block { get; set; }
         public bool IsLink { get; set; }
-        public bool IsReplica { get; set; }
-        public bool IsDialog { get; set; }
         public ColorRecordSchema? ColorSchema { get; set; }
         public string? AiHint { get; set; }
 

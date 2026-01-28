@@ -48,12 +48,11 @@ namespace Hercules.Forms.Schema
 
     internal sealed class IgorFormSchemaBuilder
     {
-        public IgorFormSchemaBuilder(ImmutableJson json, FormSettings formSettings, ProjectSettings? projectSettings, IDialogService dialogServise, TextSizeService textSizeService, ShortcutService shortcutService, CustomTypeRegistry customTypeRegistry, SchemafulDatabase? schemafulDatabase)
+        public IgorFormSchemaBuilder(ImmutableJson json, FormSettings formSettings, ProjectSettings? projectSettings, TextSizeService textSizeService, ShortcutService shortcutService, CustomTypeRegistry customTypeRegistry, SchemafulDatabase? schemafulDatabase)
         {
             SchemafulDatabase = schemafulDatabase;
             FormSettings = formSettings;
             this.projectSettings = projectSettings;
-            DialogService = dialogServise;
             TextSizeService = textSizeService;
             this.customTypeRegistry = customTypeRegistry;
             ShortcutService = shortcutService;
@@ -73,7 +72,6 @@ namespace Hercules.Forms.Schema
         private Igor.Schema.Schema IgorSchema { get; }
         private TextSizeService TextSizeService { get; }
         private readonly CustomTypeRegistry customTypeRegistry;
-        private IDialogService DialogService { get; }
         private ShortcutService ShortcutService { get; }
 
         private readonly Dictionary<string, SchemaEnum> enums = new Dictionary<string, SchemaEnum>();
@@ -142,12 +140,6 @@ namespace Hercules.Forms.Schema
                 if (record is SchemaRecord sr)
                 {
                     DetectColorRecord(sr);
-                    if (customType.GetBoolMetadata("dialog_replica"))
-                        sr.IsReplica = true;
-
-                    if (customType.GetBoolMetadata("dialog"))
-                        sr.IsDialog = true;
-
                     if (customType.TryGetStringMetadata("ai_hint", out var aiHint))
                         sr.AiHint = aiHint;
                 }

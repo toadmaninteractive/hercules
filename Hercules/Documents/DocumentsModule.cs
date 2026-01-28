@@ -30,7 +30,7 @@ namespace Hercules.Documents
             : base(core)
         {
             TextSizeService = new TextSizeService(new Typeface("Arial"), 11.5, Workspace.Dpi.PixelsPerDip);
-            FormSchemaFactory = new FormSchemaFactory(FormSettings, TextSizeService, null, Workspace.DialogService, Workspace.ShortcutService, CustomTypeRegistry);
+            FormSchemaFactory = new FormSchemaFactory(FormSettings, TextSizeService, null, Workspace.ShortcutService, CustomTypeRegistry);
             metaSchema = AsyncValue.Create(LoadMetaSchema);
 
             void CreateDocumentAction(string documentId, DocumentDraft draft) => CreateDocument(documentId, draft);
@@ -108,7 +108,7 @@ namespace Hercules.Documents
 
         private (FormSchema form, FormSchema diagram, FormSchema editors, FormSchema scripts) LoadMetaSchema()
         {
-            var factory = new FormSchemaFactory(FormSettings, TextSizeService, null, Workspace.DialogService, Workspace.ShortcutService, CustomTypeRegistry);
+            var factory = new FormSchemaFactory(FormSettings, TextSizeService, null, Workspace.ShortcutService, CustomTypeRegistry);
             var form = factory.CreateFormSchema(LoadJsonFromResource("Hercules.Resources.Schema.schema.json"), null);
             var diagram = factory.CreateFormSchema(LoadJsonFromResource("Hercules.Resources.Schema.diagram_schema.json"), null);
             var editors = factory.CreateFormSchema(LoadJsonFromResource("Hercules.Resources.Schema.editors.json"), null);
