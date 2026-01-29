@@ -1014,7 +1014,6 @@ namespace Hercules.Forms.Schema
             Simple,
             RefAsset,
             RefLink,
-            RefReplica,
             Slot,
         }
 

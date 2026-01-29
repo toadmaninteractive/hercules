@@ -4,7 +4,6 @@
         <ResourceDictionary Source="SimpleElements.xaml" />
         <ResourceDictionary Source="ProxyElements.xaml" />
         <ResourceDictionary Source="CollectionElements.xaml" />
-        <ResourceDictionary Source="../../../InteractiveMaps/Style/InteractiveMapElements.xaml" />
         <ResourceDictionary Source="../../../Plots/Style/PlotElements.xaml" />
         <ResourceDictionary Source="ElementProperties.xaml" />
     </ResourceDictionary.MergedDictionaries>

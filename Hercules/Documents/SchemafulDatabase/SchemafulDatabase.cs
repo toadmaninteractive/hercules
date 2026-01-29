@@ -126,27 +126,6 @@ namespace Hercules.Documents
                 schema = SchemaRecord.Default;
         }
 
-        /*
-        private void DialogShchemaInit(SchemaRecord dialogRecord)
-        {
-            var allReplicsProperty = dialogRecord.AllFields.First(field => field.Name == "replicas");
-            var replicaType = (RecordSchemaType)((ListSchemaType)allReplicsProperty.Type).ItemType;
-            replicaType.Record.IsReplica = true;
-
-            var answersField = replicaType.AllFields.First(field => field.Name == "answers");
-            var answerType = (RecordSchemaType)((ListSchemaType)answersField.Type).ItemType;
-
-            var answerRefType = answerType.AllFields.First(field => field.Name == "answerRef").Type;
-
-            ((StringSchemaType)answerRefType).Species = StringSchemaType.StringSpecies.RefReplica;
-            ((StringSchemaType)answerRefType).ReferenceTargetId = "dialog_replica_ref";
-
-            var startReplicaField = dialogRecord.AllFields.Single(field => field.Name == "start");
-            ((StringSchemaType)startReplicaField.Type).Species = StringSchemaType.StringSpecies.RefReplica;
-            ((StringSchemaType)startReplicaField.Type).ReferenceTargetId = "dialog_replica_ref";
-        }
-        */
-
         private void DatabaseChanged(DatabaseChange change)
         {
             switch (change.Kind)
