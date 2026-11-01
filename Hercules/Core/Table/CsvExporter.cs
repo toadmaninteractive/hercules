@@ -1,5 +1,4 @@
 ﻿using CsvHelper;
-using CsvHelper.Configuration;
 using System;
 using System.Globalization;
 using System.IO;
@@ -10,11 +9,7 @@ namespace Hercules
     {
         public string ExportToString(IExportTable table)
         {
-            var configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                Delimiter = Delimiter.ToString(CultureInfo.InvariantCulture),
-                HasHeaderRecord = false,
-            };
+            var configuration = CsvUtils.CreateWriterOptions(Delimiter);
 
             using StringWriter sw = new StringWriter();
             SaveToStream(table, sw, configuration);
@@ -23,24 +18,20 @@ namespace Hercules
 
         public void Export(IExportTable table, string fileName)
         {
-            var configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                Delimiter = Delimiter.ToString(CultureInfo.InvariantCulture),
-                HasHeaderRecord = false,
-            };
+            var configuration = CsvUtils.CreateWriterOptions(Delimiter);
 
             using StreamWriter sw = new StreamWriter(fileName, false);
             SaveToStream(table, sw, configuration);
         }
 
-        private void SaveToStream(IExportTable table, TextWriter writer, CsvConfiguration configuration)
+        private void SaveToStream(IExportTable table, TextWriter writer, CsvWriterOptions configuration)
         {
-            using var csv = new CsvWriter(writer, configuration);
+            using var csv = CsvWriter.Create(writer, configuration);
             foreach (var col in table.ExportColumns)
             {
                 csv.WriteField(col.Name);
             }
-            csv.NextRecord();
+            csv.EndRecord();
 
             for (int row = 0; row < table.RowCount; row++)
             {
@@ -62,7 +53,7 @@ namespace Hercules
 
                     csv.WriteField(asString);
                 }
-                csv.NextRecord();
+                csv.EndRecord();
             }
         }
     }

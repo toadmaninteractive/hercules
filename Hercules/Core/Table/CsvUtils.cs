@@ -1,5 +1,4 @@
 ﻿using CsvHelper;
-using CsvHelper.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,17 +8,14 @@ namespace Hercules
 {
     public static class CsvUtils
     {
-        static CsvConfiguration AutoDetectDelimiter(TextReader reader)
+        static char AutoDetectDelimiter(TextReader reader)
         {
             var line = reader.ReadLine();
             if (line == null)
-                return new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = "\t" };
-            if (line.StartsWith("sep=", StringComparison.OrdinalIgnoreCase))
-            {
-                return new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = line.Substring(4) };
-            }
-            var delimiter = GetSeparator(line) ?? '\t';
-            return new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = delimiter.ToString(CultureInfo.InvariantCulture) };
+                return '	';
+            if (line.StartsWith("sep=", StringComparison.OrdinalIgnoreCase) && line.Length > 4)
+                return line[4];
+            return GetSeparator(line) ?? '	';
         }
 
         public static char? GetSeparator(string line)
@@ -43,47 +39,55 @@ namespace Hercules
             }
         }
 
+        private static CsvReaderOptions CreateReaderOptions(char delimiter) => new()
+        {
+            Separator = delimiter,
+            HasHeader = false,
+            FormatProvider = CultureInfo.InvariantCulture,
+            MalformedData = CsvMalformedDataHandling.Recover,
+            FieldCountMismatch = CsvFieldCountHandling.Allow,
+        };
+
         public static IReadOnlyList<IReadOnlyList<string>> LoadFromString(string text)
         {
-            CsvConfiguration config;
+            char delimiter;
             using (var stringReader = new StringReader(text))
-                config = AutoDetectDelimiter(stringReader);
-            config.HasHeaderRecord = false;
-            config.BadDataFound = null;
+                delimiter = AutoDetectDelimiter(stringReader);
             using (var stringReader = new StringReader(text))
-                return LoadFromText(stringReader, config);
+                return LoadFromText(stringReader, CreateReaderOptions(delimiter));
         }
 
         public static IReadOnlyList<IReadOnlyList<string>> LoadFromFile(string filename)
         {
-            CsvConfiguration config;
             using var reader = new StreamReader(filename);
-            config = AutoDetectDelimiter(reader);
-            config.HasHeaderRecord = false;
-            config.BadDataFound = null;
+            var delimiter = AutoDetectDelimiter(reader);
             reader.BaseStream.Position = 0;
             reader.DiscardBufferedData();
-            return LoadFromText(reader, config);
+            return LoadFromText(reader, CreateReaderOptions(delimiter));
         }
 
-        private static IReadOnlyList<IReadOnlyList<string>> LoadFromText(TextReader reader, CsvConfiguration config)
+        private static IReadOnlyList<IReadOnlyList<string>> LoadFromText(TextReader reader, CsvReaderOptions options)
         {
             var result = new List<IReadOnlyList<string>>();
-            using (var csv = new CsvParser(reader, config))
+            using (var csv = CsvReader.Create(reader, options))
             {
                 while (csv.Read())
-                    result.Add(csv.Record!);
+                    result.Add(csv.Current.ToArray());
             }
             return result;
         }
 
+        internal static CsvWriterOptions CreateWriterOptions(char delimiter) => new()
+        {
+            Separator = delimiter,
+            HasHeader = false,
+            ValidateFieldCount = false,
+            FormatProvider = CultureInfo.InvariantCulture,
+        };
+
         public static void SaveToFile(IEnumerable<IEnumerable<string>> rows, string filename, char delimiter)
         {
-            var configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                Delimiter = delimiter.ToString(CultureInfo.InvariantCulture),
-                HasHeaderRecord = false,
-            };
+            var configuration = CreateWriterOptions(delimiter);
 
             using StreamWriter sw = new StreamWriter(filename, false);
             SaveToStream(rows, sw, configuration);
@@ -91,27 +95,23 @@ namespace Hercules
 
         public static string SaveToString(IEnumerable<IEnumerable<string>> rows, char delimiter)
         {
-            var configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                Delimiter = delimiter.ToString(CultureInfo.InvariantCulture),
-                HasHeaderRecord = false,
-            };
+            var configuration = CreateWriterOptions(delimiter);
 
             using StringWriter sw = new StringWriter();
             SaveToStream(rows, sw, configuration);
             return sw.ToString();
         }
 
-        static void SaveToStream(IEnumerable<IEnumerable<string>> rows, TextWriter writer, CsvConfiguration configuration)
+        static void SaveToStream(IEnumerable<IEnumerable<string>> rows, TextWriter writer, CsvWriterOptions configuration)
         {
-            using var csv = new CsvWriter(writer, configuration);
+            using var csv = CsvWriter.Create(writer, configuration);
             foreach (var row in rows)
             {
                 foreach (var item in row)
                 {
                     csv.WriteField(item);
                 }
-                csv.NextRecord();
+                csv.EndRecord();
             }
         }
     }
