@@ -25,7 +25,6 @@ namespace Hercules.AI
             serverOptions.Capabilities.Tools = new()
             {
                 ListChanged = true,
-                ToolCollection = []
             };
             var mcpTools =
                 from methodIndo in tools.GetType().GetMethods()
@@ -40,12 +39,12 @@ namespace Hercules.AI
                     OpenWorld = attr.OpenWorld,
                 });
             foreach (var tool in mcpTools)
-                serverOptions.Capabilities.Tools.ToolCollection.Add(tool);
+                serverOptions.ToolCollection.Add(tool);
 
             var loggerFactory = new HerculesLoggerFactory();
             // Create and run server with stdio transport
             await using var stdioTransport = new StdioServerTransport(serverOptions, loggerFactory);
-            var server = McpServerFactory.Create(stdioTransport, serverOptions, loggerFactory);
+            var server = ModelContextProtocol.Server.McpServer.Create(stdioTransport, serverOptions, loggerFactory);
             await server.RunAsync(ct);
         }
     }
