@@ -47,7 +47,6 @@ namespace Hercules.AI
                     MaxTokens = settings.MaxTokens.Value,
                     Model = settings.AiModel.Value,
                     Stream = false,
-                    Temperature = (decimal)settings.AiTemperature.Value,
                     Tools = tools,
                     PromptCaching = PromptCacheType.AutomaticToolsAndSystem,
                     System = new List<SystemMessage>
