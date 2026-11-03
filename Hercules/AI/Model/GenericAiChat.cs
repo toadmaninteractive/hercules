@@ -71,9 +71,9 @@ namespace Hercules.AI
                                     catch (Exception exception) when (exception is not OperationCanceledException)
                                     {
                                         // Report the failure to the model instead of aborting the whole chat.
-                                        Logger.LogException($"AI tool {functionCallContent.Name} call error", exception);
-                                        chatLog.AddException(exception);
-                                        result = $"Tool call error: {exception.Message}";
+                                        result = $"Tool call error: {AiToolErrors.Report("AI chat", functionCallContent.Name, exception)}";
+                                        if (!AiToolErrors.IsExpected(exception))
+                                            chatLog.AddException(exception);
                                     }
                                     var resultContent = new FunctionResultContent(functionCallContent.CallId, result);
                                     toolResults.Add(resultContent);

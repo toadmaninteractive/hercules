@@ -88,12 +88,9 @@ namespace Hercules.AI
                             }
                             catch (Exception ex)
                             {
-                                exception = ex;
-                                if (exception is TargetInvocationException targetInocation && targetInocation.InnerException != null)
-                                {
-                                    exception = targetInocation.InnerException;
-                                }
-                                response = $"Tool call error: {ex.Message}";
+                                response = $"Tool call error: {AiToolErrors.Report("AI chat", toolCall.Name, ex)}";
+                                if (!AiToolErrors.IsExpected(ex))
+                                    exception = AiToolErrors.Unwrap(ex);
                             }
                             var arguments = new Dictionary<string, object>();
                             foreach (var argument in (System.Text.Json.Nodes.JsonObject)toolCall.Arguments)
@@ -103,10 +100,7 @@ namespace Hercules.AI
                             var methodInfo = tools.First(t => t.Function.Name == toolCall.Name).Function.MethodInfo;
                             chatLog.AddToolCall(methodInfo.Name, toolCall.Arguments.ToImmutableJson().AsObject, response);
                             if (exception != null)
-                            {
                                 chatLog.AddException(exception);
-                                Logger.LogException($"AI tool {methodInfo.Name} call error", exception);
-                            }
                             messages.Add(new Message(toolCall, response));
                         }
                         continue;
