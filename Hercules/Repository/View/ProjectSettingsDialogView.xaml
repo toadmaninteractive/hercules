@@ -84,6 +84,20 @@
                 </StackPanel>
             </StackPanel>
         </GroupBox>
+        <GroupBox Header="MCP Server" Padding="10" Margin="0,10,0,0">
+            <StackPanel Orientation="Vertical">
+                <CheckBox Content="Enable MCP server for this project" IsChecked="{Binding McpServerEnabled}" />
+                <DockPanel LastChildFill="True" Margin="0,10,0,0" IsEnabled="{Binding McpServerEnabled}">
+                    <TextBlock Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Port:" DockPanel.Dock="Left"/>
+                    <TextBox
+                        Height="22"
+                        Width="80"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource ValidatedTextBox}"
+                        Text="{Binding McpServerPort, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                </DockPanel>
+            </StackPanel>
+        </GroupBox>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0" VerticalAlignment="Stretch">
             <Button Width="75" Height="25"
                     HorizontalAlignment="Right"

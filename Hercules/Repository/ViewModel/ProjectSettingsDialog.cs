@@ -1,5 +1,6 @@
 ﻿using Hercules.Shell;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -51,6 +52,19 @@ namespace Hercules.Repository
             set => SetField(ref remoteBaseUrl, value);
         }
 
+        public bool McpServerEnabled
+        {
+            get => mcpServerEnabled;
+            set => SetField(ref mcpServerEnabled, value);
+        }
+
+        [Range(1, 65535, ErrorMessage = "Port must be between 1 and 65535.")]
+        public int McpServerPort
+        {
+            get => mcpServerPort;
+            set => SetField(ref mcpServerPort, value);
+        }
+
         public string GitlabTestStatus
         {
             get => gitlabTestStatus;
@@ -72,6 +86,8 @@ namespace Hercules.Repository
         private string gitlabAccessToken;
         private string gitlabBranch;
         private string remoteBaseUrl;
+        private bool mcpServerEnabled;
+        private int mcpServerPort;
         private string gitlabTestStatus = string.Empty;
         private SolidColorBrush gitlabTestColor = Brushes.Gray;
         private CancellationTokenSource? gitlabTestCts;
@@ -85,6 +101,8 @@ namespace Hercules.Repository
             gitlabAccessToken = settings.GitlabAccessToken;
             gitlabBranch = settings.GitlabBranch;
             remoteBaseUrl = settings.RemoteBaseUrl;
+            mcpServerEnabled = settings.McpServerEnabled;
+            mcpServerPort = settings.McpServerPort;
 
             Title = "Project Settings";
             SelectProjectRootFolderCommand = Commands.Execute(SelectProjectRootFolder);

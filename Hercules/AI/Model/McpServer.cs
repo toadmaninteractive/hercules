@@ -17,15 +17,16 @@ namespace Hercules.AI
     /// </summary>
     public class McpServer
     {
-        public const int Port = 8421;
         private const string Path = "/mcp";
 
         private readonly AiTools tools;
+        private readonly int port;
         private readonly HerculesLoggerFactory loggerFactory = new();
 
-        public McpServer(AiTools aiTools)
+        public McpServer(AiTools aiTools, int port)
         {
             tools = aiTools;
+            this.port = port;
         }
 
         private McpServerOptions CreateOptions()
@@ -60,8 +61,8 @@ namespace Hercules.AI
         {
             var serverOptions = CreateOptions();
             using var listener = new HttpListener();
-            listener.Prefixes.Add($"http://localhost:{Port}{Path}/");
-            listener.Prefixes.Add($"http://127.0.0.1:{Port}{Path}/");
+            listener.Prefixes.Add($"http://localhost:{port}{Path}/");
+            listener.Prefixes.Add($"http://127.0.0.1:{port}{Path}/");
             listener.Start();
             using var registration = ct.Register(listener.Stop);
 

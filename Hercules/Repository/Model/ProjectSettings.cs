@@ -18,8 +18,15 @@ namespace Hercules.Repository
         public string GitlabUrl { get; private set; } = string.Empty;
         public string GitlabAccessToken { get; private set; } = string.Empty;
         public string GitlabBranch { get; private set; } = string.Empty;
+        public bool McpServerEnabled { get; private set; }
+        public int McpServerPort { get; private set; } = DefaultMcpServerPort;
+
+        public const int DefaultMcpServerPort = 8421;
 
         public IRepository? Repository { get; private set; }
+
+        /// <summary>Raised after the settings were changed with the settings dialog.</summary>
+        public event Action? Changed;
 
         private readonly IDialogService dialogService;
 
@@ -34,7 +41,10 @@ namespace Hercules.Repository
                 GitlabBranch = dialog.GitlabBranch;
                 RemoteBaseUrl = dialog.RemoteBaseUrl;
                 RepositoryType = dialog.RepositoryType;
+                McpServerEnabled = dialog.McpServerEnabled;
+                McpServerPort = dialog.McpServerPort;
                 UpdateRepository();
+                Changed?.Invoke();
                 return true;
             }
 
@@ -62,6 +72,10 @@ namespace Hercules.Repository
                     GitlabBranch = gitlabBranch;
                 if (settingsReader.Read<RepositoryType>(nameof(RepositoryType), out var repositoryType))
                     RepositoryType = repositoryType;
+                if (settingsReader.Read<bool>(nameof(McpServerEnabled), out var mcpServerEnabled))
+                    McpServerEnabled = mcpServerEnabled;
+                if (settingsReader.Read<int>(nameof(McpServerPort), out var mcpServerPort))
+                    McpServerPort = mcpServerPort;
             }
             catch (Exception ex)
             {
@@ -79,6 +93,8 @@ namespace Hercules.Repository
             settingsWriter.Write(nameof(GitlabAccessToken), GitlabAccessToken);
             settingsWriter.Write(nameof(GitlabBranch), GitlabBranch);
             settingsWriter.Write(nameof(RepositoryType), RepositoryType);
+            settingsWriter.Write(nameof(McpServerEnabled), McpServerEnabled);
+            settingsWriter.Write(nameof(McpServerPort), McpServerPort);
         }
 
         private void UpdateRepository()

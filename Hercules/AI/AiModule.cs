@@ -1,4 +1,5 @@
-﻿using Hercules.Shell;
+﻿using Hercules.Repository;
+using Hercules.Shell;
 using System;
 using System.Reactive.Linq;
 using System.Threading;
@@ -20,48 +21,49 @@ namespace Hercules.AI
             Workspace.OptionManager.AddMenuOption(searchOption, "Tools", showInToolbar: true);
             settingsPageSubscription = Workspace.WindowService.WhenAddingPage.OfType<SettingsPage>().Subscribe(p => p.Tabs.Add(new AiSettingsTab(Settings)));
             Core.SettingsService.AddSettingGroup(Settings);
-
-            var mcpServerOption = new UiToggleOption("MCP Server", null, EnableMcpServer);
-            Workspace.OptionManager.AddMenuOption(mcpServerOption, "Tools");
-            core.SettingsService.AddSetting(EnableMcpServer);
-            mcpServerSubscription = EnableMcpServer.Subscribe(_ => UpdateMcpServer());
         }
 
-        private bool projectLoaded;
-        private McpServer? mcpServer;
+        private ProjectSettings? projectSettings;
+        private int? runningMcpPort;
         private CancellationTokenSource? mcpCancellation;
-        private readonly IDisposable mcpServerSubscription;
         private readonly AiChatTool aiChatTool;
         private readonly IDisposable settingsPageSubscription;
         private readonly AiTools aiTools;
 
         public AiSettings Settings { get; }
 
-        public Setting<bool> EnableMcpServer { get; } = new Setting<bool>(nameof(EnableMcpServer), false);
-
         public const string SystemPrompt = "You're the assistant in the tool called Hercules. This is the design data database frontend and editor for game development. Each database entry is a JSON document, and a single document describes a single game entity. Documents are identified by their _id property, and contain their type in category property. Special schema document defines which other properties are available. Answer user's questions.";
 
         public override void OnLoadProject(Project project, ISettingsReader settingsReader)
         {
-            projectLoaded = true;
+            projectSettings = project.Settings;
+            projectSettings.Changed += UpdateMcpServer;
             UpdateMcpServer();
         }
 
         public override void OnCloseProject()
         {
-            projectLoaded = false;
+            if (projectSettings != null)
+                projectSettings.Changed -= UpdateMcpServer;
+            projectSettings = null;
             UpdateMcpServer();
         }
 
-        // The MCP server serves the project database, so it runs only while it's enabled and a project is loaded.
+        // The MCP server serves the project database, so it runs only while a project is loaded
+        // and the project has it enabled. The port is a project setting, so that different projects
+        // can be told apart by their urls.
         private void UpdateMcpServer()
         {
+            int? port = projectSettings is { McpServerEnabled: true } ? projectSettings.McpServerPort : null;
+            if (port == runningMcpPort)
+                return;
+
             StopMcpServer();
-            if (!EnableMcpServer.Value || !projectLoaded)
+            if (port == null)
                 return;
             mcpCancellation = new CancellationTokenSource();
-            mcpServer = new McpServer(aiTools);
-            mcpServer.RunMcpAsync(mcpCancellation.Token).Track();
+            runningMcpPort = port;
+            new McpServer(aiTools, port.Value).RunMcpAsync(mcpCancellation.Token).Track();
         }
 
         private void StopMcpServer()
@@ -69,12 +71,11 @@ namespace Hercules.AI
             mcpCancellation?.Cancel();
             mcpCancellation?.Dispose();
             mcpCancellation = null;
-            mcpServer = null;
+            runningMcpPort = null;
         }
 
         public override void OnShutdown()
         {
-            mcpServerSubscription.Dispose();
             StopMcpServer();
             settingsPageSubscription.Dispose();
         }
