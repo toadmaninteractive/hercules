@@ -6,3 +6,4 @@ bin
 *.opendb
 /Setup/Output
 /docs/build
+/.claude
