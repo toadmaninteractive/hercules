@@ -319,13 +319,12 @@ namespace Hercules.AI
         {
             get
             {
-                var category = core.Project.SchemafulDatabase.Schema.Variant.Tag;
                 var sb = new StringBuilder();
-                sb.AppendLine($@"Run JavaScript (ECMAScript 2023) code in the context of Hercules. 
+                sb.AppendLine(@"Run JavaScript (ECMAScript 2023) code in the context of Hercules. 
 Use it for batch document api.
 Prefer this tool when you need to update more than 10 documents at once.
 DO NOT use console API.
-Note that documents are JSON objects and have their id in ""_id"" property and categry in ""{category}"" property.
+Note that documents are JSON objects and have their id in ""_id"" property.
 Useful API:");
                 GetApiDescriptionForAI<HerculesDbApi>(sb);
                 GetApiDescriptionForAI<HerculesJsApi>(sb);
