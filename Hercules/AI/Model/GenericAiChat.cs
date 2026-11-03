@@ -63,7 +63,18 @@ namespace Hercules.AI
                                     toolResults ??= new();
                                     var tool = functions[functionCallContent.Name];
 
-                                    var result = await tool.InvokeAsync(new AIFunctionArguments(functionCallContent.Arguments), ct);
+                                    object? result;
+                                    try
+                                    {
+                                        result = await tool.InvokeAsync(new AIFunctionArguments(functionCallContent.Arguments), ct);
+                                    }
+                                    catch (Exception exception) when (exception is not OperationCanceledException)
+                                    {
+                                        // Report the failure to the model instead of aborting the whole chat.
+                                        Logger.LogException($"AI tool {functionCallContent.Name} call error", exception);
+                                        chatLog.AddException(exception);
+                                        result = $"Tool call error: {exception.Message}";
+                                    }
                                     var resultContent = new FunctionResultContent(functionCallContent.CallId, result);
                                     toolResults.Add(resultContent);
                                     var arguments = functionCallContent.Arguments!.ToDictionary(p => p.Key, p => ((JsonElement)p.Value!).ToImmutableJson());

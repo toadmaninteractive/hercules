@@ -2,6 +2,7 @@
 using Jint.Native;
 using Jint.Runtime.Modules;
 using Json;
+using System;
 using System.Collections.Generic;
 
 namespace Hercules.Scripting.JavaScript
@@ -35,10 +36,12 @@ namespace Hercules.Scripting.JavaScript
     {
         readonly Engine engine;
 
-        public JsHost(IJsModuleProvider? moduleProvider = null)
+        public JsHost(IJsModuleProvider? moduleProvider = null, TimeSpan? timeout = null)
         {
             Options GetOptions(Options options)
             {
+                if (timeout != null)
+                    options = options.TimeoutInterval(timeout.Value);
                 if (moduleProvider != null)
                 {
                     options = options.EnableModules(new JsModuleLoader(moduleProvider));
