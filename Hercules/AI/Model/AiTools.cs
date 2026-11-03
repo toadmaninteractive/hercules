@@ -337,7 +337,7 @@ namespace Hercules.AI
                         sb.Append($"[{issue.Severity}] {issue.Path}: {issue.Message}.");
                         if (issue.SupportedValues != null)
                         {
-                            sb.Append($"Supported values: {string.Join(", ", issue.SupportedValues)}.");
+                            sb.Append($" Supported values: {string.Join(", ", issue.SupportedValues)}.");
                         }
                         sb.AppendLine();
                     }
