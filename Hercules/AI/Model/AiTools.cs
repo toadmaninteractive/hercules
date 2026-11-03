@@ -94,7 +94,7 @@ namespace Hercules.AI
             return core.Workspace.Scheduler.ScheduleForegroundJob(() => action(core.Project ?? throw new AiToolException("No project is open.")));
         }
 
-        [AiTool("Gets Hercules design database schema as JSON.", ReadOnly = true)]
+        [AiTool("Gets Hercules design database schema as JSON. It is big: prefer GetCategorySchema if you only work with some categories.", ReadOnly = true)]
         public string GetSchema()
         {
             return OnUi(project =>
@@ -104,6 +104,70 @@ namespace Hercules.AI
                     return doc.Json.ToString();
                 throw new AiToolException("Schema document not found.");
             });
+        }
+
+        [AiTool("Gets the JSON schema of a single Hercules document category: the definition of the category and all definitions it references, as a self-contained JSON schema. Much smaller than GetSchema.", ReadOnly = true)]
+        public string GetCategorySchema([Description("Category name, as returned by GetCategories. Case insensitive.")] string category)
+        {
+            return OnUi(project =>
+            {
+                if (!project.Database.Documents.TryGetValue(CouchUtils.JsonSchemaDocumentId, out var doc))
+                    throw new AiToolException("The project has no JSON schema document. Use GetSchema instead.");
+                if (!doc.Json.TryGetValue("$defs", out var defsJson) || !defsJson.IsObject)
+                    throw new AiToolException("The schema document has no definitions. Use GetSchema instead.");
+                var defs = defsJson.AsObject;
+
+                var main = defs.FirstOrDefault(def => string.Equals(GetSchemaCategory(def.Value), category, StringComparison.CurrentCultureIgnoreCase));
+                if (main.Key == null)
+                    throw new AiToolException($"Category {category} not found. Available categories: {string.Join(", ", defs.Select(def => GetSchemaCategory(def.Value)).Where(name => name != null))}.");
+
+                // The category definition plus everything it references, directly or not.
+                var needed = new List<string> { main.Key };
+                for (var i = 0; i < needed.Count; i++)
+                {
+                    foreach (var reference in FindSchemaReferences(defs[needed[i]]))
+                    {
+                        if (defs.ContainsKey(reference) && !needed.Contains(reference))
+                            needed.Add(reference);
+                    }
+                }
+
+                var neededDefs = new JsonObject();
+                foreach (var name in needed)
+                    neededDefs[name] = defs[name];
+                var result = new JsonObject
+                {
+                    ["$ref"] = "#/$defs/" + main.Key,
+                    ["$defs"] = neededDefs,
+                };
+                return result.ToImmutable().ToString();
+            });
+        }
+
+        private static string? GetSchemaCategory(ImmutableJson definition)
+        {
+            return definition.TryFetch(new JsonPath("properties", "category", "const"), out var value) && value != null && value.IsString ? value.AsString : null;
+        }
+
+        private static IEnumerable<string> FindSchemaReferences(ImmutableJson node)
+        {
+            if (node.IsObject)
+            {
+                foreach (var property in node.AsObject)
+                {
+                    if (property.Key == "$ref" && property.Value.IsString)
+                        yield return property.Value.AsString.RemovePrefix("#/$defs/");
+                    else
+                        foreach (var nested in FindSchemaReferences(property.Value))
+                            yield return nested;
+                }
+            }
+            else if (node.IsArray)
+            {
+                foreach (var item in node.AsArray)
+                    foreach (var nested in FindSchemaReferences(item))
+                        yield return nested;
+            }
         }
 
         [AiTool("Gets Hercules document for the given id.", ReadOnly = true)]
@@ -117,9 +181,11 @@ namespace Hercules.AI
             });
         }
 
-        [AiTool("Gets Hercules documents for the given list of ids. Fails if any of the documents doesn't exist. Prefer GetPropertyValuesForMultipleDocuments instead if you are only interested in the subset of document properties.", ReadOnly = true)]
+        [AiTool("Gets Hercules documents for the given list of ids. Fails if any of the documents doesn't exist. At most 50 documents per call. Prefer GetPropertyValuesForMultipleDocuments instead if you are only interested in the subset of document properties.", ReadOnly = true)]
         public string GetDocuments([Description("Document _id values.")] string[] ids)
         {
+            if (ids.Length > MaxDocumentsPerCall)
+                throw new AiToolException($"Too many documents requested ({ids.Length}). Request at most {MaxDocumentsPerCall} per call, or use GetPropertyValuesForMultipleDocuments to get only the properties you need.");
             return OnUi(project =>
             {
                 var result = new List<string>();
@@ -156,10 +222,35 @@ namespace Hercules.AI
             });
         }
 
-        [AiTool("Gets the list of all Hercules document IDs.", ReadOnly = true)]
-        public string GetAllDocumentIds()
+        [AiTool("Gets the list of all Hercules document IDs, sorted. Long lists are paged: if the result is cut, its last line tells the offset to continue from.", ReadOnly = true)]
+        public string GetAllDocumentIds(
+            [Description("Maximum number of IDs to return.")] int limit = DefaultListLimit,
+            [Description("Number of IDs to skip.")] int offset = 0)
         {
-            return OnUi(project => string.Join(Environment.NewLine, project.Database.Documents.Select(d => d.Key)));
+            return OnUi(project => FormatPage(project.Database.Documents.Select(d => d.Key), limit, offset));
+        }
+
+        private const int DefaultListLimit = 500;
+        private const int MaxListLimit = 2000;
+        private const int DefaultSearchLimit = 50;
+        private const int MaxDocumentsPerCall = 50;
+
+        private static string FormatPage(IEnumerable<string> items, int limit, int offset)
+        {
+            var all = items.OrderBy(item => item, StringComparer.Ordinal).ToList();
+            (limit, offset) = ClampPaging(limit, offset);
+            var page = all.Skip(offset).Take(limit).ToList();
+            var text = string.Join(Environment.NewLine, page);
+            if (page.Count == 0 && all.Count > 0)
+                return $"[Nothing at offset {offset}: there are {all.Count} items in total.]";
+            if (offset + page.Count < all.Count)
+                text += $"{Environment.NewLine}[Showing {offset + 1}-{offset + page.Count} of {all.Count}. Call again with offset={offset + page.Count} for the rest.]";
+            return text;
+        }
+
+        private static (int Limit, int Offset) ClampPaging(int limit, int offset)
+        {
+            return (Math.Clamp(limit, 1, MaxListLimit), Math.Max(offset, 0));
         }
 
         [AiTool("Gets the list of opened Hercules document IDs.", ReadOnly = true)]
@@ -175,8 +266,11 @@ namespace Hercules.AI
             });
         }
 
-        [AiTool("Gets the list of Hercules document IDs belonging to the category. Fails if there's no such category.", ReadOnly = true)]
-        public string GetDocumentIdsByCategory([Description("Category name, as returned by GetCategories. Case insensitive.")] string category)
+        [AiTool("Gets the list of Hercules document IDs belonging to the category, sorted. Fails if there's no such category. Long lists are paged: if the result is cut, its last line tells the offset to continue from.", ReadOnly = true)]
+        public string GetDocumentIdsByCategory(
+            [Description("Category name, as returned by GetCategories. Case insensitive.")] string category,
+            [Description("Maximum number of IDs to return.")] int limit = DefaultListLimit,
+            [Description("Number of IDs to skip.")] int offset = 0)
         {
             return OnUi(project =>
             {
@@ -184,12 +278,15 @@ namespace Hercules.AI
                 var categoryObject = categories.FirstOrDefault(c => string.Equals(c.Name, category, StringComparison.CurrentCultureIgnoreCase));
                 if (categoryObject == null)
                     throw new AiToolException($"Category {category} not found. Available categories: {string.Join(", ", categories.Select(c => c.Name))}.");
-                return string.Join(Environment.NewLine, categoryObject.Documents.Select(d => d.DocumentId));
+                return FormatPage(categoryObject.Documents.Select(d => d.DocumentId), limit, offset);
             });
         }
 
-        [AiTool("Search inside Hercules documents. Matches text values, enum values and property names, ignoring case. Returns the list of matching document ids with the paths of matches.", ReadOnly = true)]
-        public string SearchInDocuments([Description("Text to search for.")] string text)
+        [AiTool("Search inside Hercules documents. Matches text values, enum values and property names, ignoring case. Returns a JSON object: total number of matching documents, offset, the documents (id and the paths of matches), and next_offset if there are more documents to get.", ReadOnly = true)]
+        public string SearchInDocuments(
+            [Description("Text to search for.")] string text,
+            [Description("Maximum number of matching documents to return.")] int limit = DefaultSearchLimit,
+            [Description("Number of matching documents to skip.")] int offset = 0)
         {
             return OnUi(project =>
             {
@@ -206,10 +303,13 @@ namespace Hercules.AI
                     SearchDraft = true,
                 };
                 search.Search(project.SchemafulDatabase.Schema, project.SchemafulDatabase.SchemafulDocuments);
-                if (search.Results.Documents.Count == 0)
+                var total = search.Results.Documents.Count;
+                if (total == 0)
                     return "Nothing found";
+                (limit, offset) = ClampPaging(limit, offset);
                 var json = new JsonArray();
-                foreach (var result in search.Results.Documents)
+                var page = search.Results.Documents.OrderBy(result => result.Key, StringComparer.Ordinal).Skip(offset).Take(limit).ToList();
+                foreach (var result in page)
                 {
                     var refArray = new JsonArray();
                     foreach (var reference in result.Value.References)
@@ -227,7 +327,15 @@ namespace Hercules.AI
                     };
                     json.Add(jsonObject);
                 }
-                return json.ToString();
+                var response = new JsonObject
+                {
+                    ["total"] = total,
+                    ["offset"] = offset,
+                    ["documents"] = json,
+                };
+                if (offset + page.Count < total)
+                    response["next_offset"] = offset + page.Count;
+                return response.ToImmutable().ToString();
             });
         }
 
