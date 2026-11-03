@@ -381,7 +381,7 @@ namespace Hercules.AI
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Protocol usage")]
         public record BatchDocumentUpdateEntry(
             [property: Description("Document _id.")] string id,
-            [property: Description("Dot separated path to the property, e.g. 'name' or 'items.0.cost'. Numeric segments are array indexes. Missing parts of the path are created.")] string path,
+            [property: Description("Dot separated path to the property, e.g. 'name' or 'items.0.cost'. Numeric segments are array indexes. Missing parts of the path are created; an array index past the end pads the array with nulls.")] string path,
             [property: Description("New value of the property, encoded as JSON: 5, true, null, \"text\" (strings must be quoted), {\"a\": 1}, [1, 2].")] string value);
 
         [AiTool("Updates multiple values in Hercules documents. Accepts the list of JSON objects as input. Each object has three properties: id is document ID, path is the dot separated path to the property, and value is new JSON value of updated property. Changes are applied to the document editors (including their unsaved changes) and are not saved to the database.", Destructive = true)]
