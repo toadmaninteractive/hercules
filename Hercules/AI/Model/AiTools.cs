@@ -203,7 +203,7 @@ namespace Hercules.AI
             });
         }
 
-        [AiTool("Gets values for the specified property paths for multiple Hercules documents. Returns the list of objects with document ID and property values. Properties missing in a document are omitted. Fails if any of the documents doesn't exist.", ReadOnly = true)]
+        [AiTool("Gets values for the specified property paths for multiple Hercules documents. Returns the list of objects with document ID (_id) and property values as JSON, keyed by the requested paths. A property that is null in the document is returned as null. Paths that don't exist in a document are not returned as properties, but listed in the _missing array of that object. Fails if any of the documents doesn't exist.", ReadOnly = true)]
         public string GetPropertyValuesForMultipleDocuments(
             [Description("Document _id values.")] string[] ids,
             [Description("Dot separated property paths, e.g. 'name' or 'items.0.cost'. Numeric segments are array indexes.")] string[] jsonPropertyPaths)
@@ -218,12 +218,17 @@ namespace Hercules.AI
                     obj["_id"] = id;
                     if (project.Database.Documents.TryGetValue(id, out var doc))
                     {
+                        var missingPaths = new JsonArray();
                         foreach (var jsonPropertyPath in jsonPropertyPaths)
                         {
                             var path = LooseParseJsonPath(jsonPropertyPath);
                             if (doc.DraftJson.TryFetch(path, out var value))
-                                obj[jsonPropertyPath] = value?.ToString() ?? "null";
+                                obj[jsonPropertyPath] = value ?? ImmutableJson.Null;
+                            else
+                                missingPaths.Add(jsonPropertyPath);
                         }
+                        if (missingPaths.Count > 0)
+                            obj["_missing"] = missingPaths;
                     }
                     else
                     {
@@ -241,7 +246,7 @@ namespace Hercules.AI
         public record BatchDocumentUpdateEntry(
             [property: Description("Document _id.")] string id,
             [property: Description("Dot separated path to the property, e.g. 'name' or 'items.0.cost'. Numeric segments are array indexes. Missing parts of the path are created.")] string path,
-            [property: Description("New value of the property as JSON (e.g. 5, true, \"text\", {\"a\": 1}). A value that isn't valid JSON is stored as a string.")] string value);
+            [property: Description("New value of the property, encoded as JSON: 5, true, null, \"text\" (strings must be quoted), {\"a\": 1}, [1, 2].")] string value);
 
         [AiTool("Updates multiple values in Hercules documents. Accepts the list of JSON objects as input. Each object has three properties: id is document ID, path is the dot separated path to the property, and value is new JSON value of updated property. Changes are applied to the document editors (including their unsaved changes) and are not saved to the database.", Destructive = true)]
         public string BatchUpdateDocuments([Description("The list of updates.")] List<BatchDocumentUpdateEntry> updates)
@@ -261,9 +266,10 @@ namespace Hercules.AI
                         {
                             json = JsonParser.Parse(update.value);
                         }
-                        catch
+                        catch (Exception exception)
                         {
-                            json = ImmutableJson.Create(update.value);
+                            errors.AppendLine($"Error: Value for {id} {update.path} is not valid JSON ({exception.Message}). Strings must be quoted, e.g. \"text\".");
+                            continue;
                         }
                         if (!updatedDocs.TryGetValue(id, out var updateRequest))
                         {
