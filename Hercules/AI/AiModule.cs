@@ -24,6 +24,7 @@ namespace Hercules.AI
         }
 
         private ProjectSettings? projectSettings;
+        private string projectTitle = "";
         private int? runningMcpPort;
         private CancellationTokenSource? mcpCancellation;
         private readonly AiChatTool aiChatTool;
@@ -37,6 +38,7 @@ namespace Hercules.AI
         public override void OnLoadProject(Project project, ISettingsReader settingsReader)
         {
             projectSettings = project.Settings;
+            projectTitle = project.Connection.Title;
             projectSettings.Changed += UpdateMcpServer;
             UpdateMcpServer();
         }
@@ -63,7 +65,7 @@ namespace Hercules.AI
                 return;
             mcpCancellation = new CancellationTokenSource();
             runningMcpPort = port;
-            new McpServer(aiTools, port.Value).RunMcpAsync(mcpCancellation.Token).Track();
+            new McpServer(aiTools, port.Value, projectTitle).RunMcpAsync(mcpCancellation.Token).Track();
         }
 
         private void StopMcpServer()

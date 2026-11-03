@@ -6,10 +6,12 @@ namespace Hercules
     public class HerculesLogger : ILogger
     {
         private readonly string categoryName;
+        private readonly Microsoft.Extensions.Logging.LogLevel minLevel;
 
-        public HerculesLogger(string categoryName)
+        public HerculesLogger(string categoryName, Microsoft.Extensions.Logging.LogLevel minLevel)
         {
             this.categoryName = categoryName;
+            this.minLevel = minLevel;
         }
 
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull
@@ -19,8 +21,7 @@ namespace Hercules
 
         public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
         {
-            return true;
-            // return logLevel > Microsoft.Extensions.Logging.LogLevel.Trace;
+            return logLevel >= minLevel;
         }
 
         public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
@@ -48,13 +49,20 @@ namespace Hercules
 
     public class HerculesLoggerFactory : ILoggerFactory
     {
+        private readonly Microsoft.Extensions.Logging.LogLevel minLevel;
+
+        public HerculesLoggerFactory(Microsoft.Extensions.Logging.LogLevel minLevel = Microsoft.Extensions.Logging.LogLevel.Trace)
+        {
+            this.minLevel = minLevel;
+        }
+
         public void AddProvider(ILoggerProvider provider)
         {
         }
 
         public ILogger CreateLogger(string categoryName)
         {
-            return new HerculesLogger(categoryName);
+            return new HerculesLogger(categoryName, minLevel);
         }
 
         public void Dispose()

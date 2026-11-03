@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using ModelContextProtocol;
+﻿using ModelContextProtocol;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using System;
@@ -21,12 +20,15 @@ namespace Hercules.AI
 
         private readonly AiTools tools;
         private readonly int port;
-        private readonly HerculesLoggerFactory loggerFactory = new();
+        private readonly string projectTitle;
+        // The SDK logs every message at Info/Debug; only its warnings and errors are interesting.
+        private readonly HerculesLoggerFactory loggerFactory = new(Microsoft.Extensions.Logging.LogLevel.Warning);
 
-        public McpServer(AiTools aiTools, int port)
+        public McpServer(AiTools aiTools, int port, string projectTitle)
         {
             tools = aiTools;
             this.port = port;
+            this.projectTitle = projectTitle;
         }
 
         private McpServerOptions CreateOptions()
@@ -54,7 +56,42 @@ namespace Hercules.AI
             serverOptions.ToolCollection = new McpServerPrimitiveCollection<McpServerTool>();
             foreach (var tool in mcpTools)
                 serverOptions.ToolCollection.Add(tool);
+            serverOptions.Filters.Request.CallToolFilters.Add(LogToolCall);
             return serverOptions;
+        }
+
+        private static McpRequestHandler<CallToolRequestParams, CallToolResult> LogToolCall(McpRequestHandler<CallToolRequestParams, CallToolResult> next)
+        {
+            return async (request, ct) =>
+            {
+                var arguments = request.Params?.Arguments;
+                var argumentsText = arguments is { Count: > 0 } ? " " + Truncate(JsonSerializer.Serialize(arguments), 200) : "";
+                var name = request.Params?.Name;
+                Logger.Log($"MCP tool call: {name}{argumentsText}");
+                try
+                {
+                    return await next(request, ct);
+                }
+                catch (Exception exception) when (exception is not OperationCanceledException)
+                {
+                    // Handled here, so that the SDK doesn't log the same failure again.
+                    return CreateErrorResult(AiToolErrors.Report("MCP", name ?? "", exception));
+                }
+            };
+        }
+
+        private static CallToolResult CreateErrorResult(string message)
+        {
+            return new CallToolResult
+            {
+                IsError = true,
+                Content = [new TextContentBlock { Text = message }],
+            };
+        }
+
+        private static string Truncate(string text, int maxLength)
+        {
+            return text.Length <= maxLength ? text : text[..maxLength] + "...";
         }
 
         public async Task RunMcpAsync(CancellationToken ct = default)
@@ -63,7 +100,16 @@ namespace Hercules.AI
             using var listener = new HttpListener();
             listener.Prefixes.Add($"http://localhost:{port}{Path}/");
             listener.Prefixes.Add($"http://127.0.0.1:{port}{Path}/");
-            listener.Start();
+            try
+            {
+                listener.Start();
+            }
+            catch (Exception exception)
+            {
+                Logger.LogException($"MCP server failed to start on port {port}", exception);
+                return;
+            }
+            Logger.Log($"MCP server started for {projectTitle}: http://localhost:{port}{Path}");
             using var registration = ct.Register(listener.Stop);
 
             while (!ct.IsCancellationRequested)
@@ -79,6 +125,7 @@ namespace Hercules.AI
                 }
                 _ = Task.Run(() => HandleRequestAsync(context, serverOptions, ct), ct);
             }
+            Logger.Log($"MCP server stopped (port {port})");
         }
 
         private async Task HandleRequestAsync(HttpListenerContext context, McpServerOptions serverOptions, CancellationToken ct)
@@ -91,6 +138,7 @@ namespace Hercules.AI
                 var origin = request.Headers["Origin"];
                 if (origin != null && !(Uri.TryCreate(origin, UriKind.Absolute, out var originUri) && originUri.IsLoopback))
                 {
+                    Logger.LogWarning($"MCP request rejected: origin {origin} is not allowed");
                     response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return;
                 }
@@ -114,6 +162,7 @@ namespace Hercules.AI
                 }
                 if (message == null)
                 {
+                    Logger.LogWarning("MCP request rejected: the body is not a valid JSON-RPC message");
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     return;
                 }
@@ -136,7 +185,7 @@ namespace Hercules.AI
             }
             catch (Exception ex)
             {
-                loggerFactory.CreateLogger<McpServer>().LogError(ex, "MCP request failed");
+                Logger.LogException("MCP request failed", ex);
                 try
                 {
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;

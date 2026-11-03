@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 
 namespace Hercules.AI
 {
@@ -45,6 +46,33 @@ namespace Hercules.AI
         public AiToolException(string message)
             : base(message)
         {
+        }
+    }
+
+    public static class AiToolErrors
+    {
+        public static Exception Unwrap(Exception exception)
+        {
+            return exception is TargetInvocationException { InnerException: { } inner } ? inner : exception;
+        }
+
+        /// <summary>A normal tool failure: the tool reported it on purpose, or the agent passed wrong arguments.</summary>
+        public static bool IsExpected(Exception exception)
+        {
+            return Unwrap(exception) is McpException or ArgumentException or JsonException;
+        }
+
+        /// <summary>Logs the failed tool call and returns the error text for the agent.</summary>
+        public static string Report(string source, string toolName, Exception exception)
+        {
+            exception = Unwrap(exception);
+            if (IsExpected(exception))
+            {
+                Logger.LogError($"{source} tool call {toolName} failed: {exception.Message}");
+                return exception.Message;
+            }
+            Logger.LogException($"{source} tool call {toolName} failed", exception);
+            return $"An error occurred invoking '{toolName}'.";
         }
     }
 
