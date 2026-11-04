@@ -249,6 +249,15 @@ namespace Hercules.Documents
             }
         }
 
+        /// <summary>Validates the JSON against the schema record without opening an editor.</summary>
+        public IReadOnlyList<FormIssue> Validate(ImmutableJsonObject json, SchemaRecord schemaRecord)
+        {
+            var form = new DocumentForm(json, json, schemaRecord, new ElementFactory(CustomTypeRegistry, ElementFactoryContext.Default), FormSettings);
+            var issues = new List<FormIssue>();
+            form.Root.Visit(element => element.CollectIssues(issues), VisitOptions.None);
+            return issues;
+        }
+
         private unsafe ImmutableJson LoadJsonFromResource(string path)
         {
             using var stream = (UnmanagedMemoryStream)GetType().Assembly.GetManifestResourceStream(path)!;

@@ -1,5 +1,7 @@
 ﻿using Hercules.Documents;
 using Hercules.Documents.Editor;
+using Hercules.Forms.Elements;
+using Hercules.Forms.Schema;
 using Hercules.Scripting;
 using Hercules.Scripting.JavaScript;
 using Hercules.Search;
@@ -456,15 +458,7 @@ namespace Hercules.AI
             [Description("Document content, a JSON object.")] string jsonString,
             [Description("Replace the content of the document if it already exists.")] bool overwrite = false)
         {
-            ImmutableJsonObject json;
-            try
-            {
-                json = JsonParser.Parse(jsonString).AsObject;
-            }
-            catch (Exception exception)
-            {
-                throw new AiToolException($"jsonString must be a valid JSON object: {exception.Message}");
-            }
+            var json = ParseJsonObject(jsonString);
 
             return OnUi(project =>
             {
@@ -483,20 +477,77 @@ namespace Hercules.AI
                 }
                 var root = editor.FormTab.Form.Root;
                 if (!root.IsValid)
-                {
-                    foreach (var issue in editor.FormTab.GetIssues())
-                    {
-                        sb.Append($"[{issue.Severity}] {issue.Path}: {issue.Message}.");
-                        if (issue.SupportedValues != null)
-                        {
-                            sb.Append($" Supported values: {string.Join(", ", issue.SupportedValues)}.");
-                        }
-                        sb.AppendLine();
-                    }
-                }
+                    sb.Append(FormatIssues(editor.FormTab.GetIssues()));
                 sb.AppendLine(exists ? $"Document {id} updated." : $"Document {id} created.");
                 return sb.ToString();
             });
+        }
+
+        [AiTool("Checks a Hercules document against the schema, without changing anything and without opening an editor. Pass id to check the current content of an existing document (including unsaved changes), or jsonString to check a document before creating it. Returns the issues, or says that there are none.", ReadOnly = true)]
+        public string ValidateDocument(
+            [Description("Id of an existing document.")] string? id = null,
+            [Description("Content of a document that does not exist yet: a JSON object that has its category.")] string? jsonString = null)
+        {
+            if ((id == null) == (jsonString == null))
+                throw new AiToolException("Pass either id or jsonString.");
+            var proposedJson = jsonString == null ? null : ParseJsonObject(jsonString);
+
+            return OnUi(project =>
+            {
+                ImmutableJsonObject json;
+                SchemaRecord schema;
+                if (id != null)
+                {
+                    if (!project.Database.Documents.TryGetValue(id, out var doc))
+                        throw new AiToolException($"Document {id} not found.");
+                    json = doc.DraftJson;
+                    project.SchemafulDatabase.GetDocumentSchema(doc, json, out _, out schema);
+                }
+                else
+                {
+                    json = proposedJson!;
+                    schema = project.SchemafulDatabase.Schema.Variant.GetChildForJson(json)
+                        ?? throw new AiToolException($"The document has no known category. Available categories: {string.Join(", ", project.SchemafulDatabase.Categories.Select(c => c.Name))}.");
+                }
+                // Documents of a schemaless category have nothing to be validated against.
+                if (schema == SchemaRecord.Default)
+                    throw new AiToolException("The document has no schema, so there is nothing to validate.");
+
+                var issues = core.GetModule<DocumentsModule>().Validate(json, schema);
+                return issues.Count == 0 ? "No issues found." : FormatIssues(issues);
+            });
+        }
+
+        private static ImmutableJsonObject ParseJsonObject(string jsonString)
+        {
+            try
+            {
+                return JsonParser.Parse(jsonString).AsObject;
+            }
+            catch (Exception exception)
+            {
+                throw new AiToolException($"jsonString must be a valid JSON object: {exception.Message}");
+            }
+        }
+
+        private const int MaxSupportedValuesShown = 15;
+
+        private static string FormatIssues(IEnumerable<FormIssue> issues)
+        {
+            var sb = new StringBuilder();
+            foreach (var issue in issues)
+            {
+                sb.Append($"[{issue.Severity}] {issue.Path}: {issue.Message}.");
+                if (issue.SupportedValues != null)
+                {
+                    // A reference to a big category would list hundreds of document ids.
+                    var values = issue.SupportedValues.ToList();
+                    var more = values.Count > MaxSupportedValuesShown ? $" ... and {values.Count - MaxSupportedValuesShown} more" : "";
+                    sb.Append($" Supported values: {string.Join(", ", values.Take(MaxSupportedValuesShown))}{more}.");
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
         }
 
         [AiTool("Expose/open the CSV table to the user.")]
