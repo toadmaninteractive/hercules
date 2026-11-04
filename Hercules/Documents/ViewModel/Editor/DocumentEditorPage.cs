@@ -51,7 +51,17 @@ namespace Hercules.Documents.Editor
         private bool enabled = true;
         private readonly ObservableValue<bool> originalIsDirty = new(false);
         private readonly IReadOnlyObservableValue<bool> isModified;
-        public ImmutableJsonObject DraftJson => FormTab.DraftJson;
+
+        /// <summary>The document content as the editor has it now, with _id (the form itself keeps the content without it).</summary>
+        public ImmutableJsonObject DraftJson
+        {
+            get
+            {
+                var json = new JsonObject(FormTab.DraftJson);
+                CouchUtils.SetId(json, Document.DocumentId);
+                return json;
+            }
+        }
 
         public DocumentEditorPage(DocumentEditorContext context, IDocument document)
         {

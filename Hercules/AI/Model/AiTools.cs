@@ -178,7 +178,7 @@ namespace Hercules.AI
             return OnUi(project =>
             {
                 if (project.Database.Documents.TryGetValue(id, out var doc))
-                    return GetJsonWithId(id, doc.DraftJson);
+                    return doc.DraftJson.ToString();
                 throw new AiToolException($"Document {id} not found.");
             });
         }
@@ -195,7 +195,7 @@ namespace Hercules.AI
                 foreach (var id in ids)
                 {
                     if (project.Database.Documents.TryGetValue(id, out var doc))
-                        result.Add(GetJsonWithId(id, doc.DraftJson));
+                        result.Add(doc.DraftJson.ToString());
                     else
                         missing.Add(id);
                 }
@@ -307,11 +307,11 @@ namespace Hercules.AI
         {
             // Only references are collected on the UI thread (the JSON is immutable); the query runs on the caller's thread.
             var documents = OnUi(project => SelectQueryDocuments(project, category, ids));
-            var inputJson = "[" + string.Join(",", documents.Select(document => GetJsonWithId(document.Id, document.Json))) + "]";
+            var inputJson = "[" + string.Join(",", documents.Select(document => document.ToString())) + "]";
             return JqRunner.Run(query, inputJson, QueryTimeout, QueryMaxMemoryBytes);
         }
 
-        private static List<(string Id, ImmutableJsonObject Json)> SelectQueryDocuments(Project project, string? category, string[]? ids)
+        private static List<ImmutableJsonObject> SelectQueryDocuments(Project project, string? category, string[]? ids)
         {
             var documentIds = category == null ? project.Database.Documents.Select(d => d.Key) : GetCategoryDocumentIds(project, category);
             if (ids != null)
@@ -323,14 +323,8 @@ namespace Hercules.AI
             }
             return documentIds
                 .OrderBy(id => id, StringComparer.Ordinal)
-                .Select(id => (id, project.Database.Documents[id].DraftJson))
+                .Select(id => project.Database.Documents[id].DraftJson)
                 .ToList();
-        }
-
-        // The draft JSON of a document that was never saved has no _id.
-        private static string GetJsonWithId(string id, ImmutableJsonObject json)
-        {
-            return json.ContainsKey("_id") ? json.ToString() : new JsonObject(json) { ["_id"] = id }.ToImmutable().ToString();
         }
 
         [AiTool("Search inside Hercules documents. Matches text values, enum values and property names, ignoring case. Returns a JSON object: total number of matching documents, offset, the documents (id and the paths of matches), and next_offset if there are more documents to get.", ReadOnly = true)]

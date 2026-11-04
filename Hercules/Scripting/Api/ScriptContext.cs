@@ -112,17 +112,7 @@ namespace Hercules.Scripting
         /// <summary>Editors belong to the UI thread (scripts may run elsewhere), so all drafts are read in one hop.</summary>
         public List<ImmutableJsonObject> GetDraftJsons(IEnumerable<IDocument> documents)
         {
-            return ScriptContext.InvokeNow(() => documents.Select(document => WithId(document.DocumentId, document.DraftJson)).ToList());
-        }
-
-        // The draft of a document that was never saved (or is open in an editor) may have no _id.
-        private static ImmutableJsonObject WithId(string documentId, ImmutableJsonObject json)
-        {
-            if (json.ContainsKey("_id"))
-                return json;
-            var copy = new JsonObject(json);
-            CouchUtils.SetId(copy, documentId);
-            return copy.ToImmutable();
+            return ScriptContext.InvokeNow(() => documents.Select(document => document.DraftJson).ToList());
         }
 
         // Unlike GetJson, this ignores unsaved editor drafts: saving from a script must not publish them.
