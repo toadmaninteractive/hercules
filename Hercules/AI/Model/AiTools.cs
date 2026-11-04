@@ -181,11 +181,11 @@ namespace Hercules.AI
             });
         }
 
-        [AiTool("Gets Hercules documents for the given list of ids. Fails if any of the documents doesn't exist. At most 50 documents per call. Prefer GetPropertyValuesForMultipleDocuments instead if you are only interested in the subset of document properties.", ReadOnly = true)]
+        [AiTool("Gets Hercules documents for the given list of ids. Fails if any of the documents doesn't exist. At most 50 documents per call. Prefer QueryDocuments instead if you are only interested in the subset of document properties.", ReadOnly = true)]
         public string GetDocuments([Description("Document _id values.")] string[] ids)
         {
             if (ids.Length > MaxDocumentsPerCall)
-                throw new AiToolException($"Too many documents requested ({ids.Length}). Request at most {MaxDocumentsPerCall} per call, or use GetPropertyValuesForMultipleDocuments to get only the properties you need.");
+                throw new AiToolException($"Too many documents requested ({ids.Length}). Request at most {MaxDocumentsPerCall} per call, or use QueryDocuments to get only the properties you need.");
             return OnUi(project =>
             {
                 var result = new List<string>();
@@ -294,6 +294,7 @@ namespace Hercules.AI
               .[] | select(.category == "resource" and .mass > 10) | {_id, name, mass}
               .[] | ._id as $id | .. | objects | select(.type? == "target_impact") | {doc: $id, target, inner: .impact.type}
               group_by(.category) | map({category: .[0].category, count: length})
+            Some properties of given documents (ids = ["a", "b"]): .[] | {_id, name, mass}. A missing property is null; has("name") tells it from a real null.
             path(..) gives the location of nested values, e.g. [paths] or path(.. | select(type == "number")).
             Not available: env, $ENV, input, modules, debug, stderr. The query is stopped after 10 s or 512 MB, and the output is capped: use limit(n; ...), select and projections to keep it small.
             """, ReadOnly = true)]
@@ -384,45 +385,6 @@ namespace Hercules.AI
                 if (offset + page.Count < total)
                     response["next_offset"] = offset + page.Count;
                 return response.ToImmutable().ToString();
-            });
-        }
-
-        [AiTool("Gets values for the specified property paths for multiple Hercules documents. Returns the list of objects with document ID (_id) and property values as JSON, keyed by the requested paths. A property that is null in the document is returned as null. Paths that don't exist in a document are not returned as properties, but listed in the _missing array of that object. Fails if any of the documents doesn't exist.", ReadOnly = true)]
-        public string GetPropertyValuesForMultipleDocuments(
-            [Description("Document _id values.")] string[] ids,
-            [Description("Dot separated property paths, e.g. 'name' or 'items.0.cost'. Numeric segments are array indexes.")] string[] jsonPropertyPaths)
-        {
-            return OnUi(project =>
-            {
-                JsonArray result = new();
-                var missing = new List<string>();
-                foreach (var id in ids)
-                {
-                    var obj = new JsonObject();
-                    obj["_id"] = id;
-                    if (project.Database.Documents.TryGetValue(id, out var doc))
-                    {
-                        var missingPaths = new JsonArray();
-                        foreach (var jsonPropertyPath in jsonPropertyPaths)
-                        {
-                            var path = LooseParseJsonPath(jsonPropertyPath);
-                            if (doc.DraftJson.TryFetch(path, out var value))
-                                obj[jsonPropertyPath] = value ?? ImmutableJson.Null;
-                            else
-                                missingPaths.Add(jsonPropertyPath);
-                        }
-                        if (missingPaths.Count > 0)
-                            obj["_missing"] = missingPaths;
-                    }
-                    else
-                    {
-                        missing.Add(id);
-                    }
-                    result.Add(obj);
-                }
-                if (missing.Count > 0)
-                    throw new AiToolException($"Documents not found: {string.Join(", ", missing)}.");
-                return result.ToImmutable().ToString();
             });
         }
 
