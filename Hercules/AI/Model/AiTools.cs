@@ -272,14 +272,62 @@ namespace Hercules.AI
             [Description("Maximum number of IDs to return.")] int limit = DefaultListLimit,
             [Description("Number of IDs to skip.")] int offset = 0)
         {
-            return OnUi(project =>
+            return OnUi(project => FormatPage(GetCategoryDocumentIds(project, category), limit, offset));
+        }
+
+        private static IEnumerable<string> GetCategoryDocumentIds(Project project, string category)
+        {
+            var categories = project.SchemafulDatabase.Categories;
+            var categoryObject = categories.FirstOrDefault(c => string.Equals(c.Name, category, StringComparison.CurrentCultureIgnoreCase));
+            if (categoryObject == null)
+                throw new AiToolException($"Category {category} not found. Available categories: {string.Join(", ", categories.Select(c => c.Name))}.");
+            return categoryObject.Documents.Select(d => d.DocumentId);
+        }
+
+        private static readonly TimeSpan QueryTimeout = TimeSpan.FromSeconds(10);
+        private const long QueryMaxMemoryBytes = 512L * 1024 * 1024;
+
+        [AiTool("""
+            Queries Hercules documents with a jq program (jq 1.7 syntax, gojq-compatible) and returns the results, one compact JSON value per line.
+            The input (.) is an array of documents, including unsaved changes; every document has _id. Restrict it with category and/or ids.
+            Use it for filtering, projecting, counting and for searching nested or recursive structures, e.g.:
+              .[] | select(.category == "resource" and .mass > 10) | {_id, name, mass}
+              .[] | ._id as $id | .. | objects | select(.type? == "target_impact") | {doc: $id, target, inner: .impact.type}
+              group_by(.category) | map({category: .[0].category, count: length})
+            path(..) gives the location of nested values, e.g. [paths] or path(.. | select(type == "number")).
+            Not available: env, $ENV, input, modules, debug, stderr. The query is stopped after 10 s or 512 MB, and the output is capped: use limit(n; ...), select and projections to keep it small.
+            """, ReadOnly = true)]
+        public string QueryDocuments(
+            [Description("The jq program.")] string query,
+            [Description("Only include documents of this category, as returned by GetCategories. Case insensitive.")] string? category = null,
+            [Description("Only include documents with these _id values.")] string[]? ids = null)
+        {
+            // Only references are collected on the UI thread (the JSON is immutable); the query runs on the caller's thread.
+            var documents = OnUi(project => SelectQueryDocuments(project, category, ids));
+            var inputJson = "[" + string.Join(",", documents.Select(document => GetJsonWithId(document.Id, document.Json))) + "]";
+            return JqRunner.Run(query, inputJson, QueryTimeout, QueryMaxMemoryBytes);
+        }
+
+        private static List<(string Id, ImmutableJsonObject Json)> SelectQueryDocuments(Project project, string? category, string[]? ids)
+        {
+            var documentIds = category == null ? project.Database.Documents.Select(d => d.Key) : GetCategoryDocumentIds(project, category);
+            if (ids != null)
             {
-                var categories = project.SchemafulDatabase.Categories;
-                var categoryObject = categories.FirstOrDefault(c => string.Equals(c.Name, category, StringComparison.CurrentCultureIgnoreCase));
-                if (categoryObject == null)
-                    throw new AiToolException($"Category {category} not found. Available categories: {string.Join(", ", categories.Select(c => c.Name))}.");
-                return FormatPage(categoryObject.Documents.Select(d => d.DocumentId), limit, offset);
-            });
+                var missing = ids.Where(id => !project.Database.Documents.ContainsKey(id)).ToList();
+                if (missing.Count > 0)
+                    throw new AiToolException($"Documents not found: {string.Join(", ", missing)}.");
+                documentIds = documentIds.Intersect(ids);
+            }
+            return documentIds
+                .OrderBy(id => id, StringComparer.Ordinal)
+                .Select(id => (id, project.Database.Documents[id].DraftJson))
+                .ToList();
+        }
+
+        // The draft JSON of a document that was never saved has no _id.
+        private static string GetJsonWithId(string id, ImmutableJsonObject json)
+        {
+            return json.ContainsKey("_id") ? json.ToString() : new JsonObject(json) { ["_id"] = id }.ToImmutable().ToString();
         }
 
         [AiTool("Search inside Hercules documents. Matches text values, enum values and property names, ignoring case. Returns a JSON object: total number of matching documents, offset, the documents (id and the paths of matches), and next_offset if there are more documents to get.", ReadOnly = true)]
