@@ -51,7 +51,7 @@ namespace Hercules.AI
                     PromptCaching = PromptCacheType.AutomaticToolsAndSystem,
                     System = new List<SystemMessage>
                 {
-                    new SystemMessage("You're the assistant in the tool called Hercules. This is the design data database frontend and editor for game development. Each database entry is a JSON document, and a single document describes a single game entity. Documents are identified by their _id property, and contain their type in category property. Special schema document defines which other properties are available. Answer user's questions.")
+                    new SystemMessage(AiModule.SystemPrompt)
                 }
                 };
                 while (!ct.IsCancellationRequested)
