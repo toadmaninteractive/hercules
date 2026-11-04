@@ -480,7 +480,7 @@ namespace Hercules.AI
             return sb.ToString();
         }
 
-        [AiTool("Create new Hercules document with the given id and JSON content. Fails if the document already exists, unless overwrite is true (then the document content is replaced entirely; prefer BatchUpdateDocuments to change individual properties). When using this function, make sure either to clone existing document or check schema document to ensure that properties are correct.", Destructive = true)]
+        [AiTool("Creates a new Hercules document with the given id and JSON content. The document is an unsaved draft that opens in an editor tab; the user must save it. Fails if the document already exists, unless overwrite is true (then its content is replaced entirely; prefer BatchUpdateDocuments to change individual properties). The reply lists the validation issues of the document. Make sure to clone an existing document or to check the category schema (GetCategorySchema) so that the properties are correct; ValidateDocument can check a document before it is created.", Destructive = true)]
         public string CreateDocument(
             [Description("Id of the new document.")] string id,
             [Description("Document content, a JSON object.")] string jsonString,
@@ -506,7 +506,7 @@ namespace Hercules.AI
                 var root = editor.FormTab.Form.Root;
                 if (!root.IsValid)
                     sb.Append(FormatIssues(editor.FormTab.GetIssues()));
-                sb.AppendLine(exists ? $"Document {id} updated." : $"Document {id} created.");
+                sb.AppendLine((exists ? $"Document {id} updated." : $"Document {id} created.") + " User must manually save it.");
                 return sb.ToString();
             });
         }
