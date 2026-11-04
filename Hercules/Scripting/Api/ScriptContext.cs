@@ -77,12 +77,12 @@ namespace Hercules.Scripting
         {
             if (Database.Documents.TryGetValue(documentId, out var document))
             {
-                var draft = new DocumentDraft(json ?? GetJson(documentId)!.AsObject, document.Attachments);
+                var draft = new DocumentDraft(json ?? GetCachedOrSavedJson(documentId)!.AsObject, document.Attachments);
                 ScriptContext.InvokeAsync(() => SaveDocumentAsync(document, draft));
             }
             else
             {
-                var newJson = json ?? GetJson(documentId)?.AsObject;
+                var newJson = json ?? GetCachedOrSavedJson(documentId)?.AsObject;
                 if (newJson == null)
                     throw new InvalidOperationException($"Trying to save a new document '{documentId}' without a content. Please provide a content JSON.");
                 var draft = new DocumentDraft(newJson);
@@ -91,14 +91,46 @@ namespace Hercules.Scripting
             }
         }
 
+        /// <summary>
+        /// The current content of the document: what the script has changed so far, otherwise the editor draft
+        /// (or the saved content if there is no editor). Scripts build on unsaved changes instead of discarding them.
+        /// </summary>
         public ImmutableJson? GetJson(string documentId)
         {
-            if (!DocumentCache.TryGetValue(documentId, out var json))
-            {
-                if (Database.Documents.TryGetValue(documentId, out var schemafulDoc))
-                    return schemafulDoc.Json;
-            }
-            return json;
+            if (DocumentCache.TryGetValue(documentId, out var json))
+                return json;
+            if (Database.Documents.TryGetValue(documentId, out var document))
+                return GetDraftJson(document);
+            return null;
+        }
+
+        public ImmutableJsonObject GetDraftJson(IDocument document)
+        {
+            return GetDraftJsons([document])[0];
+        }
+
+        /// <summary>Editors belong to the UI thread (scripts may run elsewhere), so all drafts are read in one hop.</summary>
+        public List<ImmutableJsonObject> GetDraftJsons(IEnumerable<IDocument> documents)
+        {
+            return ScriptContext.InvokeNow(() => documents.Select(document => WithId(document.DocumentId, document.DraftJson)).ToList());
+        }
+
+        // The draft of a document that was never saved (or is open in an editor) may have no _id.
+        private static ImmutableJsonObject WithId(string documentId, ImmutableJsonObject json)
+        {
+            if (json.ContainsKey("_id"))
+                return json;
+            var copy = new JsonObject(json);
+            CouchUtils.SetId(copy, documentId);
+            return copy.ToImmutable();
+        }
+
+        // Unlike GetJson, this ignores unsaved editor drafts: saving from a script must not publish them.
+        private ImmutableJson? GetCachedOrSavedJson(string documentId)
+        {
+            if (DocumentCache.TryGetValue(documentId, out var json))
+                return json;
+            return Database.Documents.TryGetValue(documentId, out var document) ? document.Json : null;
         }
 
         public void CreateJson(string documentId, ImmutableJsonObject json)

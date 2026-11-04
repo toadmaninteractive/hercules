@@ -1,4 +1,5 @@
 ﻿using Hercules.DB;
+using Hercules.Documents;
 using Hercules.Scripting.JavaScript;
 using Jint.Native;
 using Json;
@@ -128,7 +129,7 @@ namespace Hercules.Scripting
             var cat = databaseContext.SchemafulDatabase.GetCategory(category);
             if (cat != null)
             {
-                var docs = new Json.JsonArray(cat.Documents.Select(doc => doc.Json));
+                var docs = new Json.JsonArray(databaseContext.GetDraftJsons(cat.Documents));
                 return Host.JsonToJsValue(docs);
             }
             else
@@ -140,10 +141,10 @@ namespace Hercules.Scripting
             AiHint = "hercules.db.getAllDocs() gets the list of all (full) documents.")]
         public JsValue GetAllDocs(bool includeSchemaless = false)
         {
-            var docs = databaseContext.SchemafulDatabase.SchemafulDocuments.Select(doc => doc.Json);
+            IEnumerable<IDocument> docs = databaseContext.SchemafulDatabase.SchemafulDocuments;
             if (includeSchemaless)
-                docs = docs.Concat(databaseContext.SchemafulDatabase.SchemalessDocuments.Documents.Select(doc => doc.Json));
-            return Host.JsonToJsValue(new Json.JsonArray(docs));
+                docs = docs.Concat(databaseContext.SchemafulDatabase.SchemalessDocuments.Documents);
+            return Host.JsonToJsValue(new Json.JsonArray(databaseContext.GetDraftJsons(docs)));
         }
 
         [ScriptingApi("getDocRevisions", "Get the list of document revisions.")]
