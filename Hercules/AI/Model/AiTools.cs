@@ -396,7 +396,7 @@ namespace Hercules.AI
             [property: Description("Dot separated path to the property, e.g. 'name' or 'items.0.cost'. Numeric segments are array indexes. Missing parts of the path are created; an array index past the end pads the array with nulls.")] string path,
             [property: Description("New value of the property, encoded as JSON: 5, true, null, \"text\" (strings must be quoted), {\"a\": 1}, [1, 2].")] string value);
 
-        [AiTool("Updates multiple values in Hercules documents. Accepts the list of JSON objects as input. Each object has three properties: id is document ID, path is the dot separated path to the property, and value is new JSON value of updated property. Changes are applied to the document editors (including their unsaved changes) and are not saved to the database.", Destructive = true)]
+        [AiTool("Updates multiple values in Hercules documents. Accepts the list of JSON objects as input. Each object has three properties: id is document ID, path is the dot separated path to the property, and value is new JSON value of updated property. Changes are applied to the document editors (including their unsaved changes) and are not saved to the database. The reply lists the validation issues that the update introduced.", Destructive = true)]
         public string BatchUpdateDocuments([Description("The list of updates.")] List<BatchDocumentUpdateEntry> updates)
         {
             try
@@ -405,6 +405,7 @@ namespace Hercules.AI
                 {
                     var errors = new StringBuilder();
                     Dictionary<string, EditDocumentRequest> updatedDocs = new();
+                    Dictionary<string, ImmutableJsonObject> originalJsons = new();
                     foreach (var update in updates)
                     {
                         var id = update.id;
@@ -428,6 +429,7 @@ namespace Hercules.AI
                             }
                             // Start from the draft, so unsaved changes made in the editor are preserved.
                             updateRequest = new EditDocumentRequest(doc, Json: doc.DraftJson, Path: path);
+                            originalJsons[id] = doc.DraftJson;
                         }
                         updateRequest = updateRequest with { Json = updateRequest.Json!.ForceUpdate(path, json).AsObject };
                         updatedDocs[id] = updateRequest;
@@ -436,9 +438,13 @@ namespace Hercules.AI
                     if (updatedDocs.Count == 0)
                         throw new AiToolException($"Failed to perform batch update. {errors}".TrimEnd());
                     core.GetModule<DocumentsModule>().EditDocuments(updatedDocs.Values.ToList());
+                    var introducedIssues = DescribeIntroducedIssues(project, updatedDocs, originalJsons);
+                    var validation = introducedIssues.Length > 0
+                        ? $"Validation issues introduced by the update:{Environment.NewLine}{introducedIssues}"
+                        : "No new validation issues.";
                     if (errors.Length > 0)
-                        return $"Some of updates failed. Other updates succeeded, user must manually save modified documents.{Environment.NewLine}{errors}".TrimEnd();
-                    return "Batch document update succeeded. User must manually save modified documents.";
+                        return $"Some of updates failed. Other updates succeeded, user must manually save modified documents.{Environment.NewLine}{errors}{validation}".TrimEnd();
+                    return $"Batch document update succeeded. User must manually save modified documents.{Environment.NewLine}{validation}".TrimEnd();
                 });
             }
             catch (AiToolException)
@@ -450,6 +456,28 @@ namespace Hercules.AI
                 Logger.LogException(exception);
                 throw new AiToolException($"Failed to perform batch update: {exception.Message}");
             }
+        }
+
+        private const int MaxValidatedDocuments = 100;
+
+        // Only the issues the update introduced: documents may have had issues before, and those are not its fault.
+        private string DescribeIntroducedIssues(Project project, Dictionary<string, EditDocumentRequest> updatedDocs, Dictionary<string, ImmutableJsonObject> originalJsons)
+        {
+            var documents = core.GetModule<DocumentsModule>();
+            var sb = new StringBuilder();
+            foreach (var (id, request) in updatedDocs.Take(MaxValidatedDocuments))
+            {
+                project.SchemafulDatabase.GetDocumentSchema(request.Document, request.Json!, out _, out var schema);
+                if (schema == SchemaRecord.Default)
+                    continue;
+                var known = documents.Validate(originalJsons[id], schema).Select(issue => (issue.Path.ToString(), issue.Message)).ToHashSet();
+                var introduced = documents.Validate(request.Json!, schema).Where(issue => !known.Contains((issue.Path.ToString(), issue.Message))).ToList();
+                if (introduced.Count > 0)
+                    sb.AppendLine($"{id}:").Append(FormatIssues(introduced));
+            }
+            if (updatedDocs.Count > MaxValidatedDocuments)
+                sb.AppendLine($"Validation was skipped for {updatedDocs.Count - MaxValidatedDocuments} more documents, use ValidateDocument for them.");
+            return sb.ToString();
         }
 
         [AiTool("Create new Hercules document with the given id and JSON content. Fails if the document already exists, unless overwrite is true (then the document content is replaced entirely; prefer BatchUpdateDocuments to change individual properties). When using this function, make sure either to clone existing document or check schema document to ensure that properties are correct.", Destructive = true)]
