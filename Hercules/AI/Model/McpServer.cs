@@ -35,7 +35,13 @@ namespace Hercules.AI
         {
             var serverOptions = new McpServerOptions();
             serverOptions.ServerInfo = new Implementation { Name = "Hercules", Version = Core.GetVersion().ToString(), Title = "Hercules design data database" };
-            serverOptions.ServerInstructions = "Hercules is the database of JSON design documents. Each document describes a single ingame entity. Important properties: _id property is unique string id; category property is the document type. Which other properties are available for each category is defined by a special schema document.";
+            serverOptions.ServerInstructions =
+                "Hercules is the database of JSON design documents. Each document describes a single ingame entity. " +
+                "Important properties: _id property is unique string id; category property is the document type. " +
+                "Which other properties are available for each category is defined by a special schema document. " +
+                "Start with GetCategories and GetCategorySchema (GetSchema is big). " +
+                "To find or filter documents, or to extract values, including from nested and recursive structures, use QueryDocuments (jq). " +
+                "The documents you read include the user's unsaved changes; changes you make are applied to the open editors and not saved, the user saves them.";
             serverOptions.Capabilities = new ServerCapabilities();
             serverOptions.Capabilities.Tools = new()
             {
