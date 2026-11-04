@@ -176,7 +176,7 @@ namespace Hercules.AI
             return OnUi(project =>
             {
                 if (project.Database.Documents.TryGetValue(id, out var doc))
-                    return doc.DraftJson.ToString();
+                    return GetJsonWithId(id, doc.DraftJson);
                 throw new AiToolException($"Document {id} not found.");
             });
         }
@@ -193,7 +193,7 @@ namespace Hercules.AI
                 foreach (var id in ids)
                 {
                     if (project.Database.Documents.TryGetValue(id, out var doc))
-                        result.Add(doc.DraftJson.ToString());
+                        result.Add(GetJsonWithId(id, doc.DraftJson));
                     else
                         missing.Add(id);
                 }
