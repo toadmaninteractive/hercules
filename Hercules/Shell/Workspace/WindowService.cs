@@ -10,7 +10,7 @@ namespace Hercules.Shell
 {
     public class WindowService : NotifyPropertyChanged, IWindowService, IClosePageService
     {
-        public ObservableRangeCollection<Page> Pages { get; } = new();
+        public ObservableCollection<Page> Pages { get; } = new();
         public ObservableCollection<Tool> Tools { get; } = new();
         public ObservableCollection<Tool> LeftTools { get; } = new();
         public ObservableCollection<Tool> RightTools { get; } = new();
