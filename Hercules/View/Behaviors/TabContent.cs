@@ -252,9 +252,11 @@ namespace Hercules.Controls
                     border.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() => UpdateSelectedTab(false)));
                     return;
                 }
-                border.Child = GetCurrentContent();
+                var content = GetCurrentContent();
+                border.Child = content;
                 // EnhancedFocusScope.SetFocusOnActiveElementInScope(_border.Child);
-                border.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() => EnhancedFocusScope.SetFocusOnActiveElementInScope(border.Child)));
+                if (content != null)
+                    border.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() => EnhancedFocusScope.SetFocusOnActiveElementInScope(content)));
             }
 
             private ContentControl? GetCurrentContent()
