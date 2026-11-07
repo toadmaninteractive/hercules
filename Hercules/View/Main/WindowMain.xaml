@@ -68,6 +68,34 @@
             <Setter Property="Cursor" Value="SizeNS" />
         </Style>
 
+        <!-- the selected tab uses the Database Explorer background -->
+        <Style x:Key="PanelTabItem" TargetType="{x:Type TabItem}">
+            <Setter Property="Padding" Value="6,2" />
+            <Setter Property="Background" Value="#FFF0F0F0" />
+            <Setter Property="BorderBrush" Value="#FFACACAC" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Border x:Name="Border" Margin="0,2,-1,0" Padding="{TemplateBinding Padding}" BorderThickness="1,1,1,0"
+                                Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter ContentSource="Header" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#FFF8F8FD" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="1" />
+                                <Setter TargetName="Border" Property="Background" Value="#FFE9ECFA" />
+                                <!-- taller than the other tabs and covering the content border below it -->
+                                <Setter TargetName="Border" Property="Margin" Value="0,0,-1,-1" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="ToolPanel" TargetType="{x:Type TabControl}">
             <Setter Property="Padding" Value="0" />
             <Setter Property="ContentTemplateSelector" Value="{StaticResource ViewModelTemplateSelector}" />
@@ -83,7 +111,7 @@
             </Setter>
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
-                    <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+                    <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource PanelTabItem}">
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                     </Style>
                 </Setter.Value>
@@ -95,6 +123,7 @@
             <!-- each page keeps its own view; otherwise pages of the same type share one view instance -->
             <Setter Property="hc:TabContent.TemplateSelector" Value="{StaticResource ViewModelTemplateSelector}" />
             <Setter Property="hc:TabContent.IsCached" Value="True" />
+            <Setter Property="ItemContainerStyle" Value="{StaticResource PanelTabItem}" />
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate DataType="{x:Type shell:Page}">
