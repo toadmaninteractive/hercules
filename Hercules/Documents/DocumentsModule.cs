@@ -366,15 +366,20 @@ namespace Hercules.Documents
 
             var newPages = new List<DocumentEditorPage>();
             var context = GetDocumentEditorContext();
+            DocumentEditorPage? firstEditor = null;
             foreach (var document in documents)
             {
-                if (document.Editor == null)
+                var editor = document.Editor as DocumentEditorPage;
+                if (editor == null)
                 {
-                    var editor = new DocumentEditorPage(context, document);
+                    editor = new DocumentEditorPage(context, document);
                     newPages.Add(editor);
                 }
+                firstEditor ??= editor;
             }
             Workspace.WindowService.AddPages(newPages);
+            if (firstEditor != null)
+                Workspace.WindowService.ActiveContent = firstEditor;
         }
 
         public DocumentEditorPage CreateDocument(string docName, DocumentDraft draft)
