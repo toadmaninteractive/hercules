@@ -46,13 +46,13 @@
     <PackageReference Include="JqSharp" Version="0.1.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
     <PackageReference Include="MimeMapping" Version="4.0.0" />
-    <PackageReference Include="ModelContextProtocol.Core" Version="2.3.0" />
+    <PackageReference Include="ModelContextProtocol.Core" Version="2.4.0" />
     <PackageReference Include="NPOI" Version="2.8.1" />
-    <PackageReference Include="OllamaSharp" Version="5.5.0" />
+    <PackageReference Include="OllamaSharp" Version="5.5.2" />
     <PackageReference Include="Pfim" Version="0.11.4" />
     <PackageReference Include="System.Reactive" Version="7.0.0" />
-    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.77.0.4309" />
-    <PackageReference Include="VYaml" Version="1.6.0" />
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.78.0.4309" />
+    <PackageReference Include="VYaml" Version="1.6.1" />
   </ItemGroup>
 
   <ItemGroup>
