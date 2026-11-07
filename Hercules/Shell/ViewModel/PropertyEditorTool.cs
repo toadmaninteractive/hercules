@@ -26,7 +26,7 @@ namespace Hercules.Shell
         {
             this.Title = "Property Editor";
             this.ContentId = "{PropertyEditor}";
-            this.Pane = "RightToolsPane";
+            this.Location = ToolLocation.Right;
             this.IsVisible = false;
             this.windowService = windowService;
             windowService.PropertyChanged += WindowService_PropertyChanged;

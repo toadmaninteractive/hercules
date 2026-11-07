@@ -56,10 +56,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AvalonDock\source\Components\AvalonDock.Themes.Aero\AvalonDock.Themes.Aero.csproj" />
-    <ProjectReference Include="..\AvalonDock\source\Components\AvalonDock.Themes.Metro\AvalonDock.Themes.Metro.csproj" />
-    <ProjectReference Include="..\AvalonDock\source\Components\AvalonDock.Themes.VS2010\AvalonDock.Themes.VS2010.csproj" />
-    <ProjectReference Include="..\AvalonDock\source\Components\AvalonDock\AvalonDock.csproj" />
     <ProjectReference Include="..\FugueIcons\FugueIcons.csproj" />
   </ItemGroup>
 
@@ -108,7 +104,6 @@
       <Page Remove="Plots\CustomTypes\**" />
       <Page Remove="Plots\Elements\**" />
       <None Remove="Resources\Misc\NoImage.png" />
-      <EmbeddedResource Include="Resources\layout.xml" />
   </ItemGroup>
 
   <ItemGroup>

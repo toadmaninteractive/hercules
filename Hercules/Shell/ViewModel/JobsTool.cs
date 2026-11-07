@@ -10,7 +10,7 @@
             this.Title = "Tasks";
             this.IsVisible = true;
             this.ContentId = "{Jobs}";
-            this.Pane = "BottomToolsPane";
+            this.Location = ToolLocation.Bottom;
         }
     }
 }

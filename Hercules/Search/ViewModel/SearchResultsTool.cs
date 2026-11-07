@@ -13,7 +13,7 @@ namespace Hercules.Search
             this.openDocumentAction = openDocumentAction;
             this.Title = "Search Results";
             this.ContentId = "{SearchResults}";
-            this.Pane = "BottomToolsPane";
+            this.Location = ToolLocation.Bottom;
             this.IsVisible = false;
         }
 

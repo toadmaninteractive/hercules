@@ -13,6 +13,9 @@ namespace Hercules.Shell
     {
         public ObservableRangeCollection<Page> Pages { get; } = new();
         public ObservableCollection<Tool> Tools { get; } = new();
+        public ObservableCollection<Tool> LeftTools { get; } = new();
+        public ObservableCollection<Tool> RightTools { get; } = new();
+        public ObservableCollection<Tool> BottomTools { get; } = new();
 
         IReadOnlyList<Page> IWindowService.Pages => Pages;
         IReadOnlyList<Tool> IWindowService.Tools => Tools;
@@ -22,7 +25,36 @@ namespace Hercules.Shell
         public DockingLayoutItem? ActiveContent
         {
             get => activeContent;
-            set => SetField(ref activeContent, value);
+            set
+            {
+                if (activeContent == value)
+                    return;
+                if (activeContent != null)
+                    activeContent.IsActive = false;
+                activeContent = value;
+                if (value != null)
+                    value.IsActive = true;
+                if (value is Page page)
+                    SelectedPage = page;
+                RaisePropertyChanged();
+            }
+        }
+
+        private Page? selectedPage;
+
+        // Page shown in the document area; it is not the active content while a tool has focus
+        public Page? SelectedPage
+        {
+            get => selectedPage;
+            set
+            {
+                if (!SetField(ref selectedPage, value))
+                    return;
+                if (value != null)
+                    ActiveContent = value;
+                else if (ActiveContent is Page)
+                    ActiveContent = null;
+            }
         }
 
         private readonly Subject<Page> whenAddingPage = new Subject<Page>();
@@ -63,6 +95,36 @@ namespace Hercules.Shell
         public void AddTool(Tool tool)
         {
             Tools.Add(tool);
+            UpdateToolPanel(tool);
+            tool.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(Tool.IsVisible))
+                    UpdateToolPanel(tool);
+            };
+        }
+
+        private void UpdateToolPanel(Tool tool)
+        {
+            var panel = tool.Location switch
+            {
+                ToolLocation.Left => LeftTools,
+                ToolLocation.Right => RightTools,
+                _ => BottomTools,
+            };
+            if (tool.IsVisible == panel.Contains(tool))
+                return;
+            if (tool.IsVisible)
+            {
+                // keep the registration order of tools in the panel
+                var index = Tools.IndexOf(tool);
+                panel.Insert(panel.Count(t => Tools.IndexOf(t) < index), tool);
+            }
+            else
+            {
+                panel.Remove(tool);
+                if (ActiveContent == tool)
+                    ActiveContent = SelectedPage;
+            }
         }
 
         public T OpenSingletonPage<T>(Func<T> creator) where T : Page

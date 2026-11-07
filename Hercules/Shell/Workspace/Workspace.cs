@@ -9,14 +9,6 @@ using System.Windows.Input;
 
 namespace Hercules.Shell
 {
-    public enum VisualTheme
-    {
-        Generic = 0,
-        Aero = 1,
-        Metro = 2,
-        VS2010 = 3,
-    }
-
     public class WorkspaceSettings : ISettingGroup
     {
         public Setting<bool> LoadLastDatabaseOnStartup { get; } = new(nameof(LoadLastDatabaseOnStartup), true);
@@ -46,14 +38,13 @@ namespace Hercules.Shell
 
     public sealed class Workspace : NotifyPropertyChanged, ICommandContext, ISettingGroup
     {
-        public Workspace(BackgroundJobScheduler scheduler, IWindowService windowService, IDockingLayoutService dockingLayoutService, IDialogService dialogService, UiOptionManager optionManager, ShortcutService shortcutService, CommandBindingCollection routedCommandBindings, InputBindingCollection inputBindings, DpiScale dpi, Action bringToFront)
+        public Workspace(BackgroundJobScheduler scheduler, IWindowService windowService, IDialogService dialogService, UiOptionManager optionManager, ShortcutService shortcutService, CommandBindingCollection routedCommandBindings, InputBindingCollection inputBindings, DpiScale dpi, Action bringToFront)
         {
             this.DialogService = dialogService;
             this.Scheduler = scheduler;
             this.ShortcutService = shortcutService;
             this.OptionManager = optionManager;
             this.WindowService = windowService;
-            this.dockingLayoutService = dockingLayoutService;
             this.routedCommandBindings = routedCommandBindings;
             this.inputBindings = inputBindings;
             this.Dpi = dpi;
@@ -103,7 +94,13 @@ namespace Hercules.Shell
         public WorkspaceSettings WorkspaceSettings { get; } = new WorkspaceSettings();
         public SpreadsheetSettings SpreadsheetSettings { get; } = new SpreadsheetSettings();
 
-        public Setting<VisualTheme> Theme { get; } = new Setting<VisualTheme>(nameof(Theme), VisualTheme.Aero);
+        private const double DefaultSidePanelWidth = 280;
+        private const double DefaultBottomPanelHeight = 220;
+
+        public Setting<double> LeftPanelWidth { get; } = new(nameof(LeftPanelWidth), DefaultSidePanelWidth);
+        public Setting<double> RightPanelWidth { get; } = new(nameof(RightPanelWidth), DefaultSidePanelWidth);
+        public Setting<double> BottomPanelHeight { get; } = new(nameof(BottomPanelHeight), DefaultBottomPanelHeight);
+        public Setting<Dictionary<string, bool>> ToolVisibility { get; } = new(nameof(ToolVisibility), new Dictionary<string, bool>());
 
         public Setting<bool> ViewStatusBar { get; } = new Setting<bool>(nameof(ViewStatusBar), true);
 
@@ -111,7 +108,10 @@ namespace Hercules.Shell
 
         IEnumerable<ISetting> ISettingGroup.GetSettings()
         {
-            yield return Theme;
+            yield return LeftPanelWidth;
+            yield return RightPanelWidth;
+            yield return BottomPanelHeight;
+            yield return ToolVisibility;
             yield return ViewStatusBar;
             yield return ViewToolbar;
             foreach (var setting in WorkspaceSettings.GetSettings())
@@ -120,7 +120,7 @@ namespace Hercules.Shell
                 yield return setting;
         }
 
-        private readonly IDockingLayoutService dockingLayoutService;
+        private IReadOnlyList<Tool> defaultVisibleTools = Array.Empty<Tool>();
         private readonly CommandBindingCollection routedCommandBindings;
         private readonly InputBindingCollection inputBindings;
         private readonly Action bringToFront;
@@ -204,7 +204,7 @@ namespace Hercules.Shell
 
         public void ShowSettings(string? settingsGroup)
         {
-            var settingsPage = WindowService.OpenSingletonPage(() => new SettingsPage(WorkspaceSettings, SpreadsheetSettings, Theme));
+            var settingsPage = WindowService.OpenSingletonPage(() => new SettingsPage(WorkspaceSettings, SpreadsheetSettings));
             if (settingsGroup != null)
                 settingsPage.OpenTab(settingsGroup);
         }
@@ -286,7 +286,7 @@ namespace Hercules.Shell
             var closeAllDocumentsOption = new UiCommandOption("Close All Documents", null, WindowService.CloseAllPagesCommand);
             OptionManager.AddMenuOption(closeAllDocumentsOption, "Window#0");
 
-            var resetLayoutOption = new UiCommandOption("Reset Layout", null, dockingLayoutService.LoadDefaultLayout);
+            var resetLayoutOption = new UiCommandOption("Reset Layout", null, ResetLayout);
             OptionManager.AddMenuOption(resetLayoutOption, "Window#0");
 
             var settingsOption = new UiCommandOption("Settings", Fugue.Icons.Gear, () => ShowSettings(null));
@@ -295,6 +295,40 @@ namespace Hercules.Shell
             var aboutCommand = Commands.Execute(() => DialogService.ShowDialog(new AboutDialog()));
             var aboutOption = new UiCommandOption("About Hercules...", Fugue.Icons.InformationWhite, aboutCommand);
             OptionManager.AddMenuOption(aboutOption, "Help#20");
+        }
+
+        // Called once all modules have added their tools and the settings are loaded
+        public void RestoreLayout(bool reset)
+        {
+            defaultVisibleTools = WindowService.Tools.Where(t => t.IsVisible).ToList();
+            foreach (var tool in WindowService.Tools)
+            {
+                tool.PropertyChanged += (_, e) =>
+                {
+                    if (e.PropertyName == nameof(Tool.IsVisible))
+                        ToolVisibility.Value = WindowService.Tools.ToDictionary(t => t.ContentId!, t => t.IsVisible);
+                };
+            }
+
+            if (reset)
+            {
+                ResetLayout();
+                return;
+            }
+            foreach (var tool in WindowService.Tools)
+            {
+                if (ToolVisibility.Value.TryGetValue(tool.ContentId!, out var isVisible))
+                    tool.IsVisible = isVisible;
+            }
+        }
+
+        public void ResetLayout()
+        {
+            LeftPanelWidth.Value = DefaultSidePanelWidth;
+            RightPanelWidth.Value = DefaultSidePanelWidth;
+            BottomPanelHeight.Value = DefaultBottomPanelHeight;
+            foreach (var tool in WindowService.Tools)
+                tool.IsVisible = defaultVisibleTools.Contains(tool);
         }
 
         public void BuildUI()

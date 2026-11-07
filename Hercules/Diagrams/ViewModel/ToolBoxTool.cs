@@ -32,7 +32,7 @@ namespace Hercules.Diagrams
         {
             this.Title = "Toolbox";
             this.ContentId = "{Toolbox}";
-            this.Pane = "RightToolsPane";
+            this.Location = ToolLocation.Right;
             this.IsVisible = false;
         }
 

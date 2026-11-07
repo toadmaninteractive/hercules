@@ -1,5 +1,4 @@
-﻿using AvalonDock;
-using Hercules.AI;
+﻿using Hercules.AI;
 using Hercules.Analysis;
 using Hercules.ApplicationUpdate;
 using Hercules.Bookmarks;
@@ -36,13 +35,12 @@ namespace Hercules
         public Core Core { get; }
         public Workspace Workspace { get; }
         public WindowService WindowService { get; }
-        public DockingLayoutService DockingLayoutService { get; }
         public CommandBindingCollection RoutedCommandBindings { get; } = new();
         public InputBindingCollection InputBindings { get; } = new();
         public ConnectionsModule ConnectionsModule { get; }
         public BookmarksModule BookmarksModule { get; }
 
-        public MainViewModel(Window mainWindow, DockingManager dockingManager)
+        public MainViewModel(Window mainWindow)
         {
             Logger.Log("Application started...");
             Logger.Log($"Version: {Core.GetVersion()}");
@@ -56,10 +54,9 @@ namespace Hercules
             var dialogService = new DialogService(mainWindow);
             var shortcutService = new ShortcutService();
             var commandManager = new UiOptionManager();
-            DockingLayoutService = new DockingLayoutService(dockingManager, Path.Combine(PathUtils.ConfigFolder, "layout.xml"), resetLayout);
             WindowService = new WindowService();
             var dpi = VisualTreeHelper.GetDpi(mainWindow);
-            this.Workspace = new Workspace(scheduler, WindowService, DockingLayoutService, dialogService, commandManager, shortcutService, RoutedCommandBindings, InputBindings, dpi, () => BringToFront(mainWindow));
+            this.Workspace = new Workspace(scheduler, WindowService, dialogService, commandManager, shortcutService, RoutedCommandBindings, InputBindings, dpi, () => BringToFront(mainWindow));
             settingsService.AddSettingGroup(Workspace);
             this.Core = new Core(Workspace, settingsService, isBatchMode);
             Core.AddModule(new ApplicationUpdateModule(Core));
@@ -86,6 +83,7 @@ namespace Hercules
             {
                 settingsService.Load(new JsonSettingsReader(settingsFileName));
             }
+            Workspace.RestoreLayout(resetLayout);
             settingsService.Save();
             settingsService.SaveOnChange = true;
         }

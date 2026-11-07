@@ -13,7 +13,6 @@
     <hc:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     <hc:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
     <hc:UnderscoreConverter x:Key="UnderscoreConverter" />
-    <hc:ThemeConverter x:Key="ThemeConverter" />
     <hc:DirtyTitleConverter x:Key="DirtyTitleConverter" />
     <hc:DialogButtonCaptionConverter x:Key="DialogButtonCaptionConverter" />
     <hc:AppTitleConverter x:Key="AppTitleConverter" />

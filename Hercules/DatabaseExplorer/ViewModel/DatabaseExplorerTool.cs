@@ -48,7 +48,7 @@ namespace Hercules.DatabaseExplorer
             Title = "Database Explorer";
             IsVisible = true;
             ContentId = "{DatabaseExplorer}";
-            Pane = "LeftToolsPane";
+            Location = ToolLocation.Left;
             this.ProjectObservable = projectObservable;
             this.DocumentsModule = documentsModule;
             this.optionManager = optionManager;

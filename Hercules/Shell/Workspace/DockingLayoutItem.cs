@@ -31,14 +31,6 @@ namespace Hercules.Shell
             set => SetField(ref isActive, value);
         }
 
-        bool isSelected;
-
-        public bool IsSelected
-        {
-            get => isSelected;
-            set => SetField(ref isSelected, value);
-        }
-
         string? status;
 
         public string? Status

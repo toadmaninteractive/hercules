@@ -36,6 +36,8 @@ namespace Hercules.AI
             ChatLog = new();
             IsGenerating = new(false);
             Title = "AI Chat";
+            ContentId = "{AiChat}";
+            Location = ToolLocation.Right;
             userPrompt = "";
             SubmitCommand = Commands.Execute(Submit).If(() => !string.IsNullOrEmpty(UserPrompt));
             ResetChatCommand = Commands.Execute(ResetChat);

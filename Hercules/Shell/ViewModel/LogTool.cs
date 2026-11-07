@@ -21,7 +21,7 @@ namespace Hercules.Shell
             this.Title = "Log";
             this.ContentId = "{LogViewer}";
             this.IsVisible = true;
-            this.Pane = "BottomToolsPane";
+            this.Location = ToolLocation.Bottom;
             this.ShortcutService = shortcutService;
             var currentScheduler = DispatcherScheduler.Current;
             Task.Run(() => subscription = Logger.Events.BufferWhenAvailable(TimeSpan.FromSeconds(0.1)).ObserveOn(currentScheduler).Subscribe(AddRange));
