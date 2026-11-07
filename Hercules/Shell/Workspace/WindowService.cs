@@ -100,17 +100,31 @@ namespace Hercules.Shell
             {
                 if (e.PropertyName == nameof(Tool.IsVisible))
                     UpdateToolPanel(tool);
+                else if (e.PropertyName == nameof(Tool.IsSelected) && tool.IsSelected)
+                    SelectTool(tool);
             };
+        }
+
+        private ObservableCollection<Tool> GetToolPanel(Tool tool) => tool.Location switch
+        {
+            ToolLocation.Left => LeftTools,
+            ToolLocation.Right => RightTools,
+            _ => BottomTools,
+        };
+
+        // A non-empty panel always has exactly one selected tool; the panel's TabControl only follows it
+        private void SelectTool(Tool tool)
+        {
+            foreach (var other in GetToolPanel(tool))
+            {
+                if (other != tool)
+                    other.IsSelected = false;
+            }
         }
 
         private void UpdateToolPanel(Tool tool)
         {
-            var panel = tool.Location switch
-            {
-                ToolLocation.Left => LeftTools,
-                ToolLocation.Right => RightTools,
-                _ => BottomTools,
-            };
+            var panel = GetToolPanel(tool);
             if (tool.IsVisible == panel.Contains(tool))
                 return;
             if (tool.IsVisible)
@@ -118,10 +132,14 @@ namespace Hercules.Shell
                 // keep the registration order of tools in the panel
                 var index = Tools.IndexOf(tool);
                 panel.Insert(panel.Count(t => Tools.IndexOf(t) < index), tool);
+                tool.IsSelected = panel.All(t => t == tool || !t.IsSelected);
             }
             else
             {
                 panel.Remove(tool);
+                if (tool.IsSelected && panel.Count > 0)
+                    panel[0].IsSelected = true;
+                tool.IsSelected = false;
                 if (ActiveContent == tool)
                     ActiveContent = SelectedPage;
             }
