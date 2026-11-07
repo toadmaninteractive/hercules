@@ -92,7 +92,9 @@
 
         <Style x:Key="DocumentTabs" TargetType="{x:Type TabControl}">
             <Setter Property="Padding" Value="0" />
-            <Setter Property="ContentTemplateSelector" Value="{StaticResource ViewModelTemplateSelector}" />
+            <!-- each page keeps its own view; otherwise pages of the same type share one view instance -->
+            <Setter Property="hc:TabContent.TemplateSelector" Value="{StaticResource ViewModelTemplateSelector}" />
+            <Setter Property="hc:TabContent.IsCached" Value="True" />
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate DataType="{x:Type shell:Page}">

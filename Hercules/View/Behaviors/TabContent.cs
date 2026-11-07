@@ -226,7 +226,12 @@ namespace Hercules.Controls
             {
                 this.tabControl = tabControl;
                 this.border = border;
-                tabControl.SelectionChanged += (sender, args) => { UpdateSelectedTab(); };
+                tabControl.SelectionChanged += (sender, args) =>
+                {
+                    // ignore selection changes bubbling up from selectors inside the tab content
+                    if (args.OriginalSource == tabControl)
+                        UpdateSelectedTab();
+                };
             }
 
             public void ReplaceContainer(Decorator newBorder)
@@ -237,8 +242,16 @@ namespace Hercules.Controls
                 border = newBorder;
             }
 
-            public void UpdateSelectedTab()
+            public void UpdateSelectedTab() => UpdateSelectedTab(true);
+
+            private void UpdateSelectedTab(bool canRetry)
             {
+                // a tab that was added and selected at once has no container until the next layout pass
+                if (canRetry && tabControl.SelectedItem != null && tabControl.ItemContainerGenerator.ContainerFromItem(tabControl.SelectedItem) == null)
+                {
+                    border.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() => UpdateSelectedTab(false)));
+                    return;
+                }
                 border.Child = GetCurrentContent();
                 // EnhancedFocusScope.SetFocusOnActiveElementInScope(_border.Child);
                 border.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() => EnhancedFocusScope.SetFocusOnActiveElementInScope(border.Child)));
