@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -82,14 +81,11 @@ namespace Hercules.Shell
             Pages.Add(page);
         }
 
+        // Pages are added one by one: TabControl doesn't support range notifications
         public void AddPages(IReadOnlyCollection<Page> pages)
         {
             foreach (var page in pages)
-            {
-                page.AssignClosePageService(this);
-                whenAddingPage.OnNext(page);
-            }
-            Pages.AddRange(pages);
+                AddPage(page);
         }
 
         public void AddTool(Tool tool)
@@ -172,7 +168,23 @@ namespace Hercules.Shell
                     page.Close(context);
             }
 
-            Pages.RemoveRange(removedPages, NotifyCollectionChangedAction.Reset);
+            RemovePages(removedPages);
+        }
+
+        // Removing the selected tab makes TabControl select and build a neighbour, so the selection moves
+        // to a remaining page once, before the removal; a Reset would drop the cached views of remaining pages
+        private void RemovePages(List<Page> removedPages)
+        {
+            var remainingPage = Pages.FirstOrDefault(p => !removedPages.Contains(p));
+            if (remainingPage == null)
+            {
+                Pages.Clear();
+                return;
+            }
+            if (SelectedPage != null && removedPages.Contains(SelectedPage))
+                SelectedPage = remainingPage;
+            foreach (var page in removedPages)
+                Pages.Remove(page);
         }
     }
 }
