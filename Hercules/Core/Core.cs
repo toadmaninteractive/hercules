@@ -43,7 +43,7 @@ namespace Hercules
 
         private readonly ObservableValue<Project?> projectObservable = new ObservableValue<Project?>(null);
         private readonly IDatabaseSingletonService databaseSingletonService;
-        private IDisposable databaseSingleton;
+        private IDisposable? databaseSingleton;
 
         public Project? Project
         {

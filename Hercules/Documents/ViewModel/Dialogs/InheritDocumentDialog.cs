@@ -10,7 +10,7 @@ namespace Hercules.Documents.Dialogs
     {
         private readonly Action<IDocument, string> inheritDocumentAction;
 
-        public IDocument SelectedDocument
+        public IDocument? SelectedDocument
         {
             get => selectedDocument;
             set => SetField(ref selectedDocument, value);
@@ -32,7 +32,7 @@ namespace Hercules.Documents.Dialogs
         public SchemafulDatabase SchemafulDatabase { get; }
         public IDocument Source { get; }
 
-        private IDocument selectedDocument;
+        private IDocument? selectedDocument;
         private string documentName = string.Empty;
         private string? documentNameError;
 

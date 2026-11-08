@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 
 namespace Hercules.CommandsImpl
@@ -14,14 +15,14 @@ namespace Hercules.CommandsImpl
             this.CanExecuteHandler = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
-            return CanExecuteHandler == null || CanExecuteHandler((T)parameter);
+            return CanExecuteHandler == null || CanExecuteHandler((T)parameter!);
         }
 
-        public bool CanExecute(T parameter)
+        public bool CanExecute([AllowNull] T parameter)
         {
-            return CanExecuteHandler == null || CanExecuteHandler(parameter);
+            return CanExecuteHandler == null || CanExecuteHandler(parameter!);
         }
 
         public event EventHandler? CanExecuteChanged
@@ -38,14 +39,14 @@ namespace Hercules.CommandsImpl
             }
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
-            ExecuteHandler((T)parameter);
+            ExecuteHandler((T)parameter!);
         }
 
-        public void Execute(T parameter)
+        public void Execute([AllowNull] T parameter)
         {
-            ExecuteHandler(parameter);
+            ExecuteHandler(parameter!);
         }
     }
 
