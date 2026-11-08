@@ -120,6 +120,7 @@
 
         <Style x:Key="DocumentTabs" TargetType="{x:Type TabControl}">
             <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="{Binding Background, ElementName=MainToolBar}" />
             <!-- each page keeps its own view; otherwise pages of the same type share one view instance -->
             <Setter Property="hc:TabContent.TemplateSelector" Value="{StaticResource ViewModelTemplateSelector}" />
             <Setter Property="hc:TabContent.IsCached" Value="True" />
@@ -203,7 +204,7 @@
             </Menu.Resources>
         </Menu>
 
-        <ToolBar Height="29" Padding="0" Margin="0" Focusable="False"
+        <ToolBar x:Name="MainToolBar" Height="29" Padding="0" Margin="0" Focusable="False"
                  DockPanel.Dock="Top"
                  Visibility="{Binding Path=Workspace.ViewToolbar.Value, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
                  ItemsSource="{Binding Workspace.Toolbar.Buttons}"
