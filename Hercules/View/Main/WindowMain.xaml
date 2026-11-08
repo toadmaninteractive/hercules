@@ -169,11 +169,19 @@
                                 <Menu DockPanel.Dock="Right" Background="Transparent" VerticalAlignment="Center">
                                     <MenuItem Header="&#x25BE;" ToolTip="Open documents" Padding="6,0" FontWeight="Normal"
                                               ItemsSource="{TemplateBinding ItemsSource}" Click="DocumentList_Click">
-                                        <MenuItem.ItemContainerStyle>
-                                            <Style TargetType="{x:Type MenuItem}">
-                                                <Setter Property="Header" Value="{Binding Title}" />
-                                            </Style>
-                                        </MenuItem.ItemContainerStyle>
+                                        <!-- a TextBlock, unlike a string header, doesn't treat underscores as access keys -->
+                                        <MenuItem.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource DirtyTitleConverter}">
+                                                            <Binding Path="Title" />
+                                                            <Binding Path="IsDirty" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </MenuItem.ItemTemplate>
                                     </MenuItem>
                                 </Menu>
                                 <ScrollViewer x:Name="TabStrip" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" Focusable="False"
