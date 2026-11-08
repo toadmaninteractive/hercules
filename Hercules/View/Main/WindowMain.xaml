@@ -98,6 +98,8 @@
 
         <Style x:Key="ToolPanel" TargetType="{x:Type TabControl}">
             <Setter Property="Padding" Value="0" />
+            <!-- the Database Explorer background -->
+            <Setter Property="Background" Value="#FFE9ECFA" />
             <Setter Property="ContentTemplateSelector" Value="{StaticResource ViewModelTemplateSelector}" />
             <Setter Property="ItemTemplate">
                 <Setter.Value>
