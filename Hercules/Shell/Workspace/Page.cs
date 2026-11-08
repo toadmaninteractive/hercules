@@ -10,6 +10,7 @@ namespace Hercules.Shell
     {
         ICommand<Page> CloseAllButThisCommand { get; }
         ICommand CloseAllPagesCommand { get; }
+        ICommand<Page> MoveToOtherGroupCommand { get; }
         ClosePageContext GetClosePageContext(CloseDirtyPageAction closeDirtyPageAction, bool isBulk = false);
     }
 
@@ -37,10 +38,12 @@ namespace Hercules.Shell
         {
             ClosePageService = closePageService;
             CloseAllButThisCommand = closePageService.CloseAllButThisCommand.For(this);
+            MoveToOtherGroupCommand = closePageService.MoveToOtherGroupCommand.For(this);
         }
 
         public ICommand CloseCommand { get; }
         public ICommand? CloseAllButThisCommand { get; private set; }
+        public ICommand? MoveToOtherGroupCommand { get; private set; }
         public ICommand? CloseAllPagesCommand => ClosePageService?.CloseAllPagesCommand;
 
         public IList Services { get; }

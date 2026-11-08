@@ -286,6 +286,12 @@ namespace Hercules.Shell
             var closeAllDocumentsOption = new UiCommandOption("Close All Documents", null, WindowService.CloseAllPagesCommand);
             OptionManager.AddMenuOption(closeAllDocumentsOption, "Window#0");
 
+            var moveToOtherGroupCommand = Commands.Execute(() => WindowService.MoveToOtherGroupCommand.Execute(WindowService.ActiveContent as Page))
+                .If(() => WindowService.MoveToOtherGroupCommand.CanExecute(WindowService.ActiveContent as Page));
+            var moveToOtherGroupOption = new UiCommandOption("Move to Other Group", null, moveToOtherGroupCommand);
+            OptionManager.AddMenuOption(moveToOtherGroupOption, "Window#0");
+            AddGesture(moveToOtherGroupCommand, new KeyGesture(Key.Oem5, ModifierKeys.Control));
+
             var resetLayoutOption = new UiCommandOption("Reset Layout", null, ResetLayout);
             OptionManager.AddMenuOption(resetLayoutOption, "Window#0");
 

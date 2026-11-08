@@ -16,6 +16,8 @@ namespace Hercules.Shell
 
         ICommand CloseAllPagesCommand { get; }
 
+        ICommand<Page> MoveToOtherGroupCommand { get; }
+
         void OpenPage(Page page);
 
         void AddPage(Page page);

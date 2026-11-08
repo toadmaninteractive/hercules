@@ -136,6 +136,8 @@
                                     <MenuItem Header="Close" Command="{Binding CloseCommand}" />
                                     <MenuItem Header="Close All But This" Command="{Binding CloseAllButThisCommand}" />
                                     <MenuItem Header="Close All" Command="{Binding CloseAllPagesCommand}" />
+                                    <Separator />
+                                    <MenuItem Header="Move to Other Group" InputGestureText="Ctrl+\" Command="{Binding MoveToOtherGroupCommand}" />
                                 </ContextMenu>
                             </DockPanel.ContextMenu>
                             <Button DockPanel.Dock="Right" Style="{StaticResource TabCloseButton}" Command="{Binding CloseCommand}" />
@@ -259,10 +261,25 @@
                        DragDelta="Splitter_DragDelta" DragCompleted="Splitter_DragCompleted"
                        Visibility="{Binding Visibility, ElementName=BottomPanel}" />
 
-                <TabControl x:Name="DocumentTabs" Style="{StaticResource DocumentTabs}"
-                            ItemsSource="{Binding WindowService.Pages}"
-                            SelectedItem="{Binding WindowService.SelectedPage, Mode=TwoWay}"
-                            SelectionChanged="DocumentTabs_SelectionChanged" />
+                <!-- the side group column is sized in code-behind: hidden while the side group is empty -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="MainGroupColumn" Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition x:Name="SideGroupColumn" Width="0" />
+                    </Grid.ColumnDefinitions>
+                    <TabControl x:Name="MainGroupTabs" Grid.Column="0" Style="{StaticResource DocumentTabs}"
+                                ItemsSource="{Binding WindowService.MainGroup.Pages}"
+                                SelectedItem="{Binding WindowService.MainGroup.SelectedPage, Mode=TwoWay}"
+                                SelectionChanged="DocumentTabs_SelectionChanged" />
+                    <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" Background="Transparent" HorizontalAlignment="Stretch"
+                                  Visibility="{Binding WindowService.SideGroup.Pages.Count, Converter={StaticResource IntToVisibilityConverter}}" />
+                    <TabControl x:Name="SideGroupTabs" Grid.Column="2" Style="{StaticResource DocumentTabs}"
+                                ItemsSource="{Binding WindowService.SideGroup.Pages}"
+                                SelectedItem="{Binding WindowService.SideGroup.SelectedPage, Mode=TwoWay}"
+                                SelectionChanged="DocumentTabs_SelectionChanged"
+                                Visibility="{Binding WindowService.SideGroup.Pages.Count, Converter={StaticResource IntToVisibilityConverter}}" />
+                </Grid>
             </DockPanel>
         </DockPanel>
     </DockPanel>

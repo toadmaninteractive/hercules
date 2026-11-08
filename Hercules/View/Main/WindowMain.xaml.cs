@@ -24,8 +24,19 @@ namespace Hercules.View
             InitializeComponent();
             ViewModel = new MainViewModel(this);
             this.DataContext = ViewModel;
-            foreach (var panel in new[] { LeftPanel, RightPanel, BottomPanel, DocumentTabs })
+            foreach (var panel in new[] { LeftPanel, RightPanel, BottomPanel, MainGroupTabs, SideGroupTabs })
                 panel.AddHandler(GotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(Panel_GotKeyboardFocus), true);
+            ViewModel.WindowService.SideGroup.Pages.CollectionChanged += (_, _) => UpdateSideGroupColumn();
+        }
+
+        // Splitting gives both groups half of the width; the GridSplitter changes the proportion afterwards
+        private void UpdateSideGroupColumn()
+        {
+            var isShown = ViewModel.WindowService.SideGroup.Pages.Count > 0;
+            if (isShown == SideGroupColumn.Width.Value > 0)
+                return;
+            MainGroupColumn.Width = new GridLength(1, GridUnitType.Star);
+            SideGroupColumn.Width = isShown ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -47,7 +58,8 @@ namespace Hercules.View
 
         private void MainWindow_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (e.NewFocus == this && ViewModel.WindowService.SelectedPage != null && DocumentTabs.Template.FindName("PART_SelectedContentHost", DocumentTabs) is ContentPresenter content)
+            var tabs = ViewModel.WindowService.ActiveGroup == ViewModel.WindowService.SideGroup ? SideGroupTabs : MainGroupTabs;
+            if (e.NewFocus == this && tabs.SelectedItem != null && tabs.Template.FindName("PART_SelectedContentHost", tabs) is ContentPresenter content)
             {
                 e.Handled = true;
                 content.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
@@ -63,12 +75,13 @@ namespace Hercules.View
 
         private void DocumentTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.OriginalSource != DocumentTabs)
+            var tabs = (TabControl)sender;
+            if (e.OriginalSource != tabs)
                 return;
             // the tab of a just opened page is generated later
             Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () =>
             {
-                if (DocumentTabs.ItemContainerGenerator.ContainerFromItem(DocumentTabs.SelectedItem) is TabItem tab)
+                if (tabs.ItemContainerGenerator.ContainerFromItem(tabs.SelectedItem) is TabItem tab)
                     tab.BringIntoView();
             });
         }

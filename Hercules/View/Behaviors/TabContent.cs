@@ -4,6 +4,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -86,22 +87,8 @@ namespace Hercules.Controls
         public static readonly DependencyProperty InternalTabControlProperty =
             DependencyProperty.RegisterAttached("InternalTabControl", typeof(TabControl), typeof(TabContent), new UIPropertyMetadata(null, OnInternalTabControlChanged));
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static ContentControl? GetInternalCachedContent(DependencyObject depObj)
-        {
-            return (ContentControl)depObj.GetValue(InternalCachedContentProperty);
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static void SetInternalCachedContent(DependencyObject depObj, ContentControl value)
-        {
-            depObj.SetValue(InternalCachedContentProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for InternalCachedContent.  This enables animation, styling, binding, etc...
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static readonly DependencyProperty InternalCachedContentProperty =
-            DependencyProperty.RegisterAttached("InternalCachedContent", typeof(ContentControl), typeof(TabContent), new UIPropertyMetadata(null));
+        // Keyed by item rather than by TabItem, so an item moved to another TabControl keeps its view
+        private static readonly ConditionalWeakTable<object, ContentControl> CachedContents = new();
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static object? GetInternalContentManager(DependencyObject depObj)
@@ -242,16 +229,8 @@ namespace Hercules.Controls
                 border = newBorder;
             }
 
-            public void UpdateSelectedTab() => UpdateSelectedTab(true);
-
-            private void UpdateSelectedTab(bool canRetry)
+            public void UpdateSelectedTab()
             {
-                // a tab that was added and selected at once has no container until the next layout pass
-                if (canRetry && tabControl.SelectedItem != null && tabControl.ItemContainerGenerator.ContainerFromItem(tabControl.SelectedItem) == null)
-                {
-                    border.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() => UpdateSelectedTab(false)));
-                    return;
-                }
                 var content = GetCurrentContent();
                 border.Child = content;
                 // EnhancedFocusScope.SetFocusOnActiveElementInScope(_border.Child);
@@ -264,11 +243,7 @@ namespace Hercules.Controls
                 var item = tabControl.SelectedItem;
                 if (item == null) return null;
 
-                var tabItem = tabControl.ItemContainerGenerator.ContainerFromItem(item);
-                if (tabItem == null) return null;
-
-                var cachedContent = TabContent.GetInternalCachedContent(tabItem);
-                if (cachedContent == null)
+                if (!CachedContents.TryGetValue(item, out var cachedContent))
                 {
                     cachedContent = new ContentControl
                     {
@@ -281,8 +256,12 @@ namespace Hercules.Controls
                     EnhancedFocusScope.SetIsEnhancedFocusScope(cachedContent, true);
 
                     cachedContent.SetBinding(ContentControl.ContentProperty, new Binding());
-                    TabContent.SetInternalCachedContent(tabItem, cachedContent);
+                    CachedContents.Add(item, cachedContent);
                 }
+
+                // the item was moved here from another TabControl that may still show it
+                if (cachedContent.Parent is Decorator oldBorder && oldBorder != border)
+                    oldBorder.Child = null;
 
                 return cachedContent;
             }

@@ -10,6 +10,7 @@ namespace Hercules.Shell
 {
     public class WindowService : NotifyPropertyChanged, IWindowService, IClosePageService
     {
+        // Pages of both editor groups
         public ObservableCollection<Page> Pages { get; } = new();
         public ObservableCollection<Tool> Tools { get; } = new();
         public ObservableCollection<Tool> LeftTools { get; } = new();
@@ -34,26 +35,27 @@ namespace Hercules.Shell
                 if (value != null)
                     value.IsActive = true;
                 if (value is Page page)
-                    SelectedPage = page;
+                {
+                    var group = GetGroup(page);
+                    ActiveGroup = group;
+                    group.SelectedPage = page;
+                }
                 RaisePropertyChanged();
             }
         }
 
-        private Page? selectedPage;
+        public EditorGroup MainGroup { get; } = new();
 
-        // Page shown in the document area; it is not the active content while a tool has focus
-        public Page? SelectedPage
+        // Shown to the right of the main group while it has pages; it is never the only non-empty group
+        public EditorGroup SideGroup { get; } = new();
+
+        private EditorGroup activeGroup;
+
+        // Group that new pages open in; it is not the active content's group while a tool has focus
+        public EditorGroup ActiveGroup
         {
-            get => selectedPage;
-            set
-            {
-                if (!SetField(ref selectedPage, value))
-                    return;
-                if (value != null)
-                    ActiveContent = value;
-                else if (ActiveContent is Page)
-                    ActiveContent = null;
-            }
+            get => activeGroup;
+            private set => SetField(ref activeGroup, value);
         }
 
         private readonly Subject<Page> whenAddingPage = new Subject<Page>();
@@ -61,11 +63,38 @@ namespace Hercules.Shell
 
         public ICommand CloseAllPagesCommand { get; }
         public ICommand<Page> CloseAllButThisCommand { get; }
+        public ICommand<Page> MoveToOtherGroupCommand { get; }
 
         public WindowService()
         {
+            activeGroup = MainGroup;
+            MainGroup.PropertyChanged += (_, e) => OnGroupPropertyChanged(MainGroup, e.PropertyName);
+            SideGroup.PropertyChanged += (_, e) => OnGroupPropertyChanged(SideGroup, e.PropertyName);
             CloseAllPagesCommand = Commands.Execute(() => CloseAllPages(CloseDirtyPageAction.AskConfirmation)).If(() => Pages.Count > 0);
             CloseAllButThisCommand = Commands.Execute<Page>(page => CloseAllPages(CloseDirtyPageAction.AskConfirmation, p => p != page)).If(_ => Pages.Count > 1);
+            // moving the only page of the main group would just swap the groups
+            MoveToOtherGroupCommand = Commands.Execute<Page>(MoveToOtherGroup).If(page => page != null && (GetGroup(page) == SideGroup || MainGroup.Pages.Count > 1));
+        }
+
+        private EditorGroup GetGroup(Page page) => SideGroup.Pages.Contains(page) ? SideGroup : MainGroup;
+
+        private EditorGroup GetOtherGroup(EditorGroup group) => group == MainGroup ? SideGroup : MainGroup;
+
+        // Selection changes of the active group (clicking a tab, closing the selected page) change the active content;
+        // the other group gets activated by keyboard focus or by setting ActiveContent
+        private void OnGroupPropertyChanged(EditorGroup group, string? propertyName)
+        {
+            if (propertyName != nameof(EditorGroup.SelectedPage) || group != ActiveGroup)
+                return;
+            if (group.SelectedPage != null)
+            {
+                ActiveContent = group.SelectedPage;
+            }
+            else if (ActiveContent is Page)
+            {
+                ActiveGroup = GetOtherGroup(group);
+                ActiveContent = ActiveGroup.SelectedPage;
+            }
         }
 
         public void OpenPage(Page page)
@@ -79,6 +108,7 @@ namespace Hercules.Shell
             page.AssignClosePageService(this);
             whenAddingPage.OnNext(page);
             Pages.Add(page);
+            ActiveGroup.Pages.Add(page);
         }
 
         // Pages are added one by one: TabControl doesn't support range notifications
@@ -137,7 +167,7 @@ namespace Hercules.Shell
                     panel[0].IsSelected = true;
                 tool.IsSelected = false;
                 if (ActiveContent == tool)
-                    ActiveContent = SelectedPage;
+                    ActiveContent = ActiveGroup.SelectedPage;
             }
         }
 
@@ -155,7 +185,41 @@ namespace Hercules.Shell
 
         public ClosePageContext GetClosePageContext(CloseDirtyPageAction closeDirtyPageAction, bool isBatch = false)
         {
-            return new ClosePageContext(closeDirtyPageAction, isBatch, page => Pages.Remove(page));
+            return new ClosePageContext(closeDirtyPageAction, isBatch, RemovePage);
+        }
+
+        private void RemovePage(Page page)
+        {
+            GetGroup(page).Pages.Remove(page);
+            Pages.Remove(page);
+            CollapseEmptyGroups();
+        }
+
+        public void MoveToOtherGroup(Page page)
+        {
+            var group = GetGroup(page);
+            group.Pages.Remove(page);
+            GetOtherGroup(group).Pages.Add(page);
+            ActiveContent = page;
+            CollapseEmptyGroups();
+        }
+
+        // Like VS Code closing an empty group: the side group's pages move to the main group,
+        // and an empty side group is never active, so that new pages don't open in it
+        private void CollapseEmptyGroups()
+        {
+            if (MainGroup.Pages.Count == 0 && SideGroup.Pages.Count > 0)
+            {
+                var selectedPage = SideGroup.SelectedPage;
+                var pages = SideGroup.Pages.ToList();
+                SideGroup.Pages.Clear();
+                foreach (var page in pages)
+                    MainGroup.Pages.Add(page);
+                ActiveGroup = MainGroup;
+                MainGroup.SelectedPage = selectedPage;
+            }
+            if (SideGroup.Pages.Count == 0)
+                ActiveGroup = MainGroup;
         }
 
         public void CloseAllPages(CloseDirtyPageAction dirtyAction, Predicate<Page>? predicate = null)
@@ -171,20 +235,30 @@ namespace Hercules.Shell
             RemovePages(removedPages);
         }
 
-        // Removing the selected tab makes TabControl select and build a neighbour, so the selection moves
-        // to a remaining page once, before the removal; a Reset would drop the cached views of remaining pages
         private void RemovePages(List<Page> removedPages)
         {
-            var remainingPage = Pages.FirstOrDefault(p => !removedPages.Contains(p));
-            if (remainingPage == null)
-            {
-                Pages.Clear();
-                return;
-            }
-            if (SelectedPage != null && removedPages.Contains(SelectedPage))
-                SelectedPage = remainingPage;
+            // the inactive group first, so that the active group decides the active content
+            RemovePages(GetOtherGroup(ActiveGroup), removedPages);
+            RemovePages(ActiveGroup, removedPages);
             foreach (var page in removedPages)
                 Pages.Remove(page);
+            CollapseEmptyGroups();
+        }
+
+        // Removing the selected tab makes TabControl select and build a neighbour, so the selection moves
+        // to a remaining page once, before the removal; a Reset would drop the cached views of remaining pages
+        private static void RemovePages(EditorGroup group, List<Page> removedPages)
+        {
+            var remainingPage = group.Pages.FirstOrDefault(p => !removedPages.Contains(p));
+            if (remainingPage == null)
+            {
+                group.Pages.Clear();
+                return;
+            }
+            if (group.SelectedPage != null && removedPages.Contains(group.SelectedPage))
+                group.SelectedPage = remainingPage;
+            foreach (var page in removedPages)
+                group.Pages.Remove(page);
         }
     }
 }
