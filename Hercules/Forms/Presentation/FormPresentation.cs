@@ -32,6 +32,9 @@ namespace Hercules.Forms.Presentation
         public event Action? OnRefreshItems;
         public int ViewVersion { get; private set; }
 
+        // The canvas that shows the rows; rows keep their visuals, so only one canvas can show them
+        internal PresentationCanvas? Canvas { get; set; }
+
         public VirtualRow? FirstRow { get; private set; }
 
         public void SelectElement(Element element)

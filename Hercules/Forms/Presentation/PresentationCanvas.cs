@@ -31,6 +31,10 @@ namespace Hercules.Forms.Presentation
 
         private void ConnectToPresentation(FormPresentation presentation)
         {
+            // a new view of the presentation (e.g. a rebuilt tool view) takes the rows from the previous canvas
+            if (presentation.Canvas is { } previousCanvas && previousCanvas != this)
+                previousCanvas.DisconnectFromPresentation(presentation);
+            presentation.Canvas = this;
             presentation.OnRefreshItems += Presentation_OnRefreshItems;
             presentation.OnScrollIntoView += Presentation_OnScrollIntoView;
             presentation.OnFocusItem += Presentation_OnFocusItem;
@@ -47,6 +51,11 @@ namespace Hercules.Forms.Presentation
             presentation.OnRefreshItems -= Presentation_OnRefreshItems;
             presentation.OnScrollIntoView -= Presentation_OnScrollIntoView;
             presentation.OnFocusItem -= Presentation_OnFocusItem;
+            if (presentation.Canvas == this)
+            {
+                presentation.Canvas = null;
+                ClearVisuals();
+            }
         }
 
         private void Presentation_OnFocusItem(VirtualRowItem item)

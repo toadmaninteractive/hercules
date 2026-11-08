@@ -91,6 +91,17 @@ namespace Hercules.Controls
             ContentCanvas.Children.Add(e);
         }
 
+        // Releases the visuals of all rows, so that another canvas can show them
+        public void ClearVisuals()
+        {
+            foreach (var row in visibleRows)
+            {
+                ContentCanvas.Children.Remove(row.Visual);
+                row.DisposeVisual();
+            }
+            visibleRows.Clear();
+        }
+
         /// <summary>
         /// Tell the ScrollViewer to update the scrollbars because, extent, zoom or translate has changed.
         /// </summary>
