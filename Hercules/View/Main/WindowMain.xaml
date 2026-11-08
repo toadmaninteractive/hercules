@@ -124,6 +124,12 @@
             <Setter Property="hc:TabContent.TemplateSelector" Value="{StaticResource ViewModelTemplateSelector}" />
             <Setter Property="hc:TabContent.IsCached" Value="True" />
             <Setter Property="ItemContainerStyle" Value="{StaticResource PanelTabItem}" />
+            <!-- dragging tabs reorders them and moves them between the groups -->
+            <Setter Property="AllowDrop" Value="True" />
+            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DocumentTabs_PreviewMouseLeftButtonDown" />
+            <EventSetter Event="PreviewMouseMove" Handler="DocumentTabs_PreviewMouseMove" />
+            <EventSetter Event="DragOver" Handler="DocumentTabs_DragOver" />
+            <EventSetter Event="Drop" Handler="DocumentTabs_Drop" />
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate DataType="{x:Type shell:Page}">

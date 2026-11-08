@@ -72,11 +72,10 @@ namespace Hercules.Shell
             SideGroup.PropertyChanged += (_, e) => OnGroupPropertyChanged(SideGroup, e.PropertyName);
             CloseAllPagesCommand = Commands.Execute(() => CloseAllPages(CloseDirtyPageAction.AskConfirmation)).If(() => Pages.Count > 0);
             CloseAllButThisCommand = Commands.Execute<Page>(page => CloseAllPages(CloseDirtyPageAction.AskConfirmation, p => p != page)).If(_ => Pages.Count > 1);
-            // moving the only page of the main group would just swap the groups
-            MoveToOtherGroupCommand = Commands.Execute<Page>(MoveToOtherGroup).If(page => page != null && (GetGroup(page) == SideGroup || MainGroup.Pages.Count > 1));
+            MoveToOtherGroupCommand = Commands.Execute<Page>(MoveToOtherGroup).If(page => page != null && CanMovePage(page, GetOtherGroup(GetGroup(page))));
         }
 
-        private EditorGroup GetGroup(Page page) => SideGroup.Pages.Contains(page) ? SideGroup : MainGroup;
+        public EditorGroup GetGroup(Page page) => SideGroup.Pages.Contains(page) ? SideGroup : MainGroup;
 
         private EditorGroup GetOtherGroup(EditorGroup group) => group == MainGroup ? SideGroup : MainGroup;
 
@@ -197,9 +196,26 @@ namespace Hercules.Shell
 
         public void MoveToOtherGroup(Page page)
         {
-            var group = GetGroup(page);
-            group.Pages.Remove(page);
-            GetOtherGroup(group).Pages.Add(page);
+            var group = GetOtherGroup(GetGroup(page));
+            MovePage(page, group, group.Pages.Count);
+        }
+
+        // Moving the only page of the main group to the side group would just swap the groups
+        public bool CanMovePage(Page page, EditorGroup group) => GetGroup(page) == group || group == MainGroup || MainGroup.Pages.Count > 1;
+
+        // Moves the page to the index in the group, within the group or from the other group
+        public void MovePage(Page page, EditorGroup group, int index)
+        {
+            var oldGroup = GetGroup(page);
+            if (oldGroup == group)
+            {
+                group.Pages.Move(group.Pages.IndexOf(page), index);
+            }
+            else
+            {
+                oldGroup.Pages.Remove(page);
+                group.Pages.Insert(index, page);
+            }
             ActiveContent = page;
             CollapseEmptyGroups();
         }
