@@ -76,7 +76,7 @@ namespace Hercules.Search
             this.SearchModule = searchModule;
             this.Title = "Search";
             this.ContentId = "{Search}";
-            this.Location = ToolLocation.Left;
+            this.Location = ToolLocation.Right;
             this.IsVisible = false;
             this.ClearSearchTextCommand = Commands.Execute(() => Text = string.Empty);
             this.ExecuteSearchCommand = Commands.Execute(ExecuteSearch).If(() => projectObservable.Value?.SchemafulDatabase.Schema != null);
