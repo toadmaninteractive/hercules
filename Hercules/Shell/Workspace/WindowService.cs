@@ -15,6 +15,7 @@ namespace Hercules.Shell
         public ObservableCollection<Tool> Tools { get; } = new();
         public ObservableCollection<Tool> LeftTools { get; } = new();
         public ObservableCollection<Tool> RightTools { get; } = new();
+        public ObservableCollection<Tool> RightBottomTools { get; } = new();
         public ObservableCollection<Tool> BottomTools { get; } = new();
 
         IReadOnlyList<Page> IWindowService.Pages => Pages;
@@ -134,6 +135,7 @@ namespace Hercules.Shell
         {
             ToolLocation.Left => LeftTools,
             ToolLocation.Right => RightTools,
+            ToolLocation.RightBottom => RightBottomTools,
             _ => BottomTools,
         };
 

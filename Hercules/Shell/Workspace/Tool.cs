@@ -6,6 +6,8 @@ namespace Hercules.Shell
     {
         Left,
         Right,
+        // under the Right panel, in the same column
+        RightBottom,
         Bottom,
     }
 

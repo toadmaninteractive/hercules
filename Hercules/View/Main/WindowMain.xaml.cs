@@ -25,9 +25,29 @@ namespace Hercules.View
             InitializeComponent();
             ViewModel = new MainViewModel(this);
             this.DataContext = ViewModel;
-            foreach (var panel in new[] { LeftPanel, RightPanel, BottomPanel, MainGroupTabs, SideGroupTabs })
+            foreach (var panel in new[] { LeftPanel, RightPanel, RightBottomPanel, BottomPanel, MainGroupTabs, SideGroupTabs })
                 panel.AddHandler(GotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(Panel_GotKeyboardFocus), true);
             ViewModel.WindowService.SideGroup.Pages.CollectionChanged += (_, _) => UpdateSideGroupColumn();
+            ViewModel.WindowService.RightTools.CollectionChanged += (_, _) => UpdateRightColumn();
+            ViewModel.WindowService.RightBottomTools.CollectionChanged += (_, _) => UpdateRightColumn();
+            ViewModel.Workspace.RightBottomPanelHeight.PropertyChanged += (_, _) => UpdateRightColumn();
+            UpdateRightColumn();
+        }
+
+        // A panel of the right column fills the column when the other one is empty
+        private void UpdateRightColumn()
+        {
+            var hasTop = ViewModel.WindowService.RightTools.Count > 0;
+            var hasBottom = ViewModel.WindowService.RightBottomTools.Count > 0;
+            RightColumn.Visibility = hasTop || hasBottom ? Visibility.Visible : Visibility.Collapsed;
+            RightColumnSplitter.Visibility = hasTop && hasBottom ? Visibility.Visible : Visibility.Collapsed;
+            RightTopRow.Height = hasTop ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+            if (!hasBottom)
+                RightBottomRow.Height = new GridLength(0);
+            else if (!hasTop)
+                RightBottomRow.Height = new GridLength(1, GridUnitType.Star);
+            else
+                RightBottomRow.Height = new GridLength(ViewModel.Workspace.RightBottomPanelHeight.Value);
         }
 
         // Splitting gives both groups half of the width; the GridSplitter changes the proportion afterwards
@@ -210,6 +230,18 @@ namespace Hercules.View
             var panel = (FrameworkElement)splitter.Tag;
             var property = DockPanel.GetDock(splitter) == Dock.Bottom ? HeightProperty : WidthProperty;
             panel.GetBindingExpression(property)!.UpdateSource();
+        }
+
+        private void RightColumnSplitter_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            // the splitter is shown only when both panels are, so the row has a pixel height
+            RightBottomRow.Height = new GridLength(ClampPanelSize(RightBottomRow.Height.Value - e.VerticalChange, RightColumn.ActualHeight));
+        }
+
+        // Saving the setting updates the row again, with the same height
+        private void RightColumnSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            ViewModel.Workspace.RightBottomPanelHeight.Value = RightBottomRow.Height.Value;
         }
     }
 }

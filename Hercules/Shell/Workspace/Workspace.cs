@@ -96,10 +96,12 @@ namespace Hercules.Shell
 
         private const double DefaultSidePanelWidth = 280;
         private const double DefaultBottomPanelHeight = 220;
+        private const double DefaultRightBottomPanelHeight = 300;
 
         public Setting<double> LeftPanelWidth { get; } = new(nameof(LeftPanelWidth), DefaultSidePanelWidth);
         public Setting<double> RightPanelWidth { get; } = new(nameof(RightPanelWidth), DefaultSidePanelWidth);
         public Setting<double> BottomPanelHeight { get; } = new(nameof(BottomPanelHeight), DefaultBottomPanelHeight);
+        public Setting<double> RightBottomPanelHeight { get; } = new(nameof(RightBottomPanelHeight), DefaultRightBottomPanelHeight);
         public Setting<Dictionary<string, bool>> ToolVisibility { get; } = new(nameof(ToolVisibility), new Dictionary<string, bool>());
 
         public Setting<bool> ViewStatusBar { get; } = new Setting<bool>(nameof(ViewStatusBar), true);
@@ -111,6 +113,7 @@ namespace Hercules.Shell
             yield return LeftPanelWidth;
             yield return RightPanelWidth;
             yield return BottomPanelHeight;
+            yield return RightBottomPanelHeight;
             yield return ToolVisibility;
             yield return ViewStatusBar;
             yield return ViewToolbar;
@@ -333,6 +336,7 @@ namespace Hercules.Shell
             LeftPanelWidth.Value = DefaultSidePanelWidth;
             RightPanelWidth.Value = DefaultSidePanelWidth;
             BottomPanelHeight.Value = DefaultBottomPanelHeight;
+            RightBottomPanelHeight.Value = DefaultRightBottomPanelHeight;
             foreach (var tool in WindowService.Tools)
                 tool.IsVisible = defaultVisibleTools.Contains(tool);
         }

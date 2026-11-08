@@ -259,13 +259,26 @@
                    DragDelta="Splitter_DragDelta" DragCompleted="Splitter_DragCompleted"
                    Visibility="{Binding Visibility, ElementName=LeftPanel}" />
 
-            <TabControl x:Name="RightPanel" DockPanel.Dock="Right" Style="{StaticResource ToolPanel}"
-                        ItemsSource="{Binding WindowService.RightTools}"
-                        Width="{Binding Workspace.RightPanelWidth.Value, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
-                        Visibility="{Binding WindowService.RightTools.Count, Converter={StaticResource IntToVisibilityConverter}}" />
-            <Thumb DockPanel.Dock="Right" Style="{StaticResource VerticalSplitter}" Tag="{Binding ElementName=RightPanel}"
+            <!-- two panels stacked in one column; the rows and the column visibility are set in code-behind -->
+            <Grid x:Name="RightColumn" DockPanel.Dock="Right"
+                  Width="{Binding Workspace.RightPanelWidth.Value, Mode=TwoWay, UpdateSourceTrigger=Explicit}">
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="RightTopRow" Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition x:Name="RightBottomRow" Height="0" />
+                </Grid.RowDefinitions>
+                <TabControl x:Name="RightPanel" Grid.Row="0" Style="{StaticResource ToolPanel}"
+                            ItemsSource="{Binding WindowService.RightTools}"
+                            Visibility="{Binding WindowService.RightTools.Count, Converter={StaticResource IntToVisibilityConverter}}" />
+                <Thumb x:Name="RightColumnSplitter" Grid.Row="1" Style="{StaticResource HorizontalSplitter}"
+                       DragDelta="RightColumnSplitter_DragDelta" DragCompleted="RightColumnSplitter_DragCompleted" />
+                <TabControl x:Name="RightBottomPanel" Grid.Row="2" Style="{StaticResource ToolPanel}"
+                            ItemsSource="{Binding WindowService.RightBottomTools}"
+                            Visibility="{Binding WindowService.RightBottomTools.Count, Converter={StaticResource IntToVisibilityConverter}}" />
+            </Grid>
+            <Thumb DockPanel.Dock="Right" Style="{StaticResource VerticalSplitter}" Tag="{Binding ElementName=RightColumn}"
                    DragDelta="Splitter_DragDelta" DragCompleted="Splitter_DragCompleted"
-                   Visibility="{Binding Visibility, ElementName=RightPanel}" />
+                   Visibility="{Binding Visibility, ElementName=RightColumn}" />
 
             <DockPanel>
                 <TabControl x:Name="BottomPanel" DockPanel.Dock="Bottom" Style="{StaticResource ToolPanel}"
