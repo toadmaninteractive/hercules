@@ -1,4 +1,5 @@
-﻿using Hercules.Scripting.JavaScript;
+﻿using Hercules.AI;
+using Hercules.Scripting.JavaScript;
 using Jint.Native;
 using Json;
 using JsonDiff;
@@ -44,6 +45,18 @@ namespace Hercules.Scripting
                 return Host.JsonToJsValue(result);
             else
                 return null;
+        }
+
+        [ScriptingApi("jq", "Run a jq program (jq 1.7 syntax) over JSON; returns an array of all results. Fails if the query is invalid, too slow or the output is too big.",
+            Example = "hercules.json.jq(json, '.items[] | select(.mass > 10) | .name');")]
+        public JsValue Jq(JsValue json, string query)
+        {
+            var inputJson = Host.JsValueToJson(json).ToString();
+            var (lines, truncated) = JqRunner.RunLines(query, inputJson, TimeSpan.FromSeconds(10), 512L * 1024 * 1024);
+            if (truncated)
+                throw new InvalidOperationException("The jq result is too big. Make the query more selective.");
+            var results = new JsonArray(lines.Select(line => JsonParser.Parse(line)));
+            return Host.JsonToJsValue(results);
         }
 
         [ScriptingApi("diff", "JSON diff.",

@@ -1,8 +1,9 @@
+using Hercules.AI;
 using NUnit.Framework;
 using System;
 using System.Linq;
 
-namespace Hercules.AI.Tests
+namespace Hercules.Scripting.JavaScript.Tests
 {
     [TestFixture]
     public class JqRunnerTests

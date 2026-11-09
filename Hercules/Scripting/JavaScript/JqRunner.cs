@@ -1,9 +1,11 @@
+using Hercules.AI;
 using JqSharp;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace Hercules.AI
+namespace Hercules.Scripting.JavaScript
 {
     /// <summary>
     /// Runs a jq query over JSON text, with limits on time, memory and output size.
@@ -17,6 +19,23 @@ namespace Hercules.AI
 
         /// <returns>One compact JSON value per line.</returns>
         public static string Run(string query, string inputJson, TimeSpan timeout, long maxMemoryBytes)
+        {
+            var (lines, truncated) = RunLines(query, inputJson, timeout, maxMemoryBytes);
+            var count = lines.Count;
+            if (count == 0 && truncated)
+                throw new AiToolException($"The first result is bigger than {MaxOutputChars} characters. Make the query more selective.");
+            if (count == 0)
+                return "[No results]";
+            var output = new StringBuilder();
+            foreach (var line in lines)
+                output.AppendLine(line);
+            if (truncated)
+                output.AppendLine($"[Output truncated after {count} results. Make the query more selective, e.g. with limit(100; ...).]");
+            return output.ToString();
+        }
+
+        /// <returns>Compact JSON values; <c>truncated</c> is set if the result caps cut the output.</returns>
+        public static (List<string> Lines, bool Truncated) RunLines(string query, string inputJson, TimeSpan timeout, long maxMemoryBytes)
         {
             JqCode code;
             try
@@ -37,21 +56,21 @@ namespace Hercules.AI
             var baseline = GC.GetTotalMemory(false);
             using var watchdog = new Timer(_ => CancelIfOverLimit(memorySource, baseline, maxMemoryBytes), null, MemoryCheckMilliseconds, MemoryCheckMilliseconds);
 
-            var output = new StringBuilder();
-            var count = 0;
+            var lines = new List<string>();
+            var length = 0;
             var truncated = false;
             try
             {
                 foreach (var value in code.Run(input, linkedSource.Token))
                 {
                     var line = JqValue.ToJson(value);
-                    if (count >= MaxResults || output.Length + line.Length > MaxOutputChars)
+                    if (lines.Count >= MaxResults || length + line.Length > MaxOutputChars)
                     {
                         truncated = true;
                         break;
                     }
-                    output.AppendLine(line);
-                    count++;
+                    lines.Add(line);
+                    length += line.Length + Environment.NewLine.Length;
                 }
             }
             catch (OperationCanceledException)
@@ -65,13 +84,7 @@ namespace Hercules.AI
                 throw new AiToolException($"jq error: {exception.Message}");
             }
 
-            if (count == 0 && truncated)
-                throw new AiToolException($"The first result is bigger than {MaxOutputChars} characters. Make the query more selective.");
-            if (count == 0)
-                return "[No results]";
-            if (truncated)
-                output.AppendLine($"[Output truncated after {count} results. Make the query more selective, e.g. with limit(100; ...).]");
-            return output.ToString();
+            return (lines, truncated);
         }
 
         private static void CancelIfOverLimit(CancellationTokenSource source, long baseline, long maxMemoryBytes)

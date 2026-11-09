@@ -39,6 +39,38 @@ This function returns value stored under path or undefined if path does not exis
 - *json* - source JSON
 - *path* - JSON path, use dot as nested fields delimiter and [] for accessing object keys
 
+jq
+----------------
+
+.. code-block:: javascript
+
+   hercules.json.jq(json, query)
+
+This function runs a `jq <https://jqlang.org/manual/>`_ program (jq 1.7 syntax) over the given JSON and returns an array of all results. The array is empty if the program produces no results.
+
+- *json* - source JSON
+- *query* - jq program
+
+The function throws an error if the program is invalid, runs longer than 10 seconds, uses more than 512 MB of memory or produces too much output. ``env``, ``$ENV``, ``input`` and modules are not available.
+
+Example: names of the heavy items of a document.
+
+.. code-block:: javascript
+
+   const doc = {
+       items: [
+           { name: "anvil", mass: 50 },
+           { name: "feather", mass: 1 },
+           { name: "barrel", mass: 20 }
+       ]
+   };
+
+   const names = hercules.json.jq(doc, '.items[] | select(.mass > 10) | .name');
+   // ["anvil", "barrel"]
+
+   const total = hercules.json.jq(doc, '[.items[].mass] | add')[0];
+   // 71
+
 patch
 ----------------
 
