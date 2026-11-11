@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JsonDiff
 {
-    public abstract record JsonDiff;
+    public closed record class JsonDiff;
 
     public record JsonDiffObject(IReadOnlyDictionary<string, JsonDiff> Items) : JsonDiff;
 

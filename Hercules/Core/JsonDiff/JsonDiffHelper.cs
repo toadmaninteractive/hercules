@@ -69,34 +69,27 @@ namespace JsonDiff
 
         public static ImmutableJson? GetJson(JsonDiff diff, bool left)
         {
-            switch (diff)
+            JsonObject MakeObject(JsonDiffObject obj)
             {
-                case JsonDiffArray array:
-                    return new JsonArray(array.Items.Select(d => GetJson(d, left)).WhereNotNull());
-                case JsonDiffObject obj:
-                    {
-                        var json = new JsonObject();
-                        foreach (var pair in obj.Items)
-                        {
-                            var child = GetJson(pair.Value, left);
-                            if (child != null)
-                                json.Add(pair.Key, child);
-                        }
+                var json = new JsonObject();
+                foreach (var pair in obj.Items)
+                {
+                    var child = GetJson(pair.Value, left);
+                    if (child != null)
+                        json.Add(pair.Key, child);
+                }
 
-                        return json;
-                    }
-                case JsonDiffSame same:
-                    return same.Value;
-                case JsonDiffDifferent d:
-                    {
-                        if (left)
-                            return d.Left;
-                        else
-                            return d.Right;
-                    }
-                default:
-                    throw new ArgumentException("Unknown JsonDiff type", nameof(diff));
+                return json;
+
             }
+
+            return diff switch
+            {
+                JsonDiffArray array => new JsonArray(array.Items.Select(d => GetJson(d, left)).WhereNotNull()),
+                JsonDiffObject obj => MakeObject(obj),
+                JsonDiffSame same => same.Value,
+                JsonDiffDifferent d => left ? d.Left : d.Right
+            };
         }
 
         public static IReadOnlyList<JsonDiffChunk> GetChunks(this JsonDiff diff)
