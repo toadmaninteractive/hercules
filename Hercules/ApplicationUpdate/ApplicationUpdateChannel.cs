@@ -8,16 +8,19 @@ namespace Hercules.ApplicationUpdate
         Beta = 1,
     }
 
-    public static class ApplicationUpdateChannelHelper
+    public static class ApplicationUpdateChannelHelper 
     {
-        public static string ToTag(this ApplicationUpdateChannel channel)
+        extension(ApplicationUpdateChannel channel)
         {
-            return channel switch
+            public string ToTag()
             {
-                ApplicationUpdateChannel.Stable => "stable",
-                ApplicationUpdateChannel.Beta => "beta",
-                _ => throw new ArgumentOutOfRangeException(nameof(channel))
-            };
+                return channel switch
+                {
+                    ApplicationUpdateChannel.Stable => "stable",
+                    ApplicationUpdateChannel.Beta => "beta",
+                    _ => throw new ArgumentOutOfRangeException(nameof(channel))
+                };
+            }
         }
     }
 }
