@@ -89,8 +89,8 @@ namespace Hercules.History
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
             {
                 FileName = "History",
-                DefaultExt = ".xls",
-                Filter = "Excel 2007 Worksheet (*.xlsx)|*.xlsx|Excel 2003 Worksheet (*.xls)|*.xls",
+                DefaultExt = ".xlsx",
+                Filter = "Excel Worksheet (*.xlsx)|*.xlsx",
                 Title = "Export History"
             };
 
@@ -98,46 +98,13 @@ namespace Hercules.History
 
             if (result == true)
             {
-                if (dlg.FilterIndex == 1)
-                    ExportToExcel2007(dlg.FileName);
-                else
-                    ExportToExcel2003(dlg.FileName);
+                ExportToExcel(dlg.FileName);
                 if (OpenSpreadsheetAfterExport.Value)
                     Process.Start(new ProcessStartInfo { FileName = dlg.FileName, UseShellExecute = true });
             }
         }
 
-        void ExportToExcel2003(string fileName)
-        {
-            var currentCulture = Thread.CurrentThread.CurrentCulture;
-            try
-            {
-                var workbook = new HSSFWorkbook();
-
-                DocumentSummaryInformation dsi = PropertySetFactory.CreateDocumentSummaryInformation();
-                dsi.Company = "Toadman Interactive";
-                workbook.DocumentSummaryInformation = dsi;
-
-                SummaryInformation si = PropertySetFactory.CreateSummaryInformation();
-                si.Subject = "Hercules Summary";
-                si.ApplicationName = "Hercules";
-                workbook.SummaryInformation = si;
-
-                ISheet historySheet = workbook.CreateSheet("History");
-                ISheet summarySheet = workbook.CreateSheet("Summary");
-                ExportToSheet(historySheet);
-                ExportSummaryToSheet(summarySheet);
-
-                using var file = new FileStream(fileName, FileMode.Create);
-                workbook.Write(file);
-            }
-            finally
-            {
-                Thread.CurrentThread.CurrentCulture = currentCulture;
-            }
-        }
-
-        void ExportToExcel2007(string fileName)
+        void ExportToExcel(string fileName)
         {
             var currentCulture = Thread.CurrentThread.CurrentCulture;
             try

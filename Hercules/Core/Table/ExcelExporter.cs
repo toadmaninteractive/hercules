@@ -1,6 +1,4 @@
 ﻿using NPOI;
-using NPOI.HPSF;
-using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
@@ -10,60 +8,9 @@ using System.Threading;
 
 namespace Hercules
 {
-    public enum ExcelFormat
-    {
-        Excel2003,
-        Excel2007,
-    }
-
-    public record ExcelExporter(ExcelFormat Format, string Sheet, TimeZoneInfo TimeZone, string DateTimeFormat) : ITableExporter
+    public record ExcelExporter(string Sheet, TimeZoneInfo TimeZone, string DateTimeFormat) : ITableExporter
     {
         public void Export(IExportTable table, string fileName)
-        {
-            switch (Format)
-            {
-                case ExcelFormat.Excel2003:
-                    ExportToExcel2003(table, fileName);
-                    break;
-
-                case ExcelFormat.Excel2007:
-                    ExportToExcel2007(table, fileName);
-                    break;
-            }
-        }
-
-        private void ExportToExcel2003(IExportTable table, string fileName)
-        {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
-
-            var currentCulture = Thread.CurrentThread.CurrentCulture;
-            try
-            {
-                var workbook = new HSSFWorkbook();
-
-                DocumentSummaryInformation dsi = PropertySetFactory.CreateDocumentSummaryInformation();
-                dsi.Company = "Toadman Interactive";
-                workbook.DocumentSummaryInformation = dsi;
-
-                SummaryInformation si = PropertySetFactory.CreateSummaryInformation();
-                si.Subject = "Hercules Summary";
-                si.ApplicationName = "Hercules";
-                workbook.SummaryInformation = si;
-
-                ISheet sheet = workbook.CreateSheet(Sheet);
-                ExportToSheet(table, sheet);
-
-                using var file = new FileStream(fileName, FileMode.Create);
-                workbook.Write(file);
-            }
-            finally
-            {
-                Thread.CurrentThread.CurrentCulture = currentCulture;
-            }
-        }
-
-        private void ExportToExcel2007(IExportTable table, string fileName)
         {
             if (table == null)
                 throw new ArgumentNullException(nameof(table));

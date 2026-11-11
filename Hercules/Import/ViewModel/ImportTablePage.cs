@@ -201,7 +201,7 @@ namespace Hercules.Import
             var dlg = new Microsoft.Win32.OpenFileDialog()
             {
                 DefaultExt = ".csv",
-                Filter = "Excel 2007 Worksheet (*.xlsx)|*.xlsx|Excel 2003 Worksheet (*.xls)|*.xls|CSV (*.csv)|*.csv|Text (*.txt)|*.txt|All Files (*.*)|*.*",
+                Filter = "Excel Worksheet (*.xlsx)|*.xlsx|CSV (*.csv)|*.csv|Text (*.txt)|*.txt|All Files (*.*)|*.*",
                 Title = "Import Table"
             };
             if (lastFileName != null)

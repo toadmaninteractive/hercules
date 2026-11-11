@@ -112,8 +112,7 @@ namespace Hercules.Scripting
 
             ITableExporter exporter = extension switch
             {
-                "xls" => new ExcelExporter(ExcelFormat.Excel2003, sheet, formSettings.TimeZone.Value, spreadsheetSettings.ExportDateTimeFormat.Value),
-                "xlsx" => new ExcelExporter(ExcelFormat.Excel2007, sheet, formSettings.TimeZone.Value, spreadsheetSettings.ExportDateTimeFormat.Value),
+                "xlsx" => new ExcelExporter(sheet, formSettings.TimeZone.Value, spreadsheetSettings.ExportDateTimeFormat.Value),
                 "csv" => new CsvExporter(spreadsheetSettings.ExportCsvDelimiter.Value, formSettings.TimeZone.Value, spreadsheetSettings.ExportDateTimeFormat.Value),
                 _ => new CsvExporter(spreadsheetSettings.ExportCsvDelimiter.Value, formSettings.TimeZone.Value, spreadsheetSettings.ExportDateTimeFormat.Value)
             };

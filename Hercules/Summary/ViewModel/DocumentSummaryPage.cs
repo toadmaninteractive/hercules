@@ -174,8 +174,8 @@ namespace Hercules.Summary
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
             {
                 FileName = Category.Name + " summary",
-                DefaultExt = ".xls",
-                Filter = "Excel 2007 Worksheet (*.xlsx)|*.xlsx|Excel 2003 Worksheet (*.xls)|*.xls|CSV (*.csv)|*.csv",
+                DefaultExt = ".xlsx",
+                Filter = "Excel Worksheet (*.xlsx)|*.xlsx|CSV (*.csv)|*.csv",
                 Title = "Export Table"
             };
 
@@ -188,8 +188,7 @@ namespace Hercules.Summary
 
                 ITableExporter exporter = dlg.FilterIndex switch
                 {
-                    1 => new ExcelExporter(ExcelFormat.Excel2007, Category.Name, timeZone, spreadsheetSettings.ExportDateTimeFormat.Value),
-                    2 => new ExcelExporter(ExcelFormat.Excel2003, Category.Name, timeZone, spreadsheetSettings.ExportDateTimeFormat.Value),
+                    1 => new ExcelExporter(Category.Name, timeZone, spreadsheetSettings.ExportDateTimeFormat.Value),
                     _ => new CsvExporter(spreadsheetSettings.ExportCsvDelimiter.Value, timeZone, spreadsheetSettings.ExportDateTimeFormat.Value),
                 };
                 exporter.Export(Table, dlg.FileName);
@@ -204,7 +203,7 @@ namespace Hercules.Summary
             {
                 DefaultExt = ".csv",
                 FilterIndex = 5,
-                Filter = "Excel 2007 Worksheet (*.xlsx)|*.xlsx|Excel 2003 Worksheet (*.xls)|*.xls|CSV (*.csv)|*.csv|Text (*.txt)|*.txt|All Supported Files (*.xlsx;*.xls;*.csv;*.txt)|*.xlsx;*.xls;*.csv;*.txt|All Files (*.*)|*.*",
+                Filter = "Excel Worksheet (*.xlsx)|*.xlsx|Excel 2003 Worksheet (*.xls)|*.xls|CSV (*.csv)|*.csv|Text (*.txt)|*.txt|All Supported Files (*.xlsx;*.xls;*.csv;*.txt)|*.xlsx;*.xls;*.csv;*.txt|All Files (*.*)|*.*",
                 Title = "Import Table",
                 FileName = lastFileName
             };
