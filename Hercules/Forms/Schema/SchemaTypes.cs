@@ -1413,7 +1413,7 @@ namespace Hercules.Forms.Schema
 
         public override SchemaTypeKind Kind => SchemaTypeKind.Key;
 
-        public IEnumerable<IDocument> Items
+        public ObservableCollection<IDocument> Items
         {
             get
             {
@@ -1433,11 +1433,7 @@ namespace Hercules.Forms.Schema
         {
             if (value == null)
                 return false;
-            var items = Items;
-            if (items is CompositeCollection)
-                items = items.Cast<CollectionContainer>().SelectMany(c => c.Collection.OfType<IDocument>());
-            var document = items.Cast<IDocument>().FirstOrDefault(doc => doc.DocumentId == value);
-            return document != null;
+            return Items.Any(doc => doc.DocumentId == value);
         }
 
         public override bool ConvertFromJson(ImmutableJson? json, [MaybeNullWhen(false)] out string? value)

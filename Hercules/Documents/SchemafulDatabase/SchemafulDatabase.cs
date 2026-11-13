@@ -99,20 +99,20 @@ namespace Hercules.Documents
 
         public Category GetDocumentCategory(IDocument document) => categoriesByDocument[document.DocumentId];
 
-        public IEnumerable<IDocument> GetDocumentsByInterface(string interfaceName)
+        public ObservableCollection<IDocument> GetDocumentsByInterface(string interfaceName)
         {
-            if (interfacesByName.TryGetValue(interfaceName, out var result))
+            if (!interfacesByName.TryGetValue(interfaceName, out var intf))
             {
-                return result.Documents;
-            }
-            var categories = Schema.Variant.Children.Where(child => child.Interfaces != null && child.Interfaces.Contains(interfaceName))
-                .Select(child => categoriesByName[child.TagValue!]).ToList();
-            if (categories.Any())
-            {
-                var intf = new CategoryInterface(interfaceName, categories);
+                var categories = Schema.Variant.Children.Where(child => child.Interfaces != null && child.Interfaces.Contains(interfaceName))
+                    .Select(child => categoriesByName[child.TagValue!]).ToList();
+                intf = new CategoryInterface(interfaceName, categories);
+                foreach (var category in categories)
+                {
+                    category.AddInterface(intf);
+                }
                 interfacesByName[interfaceName] = intf;
             }
-            return SchemafulDocuments;
+            return intf.Documents;
         }
 
         public void GetDocumentSchema(IDocument document, ImmutableJsonObject json, out Category category, out SchemaRecord schema)

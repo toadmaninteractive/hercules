@@ -1,6 +1,7 @@
 ﻿using Hercules.Shortcuts;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Hercules.Documents
 {
@@ -93,11 +94,7 @@ namespace Hercules.Documents
             Name = name;
             Categories = categories;
 
-            foreach (var category in categories)
-            {
-                Documents.AddRange(category.Documents);
-
-            }
+            Documents.AddRange(categories.SelectMany(category => category.Documents).Order());
         }
     }
 }
