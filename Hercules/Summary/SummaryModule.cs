@@ -42,7 +42,7 @@ namespace Hercules.Summary
         {
             if (Workspace.DialogService.ShowDialog(dialog))
             {
-                var editor = new DocumentSummaryPage(Core.Project, Core.GetModule<DocumentsModule>(), Core.Workspace.DialogService, Core.Workspace.SpreadsheetSettings, dialog.Structure!, dialog.Category!);
+                var editor = new DocumentSummaryPage(Core.Project!, Core.GetModule<DocumentsModule>(), Core.Workspace.DialogService, Core.Workspace.SpreadsheetSettings, dialog.Structure!, dialog.Category!);
                 Core.Workspace.WindowService.OpenPage(editor);
             }
         }

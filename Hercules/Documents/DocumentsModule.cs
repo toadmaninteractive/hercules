@@ -229,7 +229,7 @@ namespace Hercules.Documents
 
             bool IsInvalidDocument(IDocument doc)
             {
-                var schemaRecord = Core.Project.SchemafulDatabase.Schema.Variant.GetChildForJson(doc.Json);
+                var schemaRecord = Core.Project!.SchemafulDatabase.Schema.Variant.GetChildForJson(doc.Json);
                 var form = new DocumentForm(doc.Json, doc.Json, schemaRecord, elementFactory, FormSettings);
                 return !form.Root.IsValid || form.IsModified.Value;
             }
@@ -271,8 +271,8 @@ namespace Hercules.Documents
         private DocumentEditorContext GetDocumentEditorContext()
         {
             return new DocumentEditorContext(
-                GetDocumentProxy: (document, editor) => new DocumentProxy(Core.Project.Database, Core.Project.Connection.Username, document, editor),
-                ObservableSchemafulDatabase: Core.Project.ObservableSchemafulDatabase,
+                GetDocumentProxy: (document, editor) => new DocumentProxy(Core.Project!.Database, Core.Project!.Connection.Username, document, editor),
+                ObservableSchemafulDatabase: Core.Project!.ObservableSchemafulDatabase,
                 DialogService: Workspace.DialogService,
                 GetElementFactory: elementFactoryContext => new ElementFactory(CustomTypeRegistry, elementFactoryContext),
                 FormSettings: FormSettings,
@@ -395,7 +395,7 @@ namespace Hercules.Documents
         {
             if (source.IsExisting)
             {
-                return CreateDocument(newDocName, new DocumentDraft(source.CurrentRevision.Json, source.CurrentRevision.Attachments.Select(a => AttachmentDraft.CopyFrom(a, Core.Project.Database.TempStorage)).ToList()));
+                return CreateDocument(newDocName, new DocumentDraft(source.CurrentRevision.Json, source.CurrentRevision.Attachments.Select(a => AttachmentDraft.CopyFrom(a, Core.Project!.Database.TempStorage)).ToList()));
             }
             else
             {
@@ -415,7 +415,7 @@ namespace Hercules.Documents
 
         public void InheriteDocument(IDocument source, string documentName)
         {
-            var docAttachments = source.CurrentRevision.Attachments.Select(a => AttachmentDraft.CopyFrom(a, Core.Project.Database.TempStorage)).ToList();
+            var docAttachments = source.CurrentRevision.Attachments.Select(a => AttachmentDraft.CopyFrom(a, Core.Project!.Database.TempStorage)).ToList();
             var json = new JsonObject(source.Json)
             {
                 [CouchUtils.HerculesBase] = source.CurrentRevision.Json.WithoutKeys(CouchUtils.BaseJsonExcludedKeys)
@@ -480,7 +480,7 @@ namespace Hercules.Documents
             var dialog = new NewEditorDocumentDialog(Core.Project!.SchemafulDatabase, CustomTypeRegistry.All);
             if (Workspace.DialogService.ShowDialog(dialog))
             {
-                var draft = dialog.CustomType.CreateEditorDraft(dialog.DocumentName, Core.Project.Database.TempStorage);
+                var draft = dialog.CustomType.CreateEditorDraft(dialog.DocumentName, Core.Project!.Database.TempStorage);
                 var doc = Core.Project.Database.CreateDocument(dialog.DocumentName, draft);
                 EditDocument(doc.DocumentId);
             }

@@ -28,7 +28,7 @@ namespace Hercules.Scripting
         public ScriptingModule(Core core)
             : base(core)
         {
-            documentPageSubscription = Workspace.WindowService.WhenAddingPage.OfType<DocumentEditorPage>().Subscribe(page => page.Services.Add(new ScriptingPageService(page, Core.Project, this)));
+            documentPageSubscription = Workspace.WindowService.WhenAddingPage.OfType<DocumentEditorPage>().Subscribe(page => page.Services.Add(new ScriptingPageService(page, Core.Project!, this)));
 
             var runScriptOption = new UiCommandOption("Run Script", Fugue.Icons.ScriptAttributeJ, Commands.Execute(() => OpenScript()).If(() => Core.Project != null));
             var scriptingReferenceOption = new UiCommandOption("Scripting Reference", null, ShowScriptingReference);
@@ -45,7 +45,7 @@ namespace Hercules.Scripting
 
         private void RunScriptDocument(string documentId)
         {
-            var doc = Core.Project.Database.Documents[documentId];
+            var doc = Core.Project!.Database.Documents[documentId];
             var script = ScriptDocumentJsonSerializer.Instance.Deserialize(doc.Json);
             RunScriptAsync(script.Script, null, new Progress<string>(), default).Track();
         }
@@ -70,7 +70,7 @@ namespace Hercules.Scripting
 
         public void OpenScript(string? preset = null)
         {
-            Workspace.WindowService.OpenPage(new DocumentScriptPage(Core.Project, this, Core.Workspace, preset));
+            Workspace.WindowService.OpenPage(new DocumentScriptPage(Core.Project!, this, Core.Workspace, preset));
         }
 
         public async Task RunScriptAsync(string script, IReadOnlyList<IDocument>? documents, IProgress<string> progress, CancellationToken cancellationToken)

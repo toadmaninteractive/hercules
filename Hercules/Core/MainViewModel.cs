@@ -135,7 +135,7 @@ namespace Hercules
                     string script;
                     if (filename.StartsWith("hercules:"))
                     {
-                        script = Core.Project.Database.Documents[HerculesUrl.DocumentId(new Uri(filename))].Json.AsObject["script"].AsString;
+                        script = Core.Project!.Database.Documents[HerculesUrl.DocumentId(new Uri(filename))].Json.AsObject["script"].AsString;
                     }
                     else
                     {

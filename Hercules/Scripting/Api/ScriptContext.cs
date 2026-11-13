@@ -179,7 +179,7 @@ namespace Hercules.Scripting
         {
             this.dispatcher = dispatcher;
             this.Core = core;
-            ScriptingModuleProvider = new ScriptingModuleProvider(Core.Project.Database);
+            ScriptingModuleProvider = new ScriptingModuleProvider(Core.Project!.Database);
             ActiveDatabaseContext = new DatabaseScriptContext(this, Core.Project.Database, Core.Project.Connection, Core.Project.SchemafulDatabase);
             Databases.Add(ActiveDatabaseContext.Connection.Title, ActiveDatabaseContext);
         }

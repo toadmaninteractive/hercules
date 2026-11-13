@@ -34,7 +34,7 @@ namespace Hercules.History
 
         public DocumentsModule DocumentsModule => Core.GetModule<DocumentsModule>();
 
-        public DatabaseHistory GetDatabaseHistory() => new DatabaseHistory(Core.Project.Database);
+        public DatabaseHistory GetDatabaseHistory() => new DatabaseHistory(Core.Project!.Database);
 
         private readonly IDisposable documentPageSubscription;
 
@@ -44,7 +44,7 @@ namespace Hercules.History
         void LoadRevision(DocumentCommit revision)
         {
             var editor = DocumentsModule.EditDocument(revision.DocumentId);
-            var draft = DocumentDraft.CopyFrom(revision.Snapshot, Core.Project.Database.TempStorage, editor.Document.CurrentRevision);
+            var draft = DocumentDraft.CopyFrom(revision.Snapshot, Core.Project!.Database.TempStorage, editor.Document.CurrentRevision);
             editor.SetupDraft(draft);
             editor.GoTo(DestinationTab.Form);
         }
