@@ -228,9 +228,12 @@ namespace Hercules.Scripting
             Logger.LogDebug(text);
         }
 
-        public void Open(string documentId)
+        public bool Open(string documentId)
         {
+            if (!InvokeNow(() => Core.Project!.Database.Documents.ContainsKey(documentId)))
+                return false;
             Invoke(() => Core.GetModule<DocumentsModule>().EditDocument(documentId));
+            return true;
         }
 
         public async Task FlushAsync()

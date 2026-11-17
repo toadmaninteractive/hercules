@@ -136,11 +136,13 @@ namespace Hercules.Scripting
             return Context.Core.Workspace.Scheduler.ScheduleForegroundJob(() => Context.Core.Workspace.DialogService.ShowPromptDialog(message, "Script", defaultValue));
         }
 
-        [ScriptingApi("open", "Open document by id.",
+        [ScriptingApi("open", "Open document by id or document object. Returns true if the document was found.",
             Example = "hercules.open(\"my_document\");")]
-        public void Open(string documentId)
+        public bool Open(JsValue document)
         {
-            Context.Open(documentId);
+            var json = Host.JsValueToJson(document);
+            var documentId = json.IsString ? json.AsString : CouchUtils.GetId(json.AsObject);
+            return Context.Open(documentId);
         }
 
         [ScriptingApi("addSearchResult", "Add an entry to Search Results tool window.",

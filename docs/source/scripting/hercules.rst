@@ -180,11 +180,11 @@ open
 
 .. code-block:: javascript
   
-  hercules.open(docId) 
+  hercules.open(docIdOrDoc)
 
-This function opens a document docId in the editor.
+This function opens a document in the editor. Returns *true* if the document was found, *false* otherwise.
 
-- *docId* - document id 
+- *docIdOrDoc* - document id or a document object (its *_id* is used)
 
 **Example:** Write a code that opens all the documents with field *action.type* set to *damage*. 
 
