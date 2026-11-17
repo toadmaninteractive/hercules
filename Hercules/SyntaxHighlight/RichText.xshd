@@ -1,15 +1,42 @@
 <?xml version="1.0"?>
 <SyntaxDefinition name="RichText" extensions=".txt" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
-	<Color name="Tag" foreground="DarkMagenta" exampleText="&lt;b&gt;bold&lt;/b&gt;" />
+	<Color name="Tag" foreground="DarkMagenta" exampleText="&lt;color=red&gt;text&lt;/color&gt;" />
 	<Color name="AttributeName" foreground="Red" exampleText='&lt;sprite name="icon"&gt;' />
 	<Color name="AttributeValue" foreground="Blue" exampleText="&lt;size=20&gt;" />
 	<Color name="Entity" foreground="Teal" exampleText="&amp;lt;" />
 	<Color name="WikiLink" foreground="#0066CC" exampleText="[[Reference]]" />
 	<Color name="WikiLinkLabel" foreground="#6699CC" exampleText="[[Reference|label]]" />
+	<Color name="Bold" fontWeight="bold" exampleText="&lt;b&gt;bold&lt;/b&gt;" />
+	<Color name="Italic" fontStyle="italic" exampleText="&lt;i&gt;italic&lt;/i&gt;" />
+	<Color name="Underline" underline="true" exampleText="&lt;u&gt;underline&lt;/u&gt;" />
+	<Color name="Strikethrough" strikethrough="true" exampleText="&lt;s&gt;strikethrough&lt;/s&gt;" />
 
 	<RuleSet>
+		<Import ruleSet="Common" />
+	</RuleSet>
+
+	<RuleSet name="Common" ignoreCase="true">
+		<!-- Effect tags must come before the generic tag span: the first rule wins on a tie. -->
+		<Span color="Bold" multiline="true" ruleSet="Common">
+			<Begin color="Tag">&lt;b&gt;</Begin>
+			<End color="Tag">&lt;/b&gt;</End>
+		</Span>
+		<Span color="Italic" multiline="true" ruleSet="Common">
+			<Begin color="Tag">&lt;i&gt;</Begin>
+			<End color="Tag">&lt;/i&gt;</End>
+		</Span>
+		<Span color="Underline" multiline="true" ruleSet="Common">
+			<Begin color="Tag">&lt;u&gt;</Begin>
+			<End color="Tag">&lt;/u&gt;</End>
+		</Span>
+		<Span color="Strikethrough" multiline="true" ruleSet="Common">
+			<Begin color="Tag">&lt;s&gt;</Begin>
+			<End color="Tag">&lt;/s&gt;</End>
+		</Span>
+
+		<!-- Skips effect tags, otherwise this span wins over the End of the effect spans above. -->
 		<Span color="Tag">
-			<Begin>&lt;/?(?=[#\w])</Begin>
+			<Begin>&lt;/?(?![bius]&gt;)(?=[#\w])</Begin>
 			<End>&gt;|(?=&lt;)</End>
 			<RuleSet>
 				<Span color="AttributeValue">

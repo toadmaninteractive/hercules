@@ -285,13 +285,15 @@
             HorizontalAlignment = "Stretch">
             <Border Style="{StaticResource FocusableElementBorder}" >
                 <ae:TextEditor
+                     FontWeight="Regular"
+                    FontSize="{StaticResource ElementFontSize}"
                 Name="MultilineTextEditor"
                 MinHeight="22"
                 Padding="2"
                     Background="Transparent"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                FontFamily="Courier New"
+                FontFamily="Consolas"
                 WordWrap="True"
                 Document="{Binding Document}"
                 VerticalScrollBarVisibility="Auto"
