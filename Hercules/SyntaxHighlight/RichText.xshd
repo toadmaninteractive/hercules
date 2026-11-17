@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="RichText" extensions=".txt" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+	<Color name="Tag" foreground="DarkMagenta" exampleText="&lt;b&gt;bold&lt;/b&gt;" />
+	<Color name="AttributeName" foreground="Red" exampleText='&lt;sprite name="icon"&gt;' />
+	<Color name="AttributeValue" foreground="Blue" exampleText="&lt;size=20&gt;" />
+	<Color name="Entity" foreground="Teal" exampleText="&amp;lt;" />
+	<Color name="WikiLink" foreground="#0066CC" exampleText="[[Reference]]" />
+	<Color name="WikiLinkLabel" foreground="#6699CC" exampleText="[[Reference|label]]" />
+
+	<RuleSet>
+		<Span color="Tag">
+			<Begin>&lt;/?(?=[#\w])</Begin>
+			<End>&gt;|(?=&lt;)</End>
+			<RuleSet>
+				<Span color="AttributeValue">
+					<Begin>"</Begin>
+					<End>"|(?=&gt;)</End>
+				</Span>
+				<Span color="AttributeValue">
+					<Begin>'</Begin>
+					<End>'|(?=&gt;)</End>
+				</Span>
+				<Rule color="AttributeName">[\w\-\.]+(?=\s*=)</Rule>
+				<Rule color="AttributeValue">=\s*[^\s"'&gt;]*</Rule>
+			</RuleSet>
+		</Span>
+
+		<Span color="WikiLink">
+			<Begin>\[\[</Begin>
+			<End>\]\]|$</End>
+			<RuleSet>
+				<Rule color="WikiLinkLabel">\|[^\]]*</Rule>
+			</RuleSet>
+		</Span>
+
+		<Rule color="Entity">&amp;\#?\w+;</Rule>
+	</RuleSet>
+</SyntaxDefinition>
