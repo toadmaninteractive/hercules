@@ -463,6 +463,8 @@ namespace Hercules.Forms.Presentation
                 }
                 BindingOperations.ClearBinding(rootPanel, FrameworkElement.WidthProperty);
                 BindingOperations.ClearBinding(rootPanel, UIElement.OpacityProperty);
+                // pooled panels are shared with ElementPresentation, where a stale height would clip the row
+                rootPanel.ClearValue(FrameworkElement.HeightProperty);
                 Presentation.ReleaseRowPanel(rootPanel, defaultPanel!);
                 rootPanel = null;
                 defaultPanel = null;
