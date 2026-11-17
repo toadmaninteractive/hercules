@@ -10,7 +10,7 @@
     <ApplicationIcon>hercules.ico</ApplicationIcon>
     <StartupObject>Hercules.App</StartupObject>
     <Company>Toadman Interactive</Company>
-    <Copyright>Toadman Interactive © 2012 - 2024</Copyright>
+    <Copyright>Toadman Interactive © 2012 - 2026</Copyright>
     <Description>Design document editor</Description>
     <BuildNumber>0</BuildNumber>
     <AssemblyVersion>2.4.1.$(BuildNumber)</AssemblyVersion>
