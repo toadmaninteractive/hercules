@@ -25,17 +25,15 @@ namespace Hercules.Forms.Elements
         public FormSettings Settings { get; }
         public IElementFactory Factory { get; }
 
-        private bool isOptionFieldsVisible = true;
-
         public bool IsOptionFieldsVisible
         {
-            get => isOptionFieldsVisible;
+            get;
             set
             {
-                if (SetField(ref isOptionFieldsVisible, value))
+                if (SetField(ref field, value))
                     RefreshPresentation();
             }
-        }
+        } = true;
 
         DateTime lastAction;
 

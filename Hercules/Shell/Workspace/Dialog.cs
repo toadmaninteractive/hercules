@@ -10,12 +10,10 @@ namespace Hercules.Shell
             OkCommand = Commands.Execute(() => SetDialogResult(true)).If(() => !IsClosed && IsOkEnabled());
         }
 
-        string? title;
-
         public string? Title
         {
-            get => title;
-            set => SetField(ref title, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public bool IsClosed { get; private set; }

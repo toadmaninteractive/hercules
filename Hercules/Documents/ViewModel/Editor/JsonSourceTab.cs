@@ -25,12 +25,10 @@ namespace Hercules.Documents.Editor
             set => searchTarget = value;
         }
 
-        private bool wordWrap;
-
         public bool WordWrap
         {
-            get => wordWrap;
-            set => SetField(ref wordWrap, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public ICommand WordWrapCommand { get; }

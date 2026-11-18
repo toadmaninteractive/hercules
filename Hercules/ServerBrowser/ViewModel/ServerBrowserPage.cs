@@ -41,12 +41,10 @@ namespace Hercules.ServerBrowser
             LoadAsync().Track();
         }
 
-        bool isLoaded;
-
         public bool IsLoaded
         {
-            get => isLoaded;
-            set => SetField(ref isLoaded, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public ICommand ReloadCommand { get; }

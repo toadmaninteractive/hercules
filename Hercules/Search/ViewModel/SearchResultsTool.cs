@@ -17,12 +17,10 @@ namespace Hercules.Search
             this.IsVisible = false;
         }
 
-        SearchResults? results;
-
         public SearchResults? Results
         {
-            get => results;
-            set => SetField(ref results, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public void OpenDocument(string documentId, JsonPath? path) => openDocumentAction(documentId, path);

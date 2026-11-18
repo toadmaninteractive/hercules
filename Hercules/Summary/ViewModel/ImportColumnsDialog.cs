@@ -46,12 +46,10 @@ namespace Hercules.Summary
         public ICommand CheckAllCommand { get; }
         public ICommand UncheckAllCommand { get; }
 
-        bool allowNewDocuments;
-
         public bool AllowNewDocuments
         {
-            get => allowNewDocuments;
-            set => SetField(ref allowNewDocuments, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         TimeZoneInfo timeZone;

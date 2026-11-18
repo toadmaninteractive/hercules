@@ -14,13 +14,11 @@ namespace Hercules.Replication
             set => SetField(ref filter, value);
         }
 
-        private bool isRegex = false;
-
         public bool IsRegex
         {
-            get => isRegex;
-            set => SetField(ref isRegex, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = false;
 
         private readonly Action<string, bool, bool, bool> Apply;
 

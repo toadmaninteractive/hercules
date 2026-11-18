@@ -47,22 +47,16 @@ namespace Hercules.Connections
 
         public ICommand FetchDatabasesCommand { get; }
 
-        string connectionTitle = string.Empty;
-
         public string ConnectionTitle
         {
-            get => connectionTitle;
-            set => SetField(ref connectionTitle, value);
-        }
-
-        string connectionUrl = string.Empty;
-
-        private string? titleError;
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public string? TitleError
         {
-            get => titleError;
-            set => SetField(ref titleError, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         [PropertyValidator(nameof(ConnectionTitle))]
@@ -81,10 +75,10 @@ namespace Hercules.Connections
 
         public string ConnectionUrl
         {
-            get => connectionUrl;
+            get;
             set
             {
-                if (SetField(ref connectionUrl, value) && Uri.TryCreate(value, UriKind.Absolute, out var uri))
+                if (SetField(ref field, value) && Uri.TryCreate(value, UriKind.Absolute, out var uri))
                 {
                     var known = Connections.Items.FirstOrDefault(c => c.Url == uri);
                     if (known != null)
@@ -94,14 +88,12 @@ namespace Hercules.Connections
                     }
                 }
             }
-        }
-
-        private string? urlError;
+        } = string.Empty;
 
         public string? UrlError
         {
-            get => urlError;
-            set => SetField(ref urlError, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         string database = string.Empty;
@@ -121,20 +113,16 @@ namespace Hercules.Connections
             }
         }
 
-        string userName = string.Empty;
-
         public string UserName
         {
-            get => userName;
-            set => SetField(ref userName, value);
-        }
-
-        private string? userNameError;
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public string? UserNameError
         {
-            get => userNameError;
-            set => SetField(ref userNameError, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         [PropertyValidator(nameof(UserName))]
@@ -144,20 +132,16 @@ namespace Hercules.Connections
             return UserNameError;
         }
 
-        string password = string.Empty;
-
         public string Password
         {
-            get => password;
-            set => SetField(ref password, value);
-        }
-
-        private string? passwordError;
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public string? PasswordError
         {
-            get => passwordError;
-            set => SetField(ref passwordError, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         [PropertyValidator(nameof(Password))]
@@ -176,13 +160,11 @@ namespace Hercules.Connections
             return UrlError;
         }
 
-        string fetchDatabasesError = string.Empty;
-
         public string FetchDatabasesError
         {
-            get => fetchDatabasesError;
-            set => SetField(ref fetchDatabasesError, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         CancellationTokenSource? fetchDatabasesCancellation;
         string? fetchDatabasesUrl;

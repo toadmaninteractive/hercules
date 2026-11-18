@@ -27,12 +27,10 @@ namespace Hercules.Connections
             SortCommand = Commands.Execute(Sort);
         }
 
-        DbConnection? selectedConnection;
-
         public DbConnection? SelectedConnection
         {
-            get => selectedConnection;
-            set => SetField(ref selectedConnection, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public ICommand<DbConnection> LoadConnectionCommand => ConnectionsModule.LoadConnectionCommand;

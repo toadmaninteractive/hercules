@@ -140,12 +140,10 @@ namespace Hercules.Forms.Elements
             originalJson = newOriginalJson;
         }
 
-        string? caption;
-
         public string? Caption
         {
-            get => caption;
-            protected set => SetField(ref caption, value);
+            get;
+            protected set => SetField(ref field, value);
         }
 
         public override IEnumerable<Element> GetChildren() => Children;

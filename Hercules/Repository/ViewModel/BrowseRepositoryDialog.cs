@@ -67,16 +67,15 @@ namespace Hercules.Repository
             }
         }
 
-        private RepositoryFile? selectedFile;
         public RepositoryFile? SelectedFile
         {
-            get => selectedFile;
+            get;
             set
             {
-                if (SetField(ref selectedFile, value))
+                if (SetField(ref field, value))
                 {
-                    if (selectedFile != null)
-                        SelectedPath = selectedFile.Path.RemovePrefix(rootPath).RemovePrefix("/");
+                    if (field != null)
+                        SelectedPath = field.Path.RemovePrefix(rootPath).RemovePrefix("/");
                     if (ShowPreview)
                         SelectedFile?.LoadAsync().Track();
                 }

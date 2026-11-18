@@ -47,13 +47,12 @@ namespace Hercules.DatabaseExplorer
         public WorkspaceContextMenu? CategoryMenu { get; }
         public Visibility CategoryGroupsVisibility
         {
-            get => categoryGroupsVisibility;
-            set => SetField(ref categoryGroupsVisibility, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         private string filter;
         private bool groupByCategories = true;
-        private Visibility categoryGroupsVisibility;
 
         public DatabaseExplorerTree(SchemafulDatabase schemafulDatabase, HashSet<string> collapsedCategories, string filter, WorkspaceContextMenu? documentMenu, WorkspaceContextMenu? categoryMenu)
         {

@@ -67,14 +67,12 @@ namespace Hercules.Forms.Elements
                 return Record.GetByPath(path);
         }
 
-        bool recordView;
-
         public bool RecordView
         {
-            get => recordView;
+            get;
             set
             {
-                if (SetField(ref recordView, value))
+                if (SetField(ref field, value))
                 {
                     Form.RefreshPresentation();
                 }

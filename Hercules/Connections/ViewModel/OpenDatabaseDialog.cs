@@ -47,12 +47,10 @@ namespace Hercules.Connections
 
         public OpenDatabaseResult? Result { get; private set; }
 
-        string? statusMessage;
-
         public string? StatusMessage
         {
-            get => statusMessage;
-            set => SetField(ref statusMessage, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         Stage currentStage = Stage.None;

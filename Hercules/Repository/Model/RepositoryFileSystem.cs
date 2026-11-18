@@ -81,15 +81,12 @@ namespace Hercules.Repository
         public string Name { get; }
         public string Path { get; }
 
-        private BitmapSource? previewImage;
-
         public BitmapSource? PreviewImage
         {
-            get => previewImage;
-            private set => SetField(ref previewImage, value);
+            get;
+            private set => SetField(ref field, value);
         }
 
-        private bool isLoading;
         private bool isReady;
 
         public RepositoryFile(IRepository repository, string name, string path)
@@ -107,8 +104,8 @@ namespace Hercules.Repository
 
         public bool IsLoading
         {
-            get => isLoading;
-            private set => SetField(ref isLoading, value);
+            get;
+            private set => SetField(ref field, value);
         }
 
         public async Task LoadAsync()
@@ -137,13 +134,12 @@ namespace Hercules.Repository
         public string Path { get; }
 
         private readonly IRepository repository;
-        private bool isExpanded;
         private bool isReady;
 
         public bool IsExpanded
         {
-            get => isExpanded;
-            set => SetField(ref isExpanded, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public bool IsReady

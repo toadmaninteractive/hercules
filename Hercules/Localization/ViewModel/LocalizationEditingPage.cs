@@ -62,12 +62,10 @@ namespace Hercules.Localization
             }
         }
 
-        private bool isModified;
-
         public bool IsModified
         {
-            get => isModified;
-            private set => SetField(ref isModified, value);
+            get;
+            private set => SetField(ref field, value);
         }
 
         public ICommand ApproveCommand { get; }
@@ -122,11 +120,10 @@ namespace Hercules.Localization
             set => SetField(ref emptyFilter, value);
         }
 
-        private bool isSaving;
         public bool IsSaving
         {
-            get => isSaving;
-            private set => SetField(ref isSaving, value);
+            get;
+            private set => SetField(ref field, value);
         }
 
         public ICommand SubmitCommand { get; }

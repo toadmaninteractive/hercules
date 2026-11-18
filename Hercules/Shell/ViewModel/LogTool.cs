@@ -80,50 +80,45 @@ namespace Hercules.Shell
 
         public ICommand ClearFilterCommand { get; }
 
-        private bool showErrors = true;
-        private bool showWarnings = true;
-        private bool showInfo = true;
-        private bool showDebug = true;
-
         public bool ShowErrors
         {
-            get => showErrors;
+            get;
             set
             {
-                if (SetField(ref showErrors, value))
+                if (SetField(ref field, value))
                     eventsView.Refresh();
             }
-        }
+        } = true;
 
         public bool ShowWarnings
         {
-            get => showWarnings;
+            get;
             set
             {
-                if (SetField(ref showWarnings, value))
+                if (SetField(ref field, value))
                     eventsView.Refresh();
             }
-        }
+        } = true;
 
         public bool ShowInfo
         {
-            get => showInfo;
+            get;
             set
             {
-                if (SetField(ref showInfo, value))
+                if (SetField(ref field, value))
                     eventsView.Refresh();
             }
-        }
+        } = true;
 
         public bool ShowDebug
         {
-            get => showDebug;
+            get;
             set
             {
-                if (SetField(ref showDebug, value))
+                if (SetField(ref field, value))
                     eventsView.Refresh();
             }
-        }
+        } = true;
 
         void AddRange(IList<LogEvent> events)
         {

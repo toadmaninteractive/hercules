@@ -68,11 +68,9 @@ namespace Hercules.Shell
 
         public string? ProgressText
         {
-            get => progressText;
-            set => SetField(ref progressText, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        private string? progressText;
 
         public double Progress
         {

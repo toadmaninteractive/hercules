@@ -17,20 +17,16 @@ namespace Hercules.Documents.Dialogs
             Title = "New Editor Document";
         }
 
-        string documentName = string.Empty;
-
         public string DocumentName
         {
-            get => documentName;
-            set => SetField(ref documentName, value);
-        }
-
-        private string? documentNameError;
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public string? DocumentNameError
         {
-            get => documentNameError;
-            set => SetField(ref documentNameError, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         [PropertyValidator(nameof(DocumentName))]
@@ -54,20 +50,16 @@ namespace Hercules.Documents.Dialogs
             return DocumentNameError;
         }
 
-        CustomTypeSupport? customType;
-
         public CustomTypeSupport? CustomType
         {
-            get => customType;
-            set => SetField(ref customType, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        private string? customTypeError;
 
         public string? CustomTypeError
         {
-            get => customTypeError;
-            set => SetField(ref customTypeError, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         [PropertyValidator(nameof(CustomType))]

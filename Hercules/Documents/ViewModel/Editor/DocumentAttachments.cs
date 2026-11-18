@@ -38,14 +38,12 @@ namespace Hercules.Documents.Editor
         public bool IsNew => OriginalAttachment == null;
         public bool IsUpdated => Attachment != OriginalAttachment && OriginalAttachment != null;
 
-        bool isDeleted;
-
         public bool IsDeleted
         {
-            get => isDeleted;
+            get;
             set
             {
-                if (SetField(ref isDeleted, value))
+                if (SetField(ref field, value))
                     attachments.UpdateModified();
             }
         }

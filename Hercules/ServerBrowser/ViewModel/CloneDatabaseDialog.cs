@@ -13,37 +13,29 @@ namespace Hercules.ServerBrowser
             ExistingDatabases = existingDatabases;
         }
 
-        string name = string.Empty;
-
         public string Name
         {
-            get => name;
-            set => SetField(ref name, value);
-        }
-
-        private string? nameError;
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public string? NameError
         {
-            get => nameError;
-            set => SetField(ref nameError, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        string? source = string.Empty;
 
         public string? Source
         {
-            get => source;
-            set => SetField(ref source, value);
-        }
-
-        bool createConnection = true;
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public bool CreateConnection
         {
-            get => createConnection;
-            set => SetField(ref createConnection, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = true;
 
         [PropertyValidator("Name")]
         public string? ValidateName()

@@ -7,12 +7,10 @@ namespace Hercules.Shell
     {
         public ObservableCollection<Page> Pages { get; } = new();
 
-        private Page? selectedPage;
-
         public Page? SelectedPage
         {
-            get => selectedPage;
-            set => SetField(ref selectedPage, value);
+            get;
+            set => SetField(ref field, value);
         }
     }
 }

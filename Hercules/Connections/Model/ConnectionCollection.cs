@@ -16,12 +16,10 @@ namespace Hercules.Connections
         private readonly string configFilename = Path.Combine(PathUtils.ConfigFolder, "config.xml");
         public ObservableCollection<DbConnection> Items { get; } = new();
 
-        DbConnection? activeConnection;
-
         public DbConnection? ActiveConnection
         {
-            get => activeConnection;
-            set => SetField(ref activeConnection, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public void LoadConfiguration()

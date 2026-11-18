@@ -37,12 +37,10 @@ namespace Hercules.ServerBrowser
 
         readonly CancellationTokenSource cancellationTokenSource;
 
-        string? statusMessage;
-
         public string? StatusMessage
         {
-            get => statusMessage;
-            set => SetField(ref statusMessage, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         async Task CopyDatabase(CdbDatabase sourceDatabase, IDatabaseBackend targetBackend, CancellationToken cancellationToken)

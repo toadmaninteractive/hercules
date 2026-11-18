@@ -15,12 +15,10 @@ namespace Hercules.History
         public IDocument Document { get; }
         public DatabaseHistory DatabaseHistory { get; }
 
-        bool isLoaded;
-
         public bool IsLoaded
         {
-            get => isLoaded;
-            set => SetField(ref isLoaded, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         bool isReloading;

@@ -14,17 +14,15 @@ namespace Hercules.Analysis
         private readonly Action refresh;
         public Category Category { get; }
 
-        private bool enabled = true;
-
         public bool Enabled
         {
-            get => enabled;
+            get;
             set
             {
-                if (SetField(ref enabled, value))
+                if (SetField(ref field, value))
                     refresh();
             }
-        }
+        } = true;
 
         public System.Windows.Media.SolidColorBrush Color { get; }
 
@@ -45,11 +43,10 @@ namespace Hercules.Analysis
         public ObservableCollection<ReferenceGraphCategory> Categories { get; }
         public Project Project => project;
 
-        private Graph? graph;
         public Graph? Graph
         {
-            get => graph;
-            set => SetField(ref graph, value);
+            get;
+            set => SetField(ref field, value);
         }
         public ICommand RefreshCommand { get; }
         public ICommand CheckAllCommand { get; }

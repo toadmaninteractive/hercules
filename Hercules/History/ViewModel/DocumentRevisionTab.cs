@@ -31,21 +31,17 @@ namespace Hercules.History
 
         public TextDocument JsonEditor { get; }
 
-        DiffLines? diffLines;
-
         public DiffLines? DiffLines
         {
-            get => diffLines;
-            private set => SetField(ref diffLines, value);
+            get;
+            private set => SetField(ref field, value);
         }
-
-        string syntax = default!;
 
         public string Syntax
         {
-            get => syntax;
-            set => SetField(ref syntax, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = default!;
 
         public DocumentEditorPage Editor { get; }
 
@@ -66,21 +62,17 @@ namespace Hercules.History
         public ICommand ApplyScriptCommand { get; }
         public ICommand RevertScriptCommand { get; }
 
-        int mode = ModeChanges;
-
         public int Mode
         {
-            get => mode;
-            set => SetField(ref mode, value);
-        }
-
-        int line = 0;
+            get;
+            set => SetField(ref field, value);
+        } = ModeChanges;
 
         public int Line
         {
-            get => line;
-            set => SetField(ref line, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = 0;
 
         bool hasDifferences = false;
 

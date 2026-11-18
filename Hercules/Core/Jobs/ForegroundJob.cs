@@ -7,12 +7,11 @@ namespace Hercules
 {
     public sealed class ForegroundJob : NotifyPropertyChanged
     {
-        bool isBusy;
 
         public bool IsBusy
         {
-            get => isBusy;
-            private set => SetField(ref isBusy, value);
+            get;
+            private set => SetField(ref field, value);
         }
 
         string? title;
@@ -23,12 +22,10 @@ namespace Hercules
             private set => SetField(ref title, value);
         }
 
-        string? status;
-
         public string? Status
         {
-            get => status;
-            private set => SetField(ref status, value);
+            get;
+            private set => SetField(ref field, value);
         }
 
         ICommand abort;

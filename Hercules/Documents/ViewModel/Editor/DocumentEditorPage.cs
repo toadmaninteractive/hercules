@@ -40,15 +40,14 @@ namespace Hercules.Documents.Editor
         public SchemaRecord Schema { get; private set; }
         public bool Enabled
         {
-            get => enabled;
-            private set => SetField(ref enabled, value);
-        }
+            get;
+            private set => SetField(ref field, value);
+        } = true;
 
         public bool IsScript => Category.Type == CategoryType.Script;
 
         private readonly IDisposable databaseSubscription;
         private readonly IDisposable dirtySubscription;
-        private bool enabled = true;
         private readonly ObservableValue<bool> originalIsDirty = new(false);
         private readonly IReadOnlyObservableValue<bool> isModified;
 

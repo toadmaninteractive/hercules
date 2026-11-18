@@ -32,13 +32,11 @@ namespace Hercules.Scripting
         public ScriptingModule ScriptingModule { get; }
         public Workspace Workspace { get; }
 
-        bool forEachDocument = false;
-
         public bool ForEachDocument
         {
-            get => forEachDocument;
-            set => SetField(ref forEachDocument, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = false;
 
         public SearchNotification Search { get; }
 

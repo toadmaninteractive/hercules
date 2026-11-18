@@ -9,25 +9,21 @@ namespace Hercules.DatabaseExplorer
         public IDocument Document { get; }
         public string FilterPrefix
         {
-            get => filterPrefix;
-            set => SetField(ref filterPrefix, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
         public string FilterPattern
         {
-            get => filterPattern;
-            set => SetField(ref filterPattern, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
         public string FilterSuffix
         {
-            get => filterSuffix;
-            set => SetField(ref filterSuffix, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
         public string DocumentId { get; }
         public override WorkspaceContextMenu? ContextMenu { get; }
-
-        private string filterPrefix = string.Empty;
-        private string filterPattern = string.Empty;
-        private string filterSuffix = string.Empty;
 
         public DatabaseExplorerDocument(IDocument document, WorkspaceContextMenu? documentMenu)
         {

@@ -9,12 +9,10 @@ namespace Hercules.Documents.Editor
     {
         public IReadOnlyList<Category> Categories { get; }
 
-        Category? category;
-
         public Category? Category
         {
-            get => category;
-            set => SetField(ref category, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public ICommand ApplyCategoryCommand { get; private set; }

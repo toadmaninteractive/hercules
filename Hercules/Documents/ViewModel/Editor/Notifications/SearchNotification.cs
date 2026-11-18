@@ -6,28 +6,23 @@ namespace Hercules.Documents.Editor
 {
     public class SearchNotification : Notification
     {
-        string text = string.Empty;
 
         public string Text
         {
-            get => text;
-            set => SetField(ref text, value);
-        }
-
-        bool wholeWord;
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public bool WholeWord
         {
-            get => wholeWord;
-            set => SetField(ref wholeWord, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        bool matchCase;
 
         public bool MatchCase
         {
-            get => matchCase;
-            set => SetField(ref matchCase, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public SearchNotification(ICommand findCommand)

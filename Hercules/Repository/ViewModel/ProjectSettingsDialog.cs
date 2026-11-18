@@ -67,15 +67,15 @@ namespace Hercules.Repository
 
         public string GitlabTestStatus
         {
-            get => gitlabTestStatus;
-            set => SetField(ref gitlabTestStatus, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public SolidColorBrush GitlabTestColor
         {
-            get => gitlabTestColor;
-            set => SetField(ref gitlabTestColor, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = Brushes.Gray;
 
         public ICommand SelectProjectRootFolderCommand { get; }
         public ICommand TestGitlabCommand { get; }
@@ -88,8 +88,6 @@ namespace Hercules.Repository
         private string remoteBaseUrl;
         private bool mcpServerEnabled;
         private int mcpServerPort;
-        private string gitlabTestStatus = string.Empty;
-        private SolidColorBrush gitlabTestColor = Brushes.Gray;
         private CancellationTokenSource? gitlabTestCts;
         private int gitlabTestVersion;
 

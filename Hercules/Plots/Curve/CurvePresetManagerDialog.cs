@@ -10,10 +10,10 @@ namespace Hercules.Plots
         public IReadOnlyList<EditorCurvePreset> Presets { get; }
         public EditorCurvePreset? SelectedPreset
         {
-            get => selectedPreset;
+            get;
             set
             {
-                if (SetField(ref selectedPreset, value))
+                if (SetField(ref field, value))
                 {
                     if (IsSaveMode)
                         SelectedName = SelectedPreset?.Name;
@@ -21,18 +21,15 @@ namespace Hercules.Plots
             }
         }
 
-        string? selectedName;
         public string? SelectedName
         {
-            get => selectedName;
-            set => SetField(ref selectedName, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public bool IsSaveMode { get; }
 
         public Rect Viewport { get; }
-
-        private EditorCurvePreset? selectedPreset;
 
         protected override bool IsOkEnabled()
         {

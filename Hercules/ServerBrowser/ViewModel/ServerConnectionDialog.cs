@@ -41,21 +41,17 @@ namespace Hercules.ServerBrowser
             }
         }
 
-        string userName = string.Empty;
-
         public string UserName
         {
-            get => userName;
-            set => SetField(ref userName, value);
-        }
-
-        string password = string.Empty;
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public string Password
         {
-            get => password;
-            set => SetField(ref password, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         protected override void OnClose(bool result)
         {

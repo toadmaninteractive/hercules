@@ -14,8 +14,6 @@ namespace Hercules.Plots
         Point position;
         double tangentIn;
         double tangentOut;
-        bool isSelected;
-        bool smooth;
         string? x;
         string? y;
 
@@ -87,16 +85,16 @@ namespace Hercules.Plots
 
         public bool IsSelected
         {
-            get => isSelected;
-            set => SetField(ref isSelected, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public bool Smooth
         {
-            get => smooth;
+            get;
             set
             {
-                if (SetField(ref smooth, value) && value)
+                if (SetField(ref field, value) && value)
                     TangentOut = -TangentIn;
             }
         }
@@ -128,37 +126,30 @@ namespace Hercules.Plots
 
     public class CurveScaler : NotifyPropertyChanged
     {
-        private double pivotX;
 
         public double PivotX
         {
-            get => pivotX;
-            set => SetField(ref pivotX, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        private double pivotY;
 
         public double PivotY
         {
-            get => pivotY;
-            set => SetField(ref pivotY, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        private double scaleX = 1;
 
         public double ScaleX
         {
-            get => scaleX;
-            set => SetField(ref scaleX, value);
-        }
-
-        private double scaleY = 1;
+            get;
+            set => SetField(ref field, value);
+        } = 1;
 
         public double ScaleY
         {
-            get => scaleY;
-            set => SetField(ref scaleY, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = 1;
 
         public Vector Scale => new Vector(ScaleX, ScaleY);
 
@@ -183,10 +174,10 @@ namespace Hercules.Plots
 
         public bool IsOpenKnotEditor
         {
-            get => isOpenKnotEditor;
+            get;
             set
             {
-                if (SetField(ref isOpenKnotEditor, value) && !value)
+                if (SetField(ref field, value) && !value)
                 {
                     FocusedKnot?.ResetPopup();
                 }
@@ -195,8 +186,8 @@ namespace Hercules.Plots
 
         public bool IsScalePopupOpened
         {
-            get => isScalePopupOpened;
-            set => SetField(ref isScalePopupOpened, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public ObservableCollection<CurveKnot> Knots { get; } = new ObservableCollection<CurveKnot>();
@@ -234,11 +225,9 @@ namespace Hercules.Plots
 
         public Rect Viewport { get; } //For Xaml binding
         private CurveKnot? focusedKnot;
-        private bool isOpenKnotEditor;
         private readonly EditorCurve editor;
         private readonly IDialogService dialogService;
         private readonly Action<EditorCurve> saveEditor;
-        private bool isScalePopupOpened;
 
         public CurveDialog(string title, EditorCurve editor, Optional<EditorCurveData> curveData, IDialogService dialogService, Action<EditorCurve> saveEditor)
         {

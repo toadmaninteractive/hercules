@@ -78,13 +78,11 @@ namespace Hercules.Summary
 
         public event Action OnReset = delegate { };
 
-        bool isReadOnly = false;
-
         public bool IsReadOnly
         {
-            get => isReadOnly;
-            set => SetField(ref isReadOnly, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = false;
 
         public void AddColumns()
         {

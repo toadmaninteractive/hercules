@@ -55,12 +55,11 @@ namespace Hercules.Import
         public ICommand PasteJsonCommand { get; }
 
         string? lastFileName;
-        bool isCompleted;
 
         public bool IsCompleted
         {
-            get => isCompleted;
-            set => SetField(ref isCompleted, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public ForegroundJob Job { get; private set; }

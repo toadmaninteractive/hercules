@@ -30,11 +30,10 @@ namespace Hercules.Documents
 
     public class DocumentPreview : NotifyPropertyChanged
     {
-        private string? caption;
         public string? Caption
         {
-            get => caption;
-            set => SetField(ref caption, value);
+            get;
+            set => SetField(ref field, value);
         }
     }
 

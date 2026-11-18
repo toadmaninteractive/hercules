@@ -14,13 +14,11 @@ namespace Hercules.Bookmarks
             set => SetField(ref name, value);
         }
 
-        string icon = "image-" + Fugue.Icons.BlueFolderOpen;
-
         public string Icon
         {
-            get => icon;
-            set => SetField(ref icon, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = "image-" + Fugue.Icons.BlueFolderOpen;
 
         public abstract IShortcut Shortcut { get; }
         public BookmarkFolder? Parent { get; set; }
@@ -70,12 +68,11 @@ namespace Hercules.Bookmarks
 
     public sealed class BookmarkShortcut : Bookmark, IShortcutProvider
     {
-        IEnumerable? items;
 
         public IEnumerable? Items
         {
-            get => items;
-            set => SetField(ref items, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public bool IsFolder { get; private set; }

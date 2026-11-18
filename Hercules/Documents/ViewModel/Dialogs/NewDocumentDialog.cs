@@ -26,28 +26,22 @@ namespace Hercules.Documents.Dialogs
             set => SetField(ref category, value);
         }
 
-        string documentName = string.Empty;
-
         public string DocumentName
         {
-            get => documentName;
-            set => SetField(ref documentName, value);
-        }
-
-        private string? documentNameError;
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public string? DocumentNameError
         {
-            get => documentNameError;
-            set => SetField(ref documentNameError, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        private string? categoryError;
 
         public string? CategoryError
         {
-            get => categoryError;
-            set => SetField(ref categoryError, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         [PropertyValidator(nameof(Category))]

@@ -7,44 +7,34 @@ namespace Hercules.Shell
     {
         public CommandBindingCollection RoutedCommandBindings { get; } = new CommandBindingCollection();
 
-        string? title;
-
         public string? Title
         {
-            get => title;
-            set => SetField(ref title, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        string? contentId;
 
         public string? ContentId
         {
-            get => contentId;
-            set => SetField(ref contentId, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        bool isActive;
 
         public bool IsActive
         {
-            get => isActive;
-            set => SetField(ref isActive, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        string? status;
 
         public string? Status
         {
-            get => status;
-            set => SetField(ref status, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        string? operation;
 
         public string? Operation
         {
-            get => operation;
-            set => SetField(ref operation, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public ObservableValue<object?> Properties { get; } = new ObservableValue<object?>(null);

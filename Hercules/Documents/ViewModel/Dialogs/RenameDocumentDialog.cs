@@ -11,13 +11,13 @@ namespace Hercules.Documents.Dialogs
     {
         public string DocumentName
         {
-            get => documentName;
-            set => SetField(ref documentName, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
         public string? DocumentNameError
         {
-            get => documentNameError;
-            set => SetField(ref documentNameError, value);
+            get;
+            set => SetField(ref field, value);
         }
         public DocumentsModule DocumentsModule { get; }
         public bool HasResults => Results.Documents.Count > 0;
@@ -31,8 +31,6 @@ namespace Hercules.Documents.Dialogs
         public ICommand CheckAllCommand { get; }
         public ICommand UncheckAllCommand { get; }
 
-        private string documentName = string.Empty;
-        private string? documentNameError;
         private SearchResults results;
 
         public RenameDocumentDialog(SchemafulDatabase schemafulDatabase, DocumentsModule documentsModule, IDocument source)

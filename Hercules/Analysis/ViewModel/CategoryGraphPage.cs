@@ -13,42 +13,39 @@ namespace Hercules.Analysis
         public ObservableCollection<ReferenceGraphCategory> Categories { get; }
         public Project Project => project;
 
-        private Graph? graph;
         public Graph? Graph
         {
-            get => graph;
-            set => SetField(ref graph, value);
+            get;
+            set => SetField(ref field, value);
         }
         public ICommand RefreshCommand { get; }
         public ICommand CheckAllCommand { get; }
         public ICommand UncheckAllCommand { get; }
         private bool isBulkUpdate;
 
-        private int referencesDepth = 1;
         public int ReferencesDepth
         {
-            get => referencesDepth;
+            get;
             set
             {
-                if (SetField(ref referencesDepth, value))
+                if (SetField(ref field, value))
                 {
                     Refresh();
                 }
             }
-        }
+        } = 1;
 
-        private int referencedByDepth = 1;
         public int ReferencedByDepth
         {
-            get => referencedByDepth;
+            get;
             set
             {
-                if (SetField(ref referencedByDepth, value))
+                if (SetField(ref field, value))
                 {
                     Refresh();
                 }
             }
-        }
+        } = 1;
 
         public CategoryGraphPage(Project project)
         {

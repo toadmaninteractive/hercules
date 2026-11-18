@@ -4,12 +4,11 @@ namespace Hercules.Shell
 {
     public class PageTab : NotifyPropertyChanged
     {
-        private string? title;
 
         public string? Title
         {
-            get => title;
-            set => SetField(ref title, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public NotificationService Notifications { get; } = new NotificationService();

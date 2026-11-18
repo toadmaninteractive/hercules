@@ -25,12 +25,10 @@ namespace Hercules.Replication
 
         public ForegroundJob Job { get; set; }
 
-        DbConnection? targetConnection;
-
         public DbConnection? TargetConnection
         {
-            get => targetConnection;
-            set => SetField(ref targetConnection, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         string localTimeHeader;
@@ -70,45 +68,35 @@ namespace Hercules.Replication
         public ConnectionsModule ConnectionsModule { get; }
         public DocumentsModule DocumentsModule { get; }
 
-        DatabaseComparer? comparer;
-
         public DatabaseComparer? Comparer
         {
-            get => comparer;
-            set => SetField(ref comparer, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        string? filter;
 
         public string? Filter
         {
-            get => filter;
-            set => SetField(ref filter, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        private bool showAdded = true;
 
         public bool ShowAdded
         {
-            get => showAdded;
-            set => SetField(ref showAdded, value);
-        }
-
-        private bool showDeleted = true;
+            get;
+            set => SetField(ref field, value);
+        } = true;
 
         public bool ShowDeleted
         {
-            get => showDeleted;
-            set => SetField(ref showDeleted, value);
-        }
-
-        private bool showModified = true;
+            get;
+            set => SetField(ref field, value);
+        } = true;
 
         public bool ShowModified
         {
-            get => showModified;
-            set => SetField(ref showModified, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = true;
 
         int savedCount = 0;
         int totalCount = 0;

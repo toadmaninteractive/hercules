@@ -18,10 +18,10 @@ namespace Hercules.DatabaseExplorer
         }
         public string Filter
         {
-            get => filter;
+            get;
             set
             {
-                if (SetField(ref filter, value))
+                if (SetField(ref field, value))
                 {
                     if (!isUpdatingFilter)
                     {
@@ -30,13 +30,12 @@ namespace Hercules.DatabaseExplorer
                     }
                 }
             }
-        }
+        } = string.Empty;
         public IList? SelectedItems { get; set; }
         public ICommand ClearFilterCommand { get; }
         public HashSet<string> CollapsedCategories { get; } = new HashSet<string>();
 
         private readonly IDisposable schemafulDatabaseSubscription;
-        private string filter = string.Empty;
         private bool isUpdatingFilter = false;
 
         public IReadOnlyObservableValue<Project?> ProjectObservable { get; }

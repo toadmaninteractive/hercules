@@ -12,29 +12,25 @@ namespace Hercules.Documents.Dialogs
 
         public IDocument? SelectedDocument
         {
-            get => selectedDocument;
-            set => SetField(ref selectedDocument, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public string DocumentName
         {
-            get => documentName;
-            set => SetField(ref documentName, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public string? DocumentNameError
         {
-            get => documentNameError;
-            set => SetField(ref documentNameError, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public List<IDocument> AvailableDocuments { get; }
         public SchemafulDatabase SchemafulDatabase { get; }
         public IDocument Source { get; }
-
-        private IDocument? selectedDocument;
-        private string documentName = string.Empty;
-        private string? documentNameError;
 
         public InheritDocumentDialog(SchemafulDatabase schemafulDatabase, Action<IDocument, string> inheritDocumentAction, IDocument source)
         {

@@ -126,12 +126,10 @@ namespace Hercules.Controls.Tree
 
         public bool IsExpandable => (HasChildren && !IsExpandedOnce) || Nodes.Count > 0;
 
-        private bool isSelected;
-
         public bool IsSelected
         {
-            get => isSelected;
-            set => SetField(ref isSelected, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public TreeNode? Parent { get; private set; }

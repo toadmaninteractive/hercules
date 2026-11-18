@@ -12,13 +12,11 @@ namespace Hercules.Import
         public string Title { get; }
         public int Index { get; }
 
-        bool isSelected = true;
-
         public bool IsSelected
         {
-            get => isSelected;
-            set => SetField(ref isSelected, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = true;
 
         public MapTableColumn(string field, string title, int index)
         {
@@ -38,20 +36,16 @@ namespace Hercules.Import
             set => SetField(ref text, value);
         }
 
-        bool isId;
-
         public bool IsId
         {
-            get => isId;
-            set => SetField(ref isId, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        bool isValid;
 
         public bool IsValid
         {
-            get => isValid;
-            set => SetField(ref isValid, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public MapTableValue(string? text)

@@ -19,12 +19,10 @@ namespace Hercules.Summary
         public TableColumn Column { get; }
         public TableRow Row { get; }
 
-        bool isModified;
-
         public bool IsModified
         {
-            get => isModified;
-            set => SetField(ref isModified, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public abstract object? ObjectValue { get; set; }
@@ -254,12 +252,10 @@ namespace Hercules.Summary
             UpdateShortcut();
         }
 
-        IShortcut? shortcut;
-
         public IShortcut? Shortcut
         {
-            get => shortcut;
-            set => SetField(ref shortcut, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         void UpdateShortcut()

@@ -7,12 +7,10 @@ namespace Hercules.Shell
     {
         public ObservableCollection<Advice> Advices { get; } = new();
 
-        bool newAdvice;
-
         public bool NewAdvice
         {
-            get => newAdvice;
-            set => SetField(ref newAdvice, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public void RemoveByType(string type)

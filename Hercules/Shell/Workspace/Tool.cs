@@ -22,20 +22,16 @@ namespace Hercules.Shell
 
         public ICommand CloseCommand { get; }
 
-        bool isVisible;
-
         public bool IsVisible
         {
-            get => isVisible;
-            set => SetField(ref isVisible, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        bool isSelected;
 
         public bool IsSelected
         {
-            get => isSelected;
-            set => SetField(ref isSelected, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public void Show()

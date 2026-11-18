@@ -9,12 +9,10 @@ namespace Hercules.Documents.Editor
     {
         public IReadOnlyList<IDocument> Documents { get; }
 
-        IDocument? document;
-
         public IDocument? Document
         {
-            get => document;
-            set => SetField(ref document, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public ICommand LinkCommand { get; private set; }

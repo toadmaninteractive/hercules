@@ -20,20 +20,16 @@ namespace Hercules.Documents.Dialogs
             Source = source;
         }
 
-        string documentNames = string.Empty;
-
         public string DocumentNames
         {
-            get => documentNames;
-            set => SetField(ref documentNames, value);
-        }
-
-        private string? documentNamesError;
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         public string? DocumentNamesError
         {
-            get => documentNamesError;
-            set => SetField(ref documentNamesError, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public List<string> SplitDocumentNames()

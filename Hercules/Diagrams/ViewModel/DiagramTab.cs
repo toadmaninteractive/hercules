@@ -23,13 +23,11 @@ namespace Hercules.Diagrams
         private SchemafulDatabase schemafulDatabase;
         private SchemaDiagram schemaDiagram = default!;
 
-        private DiagramViewModel diagram = default!;
-
         public DiagramViewModel Diagram
         {
-            get => diagram;
-            private set => SetField(ref diagram, value);
-        }
+            get;
+            private set => SetField(ref field, value);
+        } = default!;
 
         public DiagramTab(DocumentEditorPage editor, ToolBoxTool toolBoxTool, PropertyEditorTool propertyEditorTool)
         {

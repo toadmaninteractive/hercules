@@ -14,12 +14,10 @@ namespace Hercules.Search
 
         public bool IsExpanded { get; set; }
 
-        bool isChecked;
-
         public bool IsChecked
         {
-            get => isChecked;
-            set => SetField(ref isChecked, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public Reference(string documentId, JsonPath path, string text)

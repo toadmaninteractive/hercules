@@ -47,20 +47,16 @@ namespace Hercules.Documents.Editor
         public TextDocument LeftText { get; }
         public TextDocument RightText { get; }
 
-        IDiffLines? leftDiffLines;
-
         public IDiffLines? LeftDiffLines
         {
-            get => leftDiffLines;
-            set => SetField(ref leftDiffLines, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        IDiffLines? rightDiffLines;
 
         public IDiffLines? RightDiffLines
         {
-            get => rightDiffLines;
-            set => SetField(ref rightDiffLines, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public ICommand SwapCommand { get; }

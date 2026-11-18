@@ -26,12 +26,10 @@ namespace Hercules.Shell
             Services = new List<object>();
         }
 
-        bool isDirty;
-
         public bool IsDirty
         {
-            get => isDirty;
-            set => SetField(ref isDirty, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public void AssignClosePageService(IClosePageService closePageService)

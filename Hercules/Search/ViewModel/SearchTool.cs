@@ -14,61 +14,51 @@ namespace Hercules.Search
         public ICommand ExecuteSearchCommand { get; }
         public bool MatchCase
         {
-            get => matchCase;
-            set => SetField(ref matchCase, value);
+            get;
+            set => SetField(ref field, value);
         }
         public bool OpenedDocuments
         {
-            get => openedDocuments;
-            set => SetField(ref openedDocuments, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = false;
         public ObservableCollection<Category> SearchCategories { get; }
         public bool SearchEnums
         {
-            get => searchEnums;
-            set => SetField(ref searchEnums, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = true;
         public bool SearchFields
         {
-            get => searchFields;
-            set => SetField(ref searchFields, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = false;
         public bool SearchKeys
         {
-            get => searchKeys;
-            set => SetField(ref searchKeys, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = true;
         public SearchModule SearchModule { get; }
         public bool SearchNumbers
         {
-            get => searchNumbers;
-            set => SetField(ref searchNumbers, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = true;
         public bool SearchText
         {
-            get => searchText;
-            set => SetField(ref searchText, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = true;
         public string Text
         {
-            get => text;
-            set => SetField(ref text, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
         public bool WholeWord
         {
-            get => wholeWord;
-            set => SetField(ref wholeWord, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        bool matchCase;
-        bool openedDocuments = false;
-        bool searchEnums = true;
-        bool searchFields = false;
-        bool searchKeys = true;
-        bool searchNumbers = true;
-        bool searchText = true;
-        string text = string.Empty;
-        bool wholeWord;
 
         public SearchTool(SearchModule searchModule, IReadOnlyObservableValue<Project?> projectObservable)
         {

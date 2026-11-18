@@ -206,12 +206,11 @@ namespace Hercules.Summary
 
     public class SummaryTable : NotifyPropertyChanged, IExportTable
     {
-        bool isModified;
 
         public bool IsModified
         {
-            get => isModified;
-            set => SetField(ref isModified, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public ICommand<IDocument> EditDocumentCommand { get; }

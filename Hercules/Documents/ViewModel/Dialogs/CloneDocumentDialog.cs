@@ -19,21 +19,17 @@ namespace Hercules.Documents.Dialogs
             DocumentName = source.DocumentId;
         }
 
-        private string? documentNameError;
-
         public string? DocumentNameError
         {
-            get => documentNameError;
-            set => SetField(ref documentNameError, value);
+            get;
+            set => SetField(ref field, value);
         }
-
-        string documentName = string.Empty;
 
         public string DocumentName
         {
-            get => documentName;
-            set => SetField(ref documentName, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = string.Empty;
 
         [PropertyValidator(nameof(DocumentName))]
         public string? ValidateDocumentName()
