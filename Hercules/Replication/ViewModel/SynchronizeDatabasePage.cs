@@ -39,13 +39,11 @@ namespace Hercules.Replication
             set => SetField(ref localTimeHeader, value);
         }
 
-        string remoteTimeHeader;
-
         public string RemoteTimeHeader
         {
-            get => remoteTimeHeader;
-            set => SetField(ref remoteTimeHeader, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = "Time";
 
         string localUserHeader;
 
@@ -55,13 +53,11 @@ namespace Hercules.Replication
             set => SetField(ref localUserHeader, value);
         }
 
-        string remoteUserHeader;
-
         public string RemoteUserHeader
         {
-            get => remoteUserHeader;
-            set => SetField(ref remoteUserHeader, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = "User";
 
         public Database? TargetDatabase { get; private set; }
 
@@ -114,8 +110,6 @@ namespace Hercules.Replication
             var currentConnection = ConnectionsModule.Connections.ActiveConnection!;
             localTimeHeader = "Time [" + currentConnection.Title + "]";
             localUserHeader = "User [" + currentConnection.Title + "]";
-            remoteTimeHeader = "Time";
-            remoteUserHeader = "User";
             Connections = new ObservableCollection<DbConnection>(connectionsModule.Connections.Items);
             Connections.Remove(currentConnection);
             LoadCommand = Commands.Execute(Load).If(() => TargetConnection != null);

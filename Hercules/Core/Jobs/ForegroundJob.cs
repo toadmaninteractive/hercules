@@ -28,18 +28,11 @@ namespace Hercules
             private set => SetField(ref field, value);
         }
 
-        ICommand abort;
-
         public ICommand Abort
         {
-            get => abort;
-            private set => SetField(ref abort, value);
-        }
-
-        public ForegroundJob()
-        {
-            abort = CannotCommand;
-        }
+            get;
+            private set => SetField(ref field, value);
+        } = CannotCommand;
 
         public async Task Run(string title, Func<IProgress<string>, CancellationToken, Task> task)
         {

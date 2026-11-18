@@ -605,7 +605,6 @@ namespace Hercules.Forms.Elements
             : base(parent, type, json, originalJson, transaction)
         {
             ClearCommand = Commands.Execute(DoClear);
-            editorHeight = 100;
         }
 
         public ICommand ClearCommand { get; }
@@ -615,19 +614,17 @@ namespace Hercules.Forms.Elements
             Value = SimpleType.Default;
         }
 
-        double editorHeight;
-
         public double EditorHeight
         {
-            get => editorHeight;
+            get;
             set
             {
-                if (SetField(ref editorHeight, value))
+                if (SetField(ref field, value))
                 {
                     Form.RefreshPresentation();
                 }
             }
-        }
+        } = 100;
 
         public override void Present(PresentationContext context)
         {
@@ -654,24 +651,21 @@ namespace Hercules.Forms.Elements
         {
             Document = new TextDocument(value);
             Document.TextChanged += Document_TextChanged;
-            editorHeight = 100;
             HasPostUpdate = true;
             // Document.PropertyChanged += Document_PropertyChanged;
         }
 
-        double editorHeight;
-
         public double EditorHeight
         {
-            get => editorHeight;
+            get;
             set
             {
-                if (SetField(ref editorHeight, value))
+                if (SetField(ref field, value))
                 {
                     Form.RefreshPresentation();
                 }
             }
-        }
+        } = 100;
 
         /*private void Document_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {

@@ -12,12 +12,11 @@ namespace Hercules.AI
         public AiChatLog ChatLog { get; }
         public ObservableValue<bool> IsGenerating { get; }
 
-        private string userPrompt;
         public string UserPrompt
         {
-            get => userPrompt;
-            set => SetField(ref userPrompt, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = "";
 
         private IHerculesAiChat? herculesChat;
 
@@ -38,7 +37,6 @@ namespace Hercules.AI
             Title = "AI Chat";
             ContentId = "{AiChat}";
             Location = ToolLocation.Right;
-            userPrompt = "";
             SubmitCommand = Commands.Execute(Submit).If(() => !string.IsNullOrEmpty(UserPrompt));
             ResetChatCommand = Commands.Execute(ResetChat);
             StopCommand = Commands.Execute(Stop).If(() => cts != null);
@@ -87,7 +85,7 @@ namespace Hercules.AI
 
             Stop();
             cts = new CancellationTokenSource();
-            herculesChat.Ask(userPrompt, attachments, cts.Token);
+            herculesChat.Ask(UserPrompt,attachments, cts.Token);
             attachments.Clear();
         }
 
