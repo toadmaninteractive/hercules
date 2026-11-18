@@ -14,12 +14,10 @@ namespace Hercules.Shell
             private set => SetField(ref content, value);
         }
 
-        private DockingLayoutItem? layoutItem;
-
         public DockingLayoutItem? LayoutItem
         {
-            get => layoutItem;
-            private set => SetField(ref layoutItem, value);
+            get;
+            private set => SetField(ref field, value);
         }
 
         private readonly IWindowService windowService;
@@ -45,7 +43,7 @@ namespace Hercules.Shell
         // The shown page can be closed while a tool has focus, which doesn't change the active content
         private void Pages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (layoutItem is Page page && !windowService.Pages.Contains(page))
+            if (LayoutItem is Page page && !windowService.Pages.Contains(page))
                 Show(windowService.ActiveContent as Page);
         }
 

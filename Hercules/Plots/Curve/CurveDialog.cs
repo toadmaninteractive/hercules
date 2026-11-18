@@ -168,8 +168,8 @@ namespace Hercules.Plots
     {
         public CurveKnot? FocusedKnot
         {
-            get => focusedKnot;
-            set => SetField(ref focusedKnot, value);
+            get;
+            set => SetField(ref field, value);
         }
 
         public bool IsOpenKnotEditor
@@ -224,7 +224,6 @@ namespace Hercules.Plots
         public string AxisYLabel { get; }
 
         public Rect Viewport { get; } //For Xaml binding
-        private CurveKnot? focusedKnot;
         private readonly EditorCurve editor;
         private readonly IDialogService dialogService;
         private readonly Action<EditorCurve> saveEditor;
@@ -390,7 +389,7 @@ namespace Hercules.Plots
         void Straightening()
         {
             var knots = Knots.OrderBy(x => x.Position.X).ToList();
-            var i = knots.IndexOf(focusedKnot!);
+            var i = knots.IndexOf(FocusedKnot!);
             if (i >= 0 && i < knots.Count - 1)
             {
                 var angle = (knots[i + 1].Position.Y - knots[i].Position.Y) / (knots[i + 1].Position.X - knots[i].Position.X);

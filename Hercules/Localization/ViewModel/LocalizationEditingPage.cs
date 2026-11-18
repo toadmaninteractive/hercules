@@ -104,21 +104,17 @@ namespace Hercules.Localization
 
         public ObservableCollection<LocalizationEntry> Entries { get; } = new();
 
-        private ApprovalFilter approvalFilter = ApprovalFilter.NotApproved;
-
         public ApprovalFilter ApprovalFilter
         {
-            get => approvalFilter;
-            set => SetField(ref approvalFilter, value);
-        }
-
-        private EmptyFilter emptyFilter = EmptyFilter.All;
+            get;
+            set => SetField(ref field, value);
+        } = ApprovalFilter.NotApproved;
 
         public EmptyFilter EmptyFilter
         {
-            get => emptyFilter;
-            set => SetField(ref emptyFilter, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = EmptyFilter.All;
 
         public bool IsSaving
         {
@@ -154,14 +150,14 @@ namespace Hercules.Localization
             var approvedText = data.GetValueSafe("approved_text").AsStringOrNull() ?? "";
             bool isApproved = text == approvedText;
 
-            if (approvalFilter == ApprovalFilter.Approved && !isApproved)
+            if (ApprovalFilter == ApprovalFilter.Approved && !isApproved)
                 return;
-            if (approvalFilter == ApprovalFilter.NotApproved && isApproved)
+            if (ApprovalFilter == ApprovalFilter.NotApproved && isApproved)
                 return;
 
-            if (emptyFilter == EmptyFilter.Empty && text != string.Empty)
+            if (EmptyFilter == EmptyFilter.Empty && text != string.Empty)
                 return;
-            if (emptyFilter == EmptyFilter.NotEmpty && text == string.Empty)
+            if (EmptyFilter == EmptyFilter.NotEmpty && text == string.Empty)
                 return;
 
             var entry = new LocalizationEntry(document, path, text, isApproved, req => documentsModule.EditDocument(req));

@@ -53,31 +53,29 @@ namespace Hercules.Analysis
         public ICommand UncheckAllCommand { get; }
         private bool isBulkUpdate;
 
-        private int referencesDepth = 1;
         public int ReferencesDepth
         {
-            get => referencesDepth;
+            get;
             set
             {
-                if (SetField(ref referencesDepth, value))
+                if (SetField(ref field, value))
                 {
                     Refresh();
                 }
             }
-        }
+        } = 1;
 
-        private int referencedByDepth = 1;
         public int ReferencedByDepth
         {
-            get => referencedByDepth;
+            get;
             set
             {
-                if (SetField(ref referencedByDepth, value))
+                if (SetField(ref field, value))
                 {
                     Refresh();
                 }
             }
-        }
+        } = 1;
 
         public ReferenceGraphPage(Project project, IReadOnlyCollection<IDocument> rootDocuments, IBulkCommand<IDocument> editDocumentCommand)
         {
@@ -141,14 +139,14 @@ namespace Hercules.Analysis
                 }
             }
 
-            foreach (var edgeModel in graphModel.TraverseReferences(rootNodes, referencesDepth))
+            foreach (var edgeModel in graphModel.TraverseReferences(rootNodes, ReferencesDepth))
             {
                 var edge = buildGraph.AddEdge(edgeModel.from.Id, edgeModel.to.Id);
                 edge.Attr.Color = Color.Gray;
                 edge.Attr.LineWidth = 0.5;
             }
 
-            foreach (var edgeModel in graphModel.TraverseReferencedBy(rootNodes, referencedByDepth))
+            foreach (var edgeModel in graphModel.TraverseReferencedBy(rootNodes, ReferencedByDepth))
             {
                 var edge = buildGraph.AddEdge(edgeModel.from.Id, edgeModel.to.Id);
                 edge.Attr.Color = Color.Gray;

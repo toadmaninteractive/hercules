@@ -45,7 +45,7 @@ namespace Hercules.Shell
                 _ => ShowInfo
             }))
                 return false;
-            if (!string.IsNullOrEmpty(filter) && !e.Message.Contains(filter))
+            if (!string.IsNullOrEmpty(Filter) && !e.Message.Contains(Filter))
                 return false;
             return true;
         }
@@ -64,19 +64,17 @@ namespace Hercules.Shell
 
         private IDisposable? subscription;
 
-        private string filter = "";
-
         public string Filter
         {
-            get => filter;
+            get;
             set
             {
-                if (SetField(ref filter, value))
+                if (SetField(ref field, value))
                 {
                     eventsView.Refresh();
                 }
             }
-        }
+        } = "";
 
         public ICommand ClearFilterCommand { get; }
 

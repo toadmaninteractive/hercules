@@ -28,7 +28,7 @@ namespace Hercules.Forms.Elements
 
             if (ApprovedText != null)
             {
-                ApproveCommand = Commands.Execute(Approve).If(() => !isApproved);
+                ApproveCommand = Commands.Execute(Approve).If(() => !IsApproved);
                 IsApproved = ImmutableJson.Equals(ApprovedText?.Json ?? EmptyStringJson, Text.Json);
             }
         }
@@ -49,12 +49,10 @@ namespace Hercules.Forms.Elements
         public Element Text { get; }
         public Element? ApprovedText { get; }
 
-        private bool isApproved;
-
         public bool IsApproved
         {
-            get => isApproved;
-            private set => SetField(ref isApproved, value);
+            get;
+            private set => SetField(ref field, value);
         }
 
         public ICommand? ApproveCommand { get; }

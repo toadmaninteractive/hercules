@@ -144,13 +144,11 @@ namespace Hercules.Summary
             Type = type;
         }
 
-        bool isChecked = false;
-
         public bool IsChecked
         {
-            get => isChecked;
-            set => SetField(ref isChecked, value);
-        }
+            get;
+            set => SetField(ref field, value);
+        } = false;
 
         public JsonPath Path { get; }
 
@@ -158,7 +156,7 @@ namespace Hercules.Summary
 
         public override IEnumerable<StructureValue> Collect()
         {
-            if (isChecked)
+            if (IsChecked)
                 yield return this;
         }
 
