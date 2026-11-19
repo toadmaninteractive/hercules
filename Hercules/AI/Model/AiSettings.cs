@@ -1,5 +1,6 @@
 ﻿using Anthropic.SDK.Constants;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Hercules.AI
 {

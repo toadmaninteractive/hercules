@@ -1,14 +1,17 @@
 ﻿using Hercules.Documents;
 using Hercules.Shell;
 using Hercules.Shortcuts;
-using Json;
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows.Input;
 
 namespace Hercules.Bookmarks
 {
+    public record StoredBookmarkFolder(string Title, ImmutableList<StoredBookmark> Items);
+    public union StoredBookmark(string, StoredBookmarkFolder);
+
     public class BookmarksBar
     {
         public ShortcutService ShortcutService { get; }
@@ -111,36 +114,27 @@ namespace Hercules.Bookmarks
             Root.Items.Clear();
         }
 
-        public void Load(ImmutableJsonArray json)
+        public void Load(ImmutableList<StoredBookmark> bookmarks)
         {
             Root.Items.Clear();
-            foreach (var item in json)
+            foreach (var storedBookmark in bookmarks)
             {
-                var bookmark = BookmarkFromJson(item);
+                var bookmark = LoadBookmark(storedBookmark);
                 if (bookmark != null)
                     Root.Add(bookmark);
             }
         }
 
-        public ImmutableJsonArray Save()
+        public ImmutableList<StoredBookmark> Save()
         {
-            var result = new JsonArray();
-            result.AddRange(Root.Items.Select(BookmarkToJson));
-            return result;
+            return Root.Items.Select(StoreBookmark).ToImmutableList();
         }
 
-        private ImmutableJson BookmarkToJson(Bookmark bookmark)
+        private StoredBookmark StoreBookmark(Bookmark bookmark)
         {
             if (bookmark is BookmarkFolder folder)
             {
-                var jsonArray = new JsonArray();
-                jsonArray.AddRange(folder.Items.Select(BookmarkToJson));
-                var jsonObject = new JsonObject
-                {
-                    ["Title"] = folder.Name,
-                    ["Items"] = jsonArray
-                };
-                return jsonObject;
+                return new StoredBookmarkFolder(folder.Name, folder.Items.Select(StoreBookmark).ToImmutableList());
             }
             else
             {
@@ -149,27 +143,27 @@ namespace Hercules.Bookmarks
             }
         }
 
-        private Bookmark? BookmarkFromJson(ImmutableJson json)
+        private Bookmark? LoadBookmark(StoredBookmark storedBookmark)
         {
-            if (json.IsObject)
+            switch (storedBookmark)
             {
-                var title = json["Title"].AsString;
-                var items = json["Items"].AsArray;
-                var folder = new BookmarkFolder(title);
-                foreach (var item in items)
-                {
-                    var child = BookmarkFromJson(item);
-                    if (child != null)
-                        folder.Add(child);
-                }
-                return folder;
+                case StoredBookmarkFolder storedFolder:
+                    {
+                        var folder = new BookmarkFolder(storedFolder.Title);
+                        foreach (var item in storedFolder.Items)
+                        {
+                            var child = LoadBookmark(item);
+                            if (child != null)
+                                folder.Add(child);
+                        }
+                        return folder;
+                    }
+
+                case string url:
+                    return FromUrl(url);
+                default:
+                    return null;
             }
-            else if (json.IsString)
-            {
-                return FromUrl(json.AsString);
-            }
-            else
-                return null;
         }
 
         void Invalidate(IShortcutHandler handler)

@@ -1,5 +1,6 @@
 ﻿using Hercules.Shell;
 using System;
+using System.Text.Json.Serialization;
 
 namespace Hercules.Repository
 {

@@ -1,8 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Hercules
 {
-    public interface ISettingsReader
+    public interface ISettingsReader : IDisposable
     {
         bool Read<T>(string name, [MaybeNullWhen(returnValue: false)] out T value);
     }
@@ -18,6 +19,10 @@ namespace Hercules
         {
             value = default!;
             return false;
+        }
+
+        public void Dispose()
+        {
         }
 
         public static readonly ISettingsReader Default = new EmptySettingsReader();

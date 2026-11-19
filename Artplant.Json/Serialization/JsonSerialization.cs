@@ -4,6 +4,18 @@ using System.Globalization;
 
 namespace Json.Serialization
 {
+    public interface IJsonSerializer
+    {
+        object Deserialize(ImmutableJson json);
+        ImmutableJson Serialize(object value);
+    }
+
+    public interface IJsonKeySerializer
+    {
+        object DeserializeKey(string str);
+        string SerializeKey(object value);
+    }
+
     public interface IJsonSerializable
     {
         ImmutableJson SerializeJson();

@@ -14,20 +14,7 @@ using System.Windows.Media.Imaging;
 
 namespace Hercules.Cards
 {
-    public class CardSettings : IJsonSerializable
-    {
-        public double TileSize { get; set; } = 250;
-
-        public void DeserializeJson(ImmutableJson json)
-        {
-            TileSize = json.IsObject ? json.AsObject.GetValueOrDefault("TileSize")?.AsNumber ?? 250 : 250;
-        }
-
-        public ImmutableJson SerializeJson()
-        {
-            return new JsonObject { ["TileSize"] = TileSize };
-        }
-    }
+    public record struct CardSettings(double TileSize = 250);
 
     public class Card : NotifyPropertyChanged
     {
@@ -70,7 +57,7 @@ namespace Hercules.Cards
         private readonly IDisposable smoothTileSizeSubscription;
 
         public Project Project { get; }
-        public CardSettings Settings { get; }
+        public CardSettings Settings { get; private set; }
         public DocumentsModule DocumentsModule { get; }
         public SchemaRecord SchemaRecord { get; }
         public Category Category { get; }
@@ -89,7 +76,7 @@ namespace Hercules.Cards
             set
             {
                 if (SetField(ref tileSize, value))
-                    Settings.TileSize = (float)value;
+                    Settings = Settings with { TileSize = (float)value };
             }
         }
 

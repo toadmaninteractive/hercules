@@ -4,6 +4,7 @@ using Hercules.Shell;
 using Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
@@ -56,7 +57,7 @@ namespace Hercules.Bookmarks
                     select project.Database.Documents[docId]);
             }
 
-            if (settingsReader.Read<ImmutableJsonArray>("Bookmarks", out var bookmarks))
+            if (settingsReader.Read<ImmutableList<StoredBookmark>>("Bookmarks", out var bookmarks))
                 Bookmarks.Load(bookmarks);
             else
                 Bookmarks.AddRecentDocumentsBookmark();

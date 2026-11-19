@@ -88,6 +88,7 @@ namespace Hercules
             var newProject = new Project(connection, database, projectSettings, schemaUpdater, formSchemaFactory, documentsModule.MetaSchemaProvider);
             modules.ForEach(mod => mod.OnLoadProject(newProject, settingsReader));
             Project = newProject;
+            settingsReader.Dispose();
         }
 
         public void CloseProject()
