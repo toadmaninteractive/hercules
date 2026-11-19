@@ -48,7 +48,6 @@
                 "icon",
                 "curve",
                 "plot",
-                "interactive_map",
                 "breadcrumbs"
             ]
         },
@@ -65,7 +64,6 @@
                 "icon": "EditorIcon",
                 "curve": "EditorCurve",
                 "plot": "EditorPlot",
-                "interactive_map": "EditorInteractiveMap",
                 "breadcrumbs": "EditorBreadcrumbs"
             },
             "fields": {
@@ -294,20 +292,6 @@
                     "kind": "float",
                     "default": 200,
                     "type": "float32",
-                    "optional": false
-                }
-            },
-            "parent": "Editor",
-            "interfaces": []
-        },
-        "EditorInteractiveMap": {
-            "kind": "record",
-            "fields": {
-                "title": {
-                    "kind": "string",
-                    "default": "",
-                    "multiline": false,
-                    "not_empty": false,
                     "optional": false
                 }
             },

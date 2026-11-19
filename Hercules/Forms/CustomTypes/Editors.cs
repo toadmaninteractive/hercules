@@ -13,8 +13,7 @@ namespace Hercules.Forms.Schema.Custom
         Icon = 1,
         Curve = 2,
         Plot = 3,
-        InteractiveMap = 4,
-        Breadcrumbs = 5,
+        Breadcrumbs = 4,
     }
 
     public enum EditorScope
@@ -198,13 +197,6 @@ namespace Hercules.Forms.Schema.Custom
         public float PreviewHeight { get; set; } = 200f;
     }
 
-    public sealed class EditorInteractiveMap : Editor
-    {
-        public override EditorType EditorType => EditorType.InteractiveMap;
-
-        public string Title { get; set; } = "";
-    }
-
     public sealed class BreadcrumbsData
     {
         public string Name { get; }
@@ -301,7 +293,6 @@ namespace Hercules.Forms.Schema.Custom
                 EditorType.Icon => "icon",
                 EditorType.Curve => "curve",
                 EditorType.Plot => "plot",
-                EditorType.InteractiveMap => "interactive_map",
                 EditorType.Breadcrumbs => "breadcrumbs",
                 _ => throw new System.ArgumentOutOfRangeException(nameof(value))
             };
@@ -314,7 +305,6 @@ namespace Hercules.Forms.Schema.Custom
                 "icon" => EditorType.Icon,
                 "curve" => EditorType.Curve,
                 "plot" => EditorType.Plot,
-                "interactive_map" => EditorType.InteractiveMap,
                 "breadcrumbs" => EditorType.Breadcrumbs,
                 _ => throw new System.ArgumentOutOfRangeException(nameof(jsonKey))
             };
@@ -369,7 +359,6 @@ namespace Hercules.Forms.Schema.Custom
                 EditorType.Icon => EditorIconJsonSerializer.Instance.Serialize((EditorIcon)value),
                 EditorType.Curve => EditorCurveJsonSerializer.Instance.Serialize((EditorCurve)value),
                 EditorType.Plot => EditorPlotJsonSerializer.Instance.Serialize((EditorPlot)value),
-                EditorType.InteractiveMap => EditorInteractiveMapJsonSerializer.Instance.Serialize((EditorInteractiveMap)value),
                 EditorType.Breadcrumbs => EditorBreadcrumbsJsonSerializer.Instance.Serialize((EditorBreadcrumbs)value),
                 _ => throw new System.ArgumentException("Invalid variant tag")
             };
@@ -385,7 +374,6 @@ namespace Hercules.Forms.Schema.Custom
                 EditorType.Icon => EditorIconJsonSerializer.Instance.Deserialize(json),
                 EditorType.Curve => EditorCurveJsonSerializer.Instance.Deserialize(json),
                 EditorType.Plot => EditorPlotJsonSerializer.Instance.Deserialize(json),
-                EditorType.InteractiveMap => EditorInteractiveMapJsonSerializer.Instance.Deserialize(json),
                 EditorType.Breadcrumbs => EditorBreadcrumbsJsonSerializer.Instance.Deserialize(json),
                 _ => throw new System.ArgumentException("Invalid variant tag")
             };
@@ -707,47 +695,6 @@ namespace Hercules.Forms.Schema.Custom
                 value.PreviewWidth = JsonSerializer.Float.Deserialize(jsonPreviewWidth);
             if (json.AsObject.TryGetValue("preview_height", out var jsonPreviewHeight) && !jsonPreviewHeight.IsNull)
                 value.PreviewHeight = JsonSerializer.Float.Deserialize(jsonPreviewHeight);
-        }
-    }
-
-    public sealed class EditorInteractiveMapJsonSerializer : Json.Serialization.IJsonSerializer<EditorInteractiveMap>
-    {
-        public static readonly EditorInteractiveMapJsonSerializer Instance = new EditorInteractiveMapJsonSerializer();
-
-        public Json.ImmutableJson Serialize(EditorInteractiveMap value)
-        {
-            if (value == null)
-                throw new System.ArgumentNullException(nameof(value));
-
-            if (value.Title == null)
-                throw new System.ArgumentException("Required property Title is null", nameof(value));
-            return new Json.JsonObject
-            {
-                ["editor_type"] = EditorTypeJsonSerializer.Instance.Serialize(value.EditorType),
-                ["scope"] = EditorScopeJsonSerializer.Instance.Serialize(value.Scope),
-                ["title"] = JsonSerializer.String.Serialize(value.Title)
-            };
-        }
-
-        public EditorInteractiveMap Deserialize(Json.ImmutableJson json)
-        {
-            if (json == null)
-                throw new System.ArgumentNullException(nameof(json));
-            var result = new EditorInteractiveMap();
-            Deserialize(json, result);
-            return result;
-        }
-
-        public void Deserialize(Json.ImmutableJson json, EditorInteractiveMap value)
-        {
-            if (json == null)
-                throw new System.ArgumentNullException(nameof(json));
-            if (value == null)
-                throw new System.ArgumentNullException(nameof(value));
-            if (json.AsObject.TryGetValue("scope", out var jsonScope) && !jsonScope.IsNull)
-                value.Scope = EditorScopeJsonSerializer.Instance.Deserialize(jsonScope);
-            if (json.AsObject.TryGetValue("title", out var jsonTitle) && !jsonTitle.IsNull)
-                value.Title = JsonSerializer.String.Deserialize(jsonTitle);
         }
     }
 

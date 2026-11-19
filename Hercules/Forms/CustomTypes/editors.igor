@@ -24,7 +24,6 @@ module Editors
         icon;
         curve;
         plot;
-        interactive_map;
         breadcrumbs;
     }
 
@@ -104,11 +103,6 @@ module Editors
         bool auto_scale_editor = false;
         float preview_width = 200;
         float preview_height = 200;
-    }
-
-    record Editor.EditorInteractiveMap[interactive_map]
-    {
-        string title = "";
     }
 
     [csharp immutable]

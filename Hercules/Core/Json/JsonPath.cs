@@ -429,7 +429,7 @@ namespace Json
 
         public static readonly JsonPath Empty = new JsonPath(new JsonPathNode[0]);
 
-        static readonly char[] Separators = new char[] { '.', '[', ']' };
+        static readonly char[] Separators = ['.', '[', ']'];
 
         JsonPath(JsonPathNode[] nodes)
         {

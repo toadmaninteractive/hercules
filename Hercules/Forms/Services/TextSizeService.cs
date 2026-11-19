@@ -5,18 +5,8 @@ using System.Windows.Media;
 
 namespace Hercules.Forms
 {
-    public class TextSizeService
+    public class TextSizeService(Typeface typeface, double emSize, double pixelsPerDip)
     {
-        public TextSizeService(Typeface typeface, double emSize, double pixelsPerDip)
-        {
-            this.typeface = typeface;
-            this.emSize = emSize;
-            this.pixelsPerDip = pixelsPerDip;
-        }
-
-        private readonly double pixelsPerDip;
-        private readonly Typeface typeface;
-        private readonly double emSize;
         private readonly Dictionary<string, double> cache = new Dictionary<string, double>();
 
         public double GetWidth(string text)

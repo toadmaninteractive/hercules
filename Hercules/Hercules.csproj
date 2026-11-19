@@ -85,9 +85,6 @@
     <Reference Include="Telerik.Windows.Diagrams.Core">
       <HintPath>..\Library\Telerik\Telerik.Windows.Diagrams.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Igor.Runtime">
-      <HintPath>..\Library\Igor.Runtime.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
