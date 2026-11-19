@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29806.167
+# Visual Studio Version 18
+VisualStudioVersion = 18.12.12405.243 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hercules", "Hercules\Hercules.csproj", "{8EDB2397-0C68-429E-8E47-4DD8C4C87B0B}"
 EndProject
@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CB8D6D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FugueIcons", "FugueIcons\FugueIcons.csproj", "{B2227882-6D0A-487F-9022-E200068A974D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Artplant.Json", "Artplant.Json\Artplant.Json.csproj", "{990C984D-055A-734A-82FF-8B67D76737EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B2227882-6D0A-487F-9022-E200068A974D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2227882-6D0A-487F-9022-E200068A974D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2227882-6D0A-487F-9022-E200068A974D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{990C984D-055A-734A-82FF-8B67D76737EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{990C984D-055A-734A-82FF-8B67D76737EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{990C984D-055A-734A-82FF-8B67D76737EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{990C984D-055A-734A-82FF-8B67D76737EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+		<TargetFramework>net11.0</TargetFramework>
+		<Description>Immutable Json library</Description>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+</Project>
