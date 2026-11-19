@@ -5,46 +5,42 @@
             "fields": {
                 "x": {
                     "kind": "float",
-                    "optional": false,
-                    "type": "float64"
+                    "type": "float64",
+                    "optional": false
                 },
                 "y": {
                     "kind": "float",
-                    "optional": false,
-                    "type": "float64"
+                    "type": "float64",
+                    "optional": false
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "Rect": {
             "kind": "record",
             "fields": {
                 "x": {
                     "kind": "float",
-                    "optional": false,
-                    "type": "float64"
+                    "type": "float64",
+                    "optional": false
                 },
                 "y": {
                     "kind": "float",
-                    "optional": false,
-                    "type": "float64"
+                    "type": "float64",
+                    "optional": false
                 },
                 "width": {
                     "kind": "float",
-                    "optional": false,
-                    "type": "float64"
+                    "type": "float64",
+                    "optional": false
                 },
                 "height": {
                     "kind": "float",
-                    "optional": false,
-                    "type": "float64"
+                    "type": "float64",
+                    "optional": false
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "EditorType": {
             "kind": "enum",
@@ -64,22 +60,6 @@
         },
         "Editor": {
             "kind": "variant",
-            "fields": {
-                "editor_type": {
-                    "kind": "enum",
-                    "optional": false,
-                    "name": "EditorType"
-                },
-                "scope": {
-                    "kind": "enum",
-                    "optional": false,
-                    "name": "EditorScope",
-                    "default": "editor"
-                }
-            },
-            "interfaces": [
-                
-            ],
             "tag": "editor_type",
             "children": {
                 "icon": "EditorIcon",
@@ -87,170 +67,170 @@
                 "plot": "EditorPlot",
                 "interactive_map": "EditorInteractiveMap",
                 "breadcrumbs": "EditorBreadcrumbs"
-            }
+            },
+            "fields": {
+                "editor_type": {
+                    "kind": "enum",
+                    "name": "EditorType",
+                    "optional": false
+                },
+                "scope": {
+                    "kind": "enum",
+                    "name": "EditorScope",
+                    "default": "editor",
+                    "optional": false
+                }
+            },
+            "interfaces": []
         },
         "EditorIcon": {
             "kind": "record",
             "fields": {
                 "atlas": {
                     "kind": "string",
-                    "optional": false,
                     "default": "",
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": false
                 },
                 "icon_width": {
                     "kind": "int",
-                    "optional": false,
-                    "type": "int32"
+                    "type": "int32",
+                    "optional": false
                 },
                 "icon_height": {
                     "kind": "int",
-                    "optional": false,
-                    "type": "int32"
+                    "type": "int32",
+                    "optional": false
                 },
                 "default": {
                     "kind": "int",
-                    "optional": false,
-                    "type": "int32"
+                    "type": "int32",
+                    "optional": false
                 }
             },
             "parent": "Editor",
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "EditorCurveKnot": {
             "kind": "record",
             "fields": {
                 "position": {
                     "kind": "record",
-                    "optional": false,
                     "name": "Vector",
-                    "compact": false
+                    "compact": false,
+                    "optional": false
                 },
                 "tangent_in": {
                     "kind": "float",
-                    "optional": false,
-                    "type": "float64"
+                    "type": "float64",
+                    "optional": false
                 },
                 "tangent_out": {
                     "kind": "float",
-                    "optional": false,
-                    "type": "float64"
+                    "type": "float64",
+                    "optional": false
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "EditorCurveData": {
             "kind": "record",
             "fields": {
                 "knots": {
                     "kind": "list",
-                    "optional": false,
                     "element": {
                         "kind": "record",
-                        "optional": false,
                         "name": "EditorCurveKnot",
-                        "compact": false
+                        "compact": false,
+                        "optional": false
                     },
-                    "default": [
-                        
-                    ]
+                    "default": [],
+                    "optional": false
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "EditorCurvePreset": {
             "kind": "record",
             "fields": {
                 "name": {
                     "kind": "string",
-                    "optional": false,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": false
                 },
                 "curve_data": {
                     "kind": "record",
-                    "optional": false,
                     "name": "EditorCurveData",
-                    "compact": false
+                    "compact": false,
+                    "optional": false
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "EditorCurve": {
             "kind": "record",
             "fields": {
                 "default_viewport": {
                     "kind": "record",
-                    "optional": false,
                     "name": "Rect",
-                    "compact": false
+                    "compact": false,
+                    "optional": false
                 },
                 "auto_scale_preview_x": {
                     "kind": "bool",
-                    "optional": false,
-                    "default": false
+                    "default": false,
+                    "optional": false
                 },
                 "auto_scale_preview_y": {
                     "kind": "bool",
-                    "optional": false,
-                    "default": false
+                    "default": false,
+                    "optional": false
                 },
                 "auto_scale_editor": {
                     "kind": "bool",
-                    "optional": false,
-                    "default": false
+                    "default": false,
+                    "optional": false
                 },
                 "preview_width": {
                     "kind": "float",
-                    "optional": false,
                     "default": 200,
-                    "type": "float32"
+                    "type": "float32",
+                    "optional": false
                 },
                 "preview_height": {
                     "kind": "float",
-                    "optional": false,
                     "default": 200,
-                    "type": "float32"
+                    "type": "float32",
+                    "optional": false
                 },
                 "axis_x_label": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "axis_y_label": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "presets": {
                     "kind": "list",
-                    "optional": false,
                     "element": {
                         "kind": "record",
-                        "optional": false,
                         "name": "EditorCurvePreset",
-                        "compact": false
+                        "compact": false,
+                        "optional": false
                     },
-                    "default": [
-                        
-                    ]
+                    "default": [],
+                    "optional": false
                 }
             },
             "parent": "Editor",
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "PlotType": {
             "kind": "enum",
@@ -263,130 +243,116 @@
             "fields": {
                 "points": {
                     "kind": "list",
-                    "optional": false,
                     "element": {
                         "kind": "record",
-                        "optional": false,
                         "name": "Vector",
-                        "compact": false
+                        "compact": false,
+                        "optional": false
                     },
-                    "default": [
-                        
-                    ]
+                    "default": [],
+                    "optional": false
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "EditorPlot": {
             "kind": "record",
             "fields": {
                 "default_viewport": {
                     "kind": "record",
-                    "optional": false,
                     "name": "Rect",
-                    "compact": false
+                    "compact": false,
+                    "optional": false
                 },
                 "plot_type": {
                     "kind": "enum",
-                    "optional": false,
-                    "name": "PlotType"
+                    "name": "PlotType",
+                    "optional": false
                 },
                 "auto_scale_preview_x": {
                     "kind": "bool",
-                    "optional": false,
-                    "default": false
+                    "default": false,
+                    "optional": false
                 },
                 "auto_scale_preview_y": {
                     "kind": "bool",
-                    "optional": false,
-                    "default": false
+                    "default": false,
+                    "optional": false
                 },
                 "auto_scale_editor": {
                     "kind": "bool",
-                    "optional": false,
-                    "default": false
+                    "default": false,
+                    "optional": false
                 },
                 "preview_width": {
                     "kind": "float",
-                    "optional": false,
                     "default": 200,
-                    "type": "float32"
+                    "type": "float32",
+                    "optional": false
                 },
                 "preview_height": {
                     "kind": "float",
-                    "optional": false,
                     "default": 200,
-                    "type": "float32"
+                    "type": "float32",
+                    "optional": false
                 }
             },
             "parent": "Editor",
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "EditorInteractiveMap": {
             "kind": "record",
             "fields": {
                 "title": {
                     "kind": "string",
-                    "optional": false,
                     "default": "",
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": false
                 }
             },
             "parent": "Editor",
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "BreadcrumbsData": {
             "kind": "record",
             "fields": {
                 "name": {
                     "kind": "string",
-                    "optional": false,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": false
                 },
                 "items": {
                     "kind": "list",
-                    "optional": true,
                     "element": {
                         "kind": "record",
-                        "optional": false,
                         "name": "BreadcrumbsData",
-                        "compact": false
-                    }
+                        "compact": false,
+                        "optional": false
+                    },
+                    "optional": true
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "EditorBreadcrumbs": {
             "kind": "record",
             "fields": {
                 "items": {
                     "kind": "list",
-                    "optional": false,
                     "element": {
                         "kind": "record",
-                        "optional": false,
                         "name": "BreadcrumbsData",
-                        "compact": false
+                        "compact": false,
+                        "optional": false
                     },
-                    "default": [
-                        
-                    ]
+                    "default": [],
+                    "optional": false
                 }
             },
             "parent": "Editor",
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         }
     },
     "document_type": "Editor",

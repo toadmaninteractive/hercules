@@ -14,88 +14,86 @@
             "fields": {
                 "name": {
                     "kind": "string",
-                    "optional": false,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": false
                 },
                 "type": {
                     "kind": "enum",
-                    "optional": false,
-                    "name": "ConnectorType"
+                    "name": "ConnectorType",
+                    "optional": false
                 },
                 "position": {
                     "kind": "string",
-                    "optional": false,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": false
                 },
                 "field": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "color": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "caption": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "category": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "Prototype": {
             "kind": "record",
             "fields": {
                 "name": {
                     "kind": "string",
-                    "optional": false,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": false
                 },
                 "custom_type": {
                     "kind": "string",
-                    "optional": false,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": false
                 },
                 "archetype": {
                     "kind": "string",
-                    "optional": false,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": false
                 },
                 "icon": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "color": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "caption": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "show_icon": {
                     "kind": "bool",
@@ -103,81 +101,69 @@
                 },
                 "special_fields": {
                     "kind": "dict",
-                    "optional": false,
                     "key": {
                         "kind": "string",
-                        "optional": false,
                         "multiline": false,
-                        "not_empty": false
+                        "not_empty": false,
+                        "optional": false
                     },
                     "value": {
                         "kind": "string",
-                        "optional": false,
                         "multiline": false,
-                        "not_empty": false
+                        "not_empty": false,
+                        "optional": false
                     },
-                    "default": {
-                        
-                    }
+                    "default": {},
+                    "optional": false
                 },
                 "connectors": {
                     "kind": "list",
-                    "optional": false,
                     "element": {
                         "kind": "record",
-                        "optional": false,
                         "name": "Connector",
-                        "compact": false
+                        "compact": false,
+                        "optional": false
                     },
-                    "default": [
-                        
-                    ]
+                    "default": [],
+                    "optional": false
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         },
         "DiagramSchema": {
             "kind": "record",
             "fields": {
                 "prototypes": {
                     "kind": "list",
-                    "optional": false,
                     "element": {
                         "kind": "record",
-                        "optional": false,
                         "name": "Prototype",
-                        "compact": false
+                        "compact": false,
+                        "optional": false
                     },
-                    "default": [
-                        
-                    ]
+                    "default": [],
+                    "optional": false
                 },
                 "diagram_tags": {
                     "kind": "list",
-                    "optional": false,
                     "element": {
                         "kind": "string",
-                        "optional": false,
                         "multiline": false,
-                        "not_empty": false
+                        "not_empty": false,
+                        "optional": false
                     },
-                    "default": [
-                        
-                    ]
+                    "default": [],
+                    "optional": false
                 },
                 "version": {
                     "kind": "string",
-                    "optional": false,
                     "default": "1.0",
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": false
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         }
     },
     "document_type": "DiagramSchema",

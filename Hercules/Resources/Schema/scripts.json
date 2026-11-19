@@ -11,27 +11,27 @@
             "fields": {
                 "scope": {
                     "kind": "enum",
-                    "optional": false,
                     "name": "ScriptScope",
-                    "default": "script"
+                    "default": "script",
+                    "optional": false
                 },
                 "name": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "icon": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "menu_category": {
                     "kind": "string",
-                    "optional": true,
                     "multiline": false,
-                    "not_empty": false
+                    "not_empty": false,
+                    "optional": true
                 },
                 "show_in_toolbar": {
                     "kind": "bool",
@@ -39,15 +39,13 @@
                 },
                 "script": {
                     "kind": "string",
-                    "optional": false,
                     "multiline": true,
                     "not_empty": false,
-                    "syntax": "JavaScript"
+                    "syntax": "JavaScript",
+                    "optional": false
                 }
             },
-            "interfaces": [
-                
-            ]
+            "interfaces": []
         }
     },
     "document_type": "ScriptDocument",

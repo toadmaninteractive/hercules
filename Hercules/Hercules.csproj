@@ -37,7 +37,6 @@
 
   <ItemGroup>
     <PackageReference Include="Anthropic.SDK" Version="5.10.0" />
-    <PackageReference Include="Artplant.Json" Version="1.0.4" />
     <PackageReference Include="AutomaticGraphLayout" Version="1.1.12" />
     <PackageReference Include="AutomaticGraphLayout.WpfGraphControl" Version="1.1.12" />
     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
@@ -58,6 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Artplant.Json\Artplant.Json.csproj" />
     <ProjectReference Include="..\FugueIcons\FugueIcons.csproj" />
   </ItemGroup>
 
