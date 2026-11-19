@@ -20,23 +20,13 @@ namespace Json
         }
     }
 
-    public sealed class JsonParser
+    public sealed class JsonParser(TextReader reader)
     {
-        private readonly TextReader reader;
-
-        public int Line { get; private set; }
-        public int Column { get; private set; }
-        public int Position { get; private set; }
+        public int Line { get; private set; } = 1;
+        public int Column { get; private set; } = 1;
+        public int Position { get; private set; } = 0;
 
         char[] buffer = new char[1025];
-
-        public JsonParser(TextReader reader)
-        {
-            this.reader = reader;
-            Line = 1;
-            Column = 1;
-            Position = 0;
-        }
 
         string ReadString()
         {

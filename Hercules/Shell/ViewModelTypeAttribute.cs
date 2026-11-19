@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -18,7 +19,7 @@ namespace Hercules
 
     public static class ViewModelTypes
     {
-        private static Lazy<Dictionary<Type, Type>>? types = null;
+        private static Lazy<FrozenDictionary<Type, Type>>? types = null;
 
         public static bool TryGetViewTypeByViewModelType(Type viewType, [MaybeNullWhen(false)] out Type viewModelType)
         {
@@ -32,7 +33,7 @@ namespace Hercules
             types = AsyncValue.Create(() => GetTypes(assembly));
         }
 
-        private static Dictionary<Type, Type> GetTypes(Assembly assembly)
+        private static FrozenDictionary<Type, Type> GetTypes(Assembly assembly)
         {
             var result = new Dictionary<Type, Type>();
             foreach (var type in assembly.GetTypes())
@@ -44,7 +45,7 @@ namespace Hercules
                 }
             }
 
-            return result;
+            return result.ToFrozenDictionary();
         }
     }
 }

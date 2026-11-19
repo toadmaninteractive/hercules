@@ -281,11 +281,6 @@ namespace CouchDB
             return await response.Content.GetJsonResponseAsync(CdbDocumentOperationResponseJsonSerializer.Instance, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task<CdbDocumentOperationResponse> PutDocumentAsync<T>(string docId, T data, CancellationToken cancellationToken = default) where T : IJsonSerializable
-        {
-            return PutDocumentAsync(docId, data.SerializeJson(), cancellationToken);
-        }
-
         public async Task<CdbDocumentOperationResponse> PutMultipartDocumentAsync(string docId, ImmutableJson data, IEnumerable<Stream> attachments, CancellationToken cancellationToken = default)
         {
             if (docId == null)

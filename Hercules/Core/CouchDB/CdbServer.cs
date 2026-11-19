@@ -1,10 +1,7 @@
-﻿using CouchDB.Api;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,12 +31,9 @@ namespace CouchDB
             return new(this, name);
         }
 
-        public async Task<IReadOnlyCollection<string>> GetDatabaseNamesAsync(CancellationToken cancellationToken = default)
+        public Task<ImmutableArray<string>> GetDatabaseNamesAsync(CancellationToken cancellationToken = default)
         {
-            var response = await HttpClient.GetAsync("_all_dbs", cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.GetJsonResponseAsync(cancellationToken).ConfigureAwait(false);
-            return result.AsArray.Select(db => db.AsString).ToArray();
+            return HttpClient.GetFromJsonAsync<ImmutableArray<string>>("_all_dbs", cancellationToken);
         }
 
         public async Task CreateDatabaseAsync(string dbname, CancellationToken cancellationToken = default)
