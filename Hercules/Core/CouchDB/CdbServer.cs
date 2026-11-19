@@ -29,13 +29,6 @@ namespace CouchDB
             HttpClient = httpClient;
         }
 
-        public async Task<CdbInstanceInfo> GetInstanceInfoAsync(CancellationToken cancellationToken = default)
-        {
-            var response = await HttpClient.GetAsync("", cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.GetJsonResponseAsync(CdbInstanceInfoJsonSerializer.Instance, cancellationToken).ConfigureAwait(false);
-        }
-
         public CdbDatabase GetDatabase(string name)
         {
             return new(this, name);
@@ -67,17 +60,6 @@ namespace CouchDB
             var result = (await response.Content.GetJsonResponseAsync(cancellationToken).ConfigureAwait(false)).AsObject;
             if (result.ContainsKey("ok") == false || result["ok"].AsBool != true)
                 throw new ArgumentException("Failed to delete database: " + result);
-        }
-
-        public async Task<CdbReplicationResult> ReplicateAsync(Uri source, Uri target, bool createTarget = false, bool continuous = false, Dictionary<string, string>? sourceHeaders = null, Dictionary<string, string>? targetHeaders = null, CancellationToken cancellationToken = default)
-        {
-            var sourceDatabase = new CdbReplicationDatabase(source, sourceHeaders ?? (IReadOnlyDictionary<string, string>)ImmutableDictionary<string, string>.Empty);
-            var targetDatabase = new CdbReplicationDatabase(target, targetHeaders ?? (IReadOnlyDictionary<string, string>)ImmutableDictionary<string, string>.Empty);
-            var request = new CdbReplicationRequest(sourceDatabase, targetDatabase, createTarget: createTarget, continuous: continuous);
-            using var requestContent = new StringContent(CdbReplicationRequestJsonSerializer.Instance.Serialize(request).ToString(), Encoding.UTF8, "application/json");
-            using var response = await HttpClient.PostAsync("_replicate", requestContent, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.GetJsonResponseAsync(CdbReplicationResultJsonSerializer.Instance, cancellationToken).ConfigureAwait(false);
         }
     }
 }

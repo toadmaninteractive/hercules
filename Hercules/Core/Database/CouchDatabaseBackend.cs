@@ -31,12 +31,6 @@ namespace Hercules.DB
             return changes.Results.Select(CdbToBackendChange).ToList();
         }
 
-        public async Task<IReadOnlyList<ImmutableJsonObject>> GetAllDocumentsAsync(CancellationToken cancellationToken)
-        {
-            var allDocs = await CouchDatabase.GetAllDocumentsAsync(includeDocs: true).ConfigureAwait(true);
-            return allDocs.Rows.Select(doc => doc.Doc!.AsObject).ToList();
-        }
-
         public async Task<ImmutableJsonObject> GetDocumentAsync(string documentId, string rev, CancellationToken cancellationToken)
         {
             return (await CouchDatabase.GetDocumentAsync(documentId, rev: rev, cancellationToken: cancellationToken).ConfigureAwait(false)).AsObject;

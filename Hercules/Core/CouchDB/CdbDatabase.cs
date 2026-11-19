@@ -32,12 +32,6 @@ namespace CouchDB
             Name = name;
         }
 
-        public async Task<CdbDatabaseInfo> GetInfoAsync(CancellationToken cancellationToken = default)
-        {
-            using var response = await Server.HttpClient.GetAsync(Name, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.GetJsonResponseAsync(CdbDatabaseInfoJsonSerializer.Instance, cancellationToken).ConfigureAwait(false);
-        }
 
         /// <summary>
         /// Returns information of all of the documents in a given database.
@@ -273,11 +267,6 @@ namespace CouchDB
                 var json = await response.Content.GetJsonResponseAsync(cancellationToken).ConfigureAwait(false);
                 return new CdbMultipartDocument(json, Array.Empty<CdbMultipartDocumentAttachment>());
             }
-        }
-
-        public static CdbDocumentInfo GetDocumentInfo(ImmutableJson json)
-        {
-            return CdbDocumentInfoJsonSerializer.Instance.Deserialize(json);
         }
 
         public async Task<CdbDocumentOperationResponse> PutDocumentAsync(string docId, ImmutableJson data, CancellationToken cancellationToken = default)
