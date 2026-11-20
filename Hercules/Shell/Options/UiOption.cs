@@ -77,7 +77,7 @@ namespace Hercules.Shell
     public class UiCategoryOption : UiOption
     {
         public string Name { get; }
-        public ObservableCollection<UiOption> Items { get; } = new ObservableCollection<UiOption>();
+        public ObservableCollection<UiOption> Items { get; } = [];
 
         public UiCategoryOption(string name, IEnumerable<UiOption> items)
         {

@@ -26,7 +26,7 @@ namespace Hercules.Documents
 
     public class DocumentRevisionEqualityComparer : EqualityComparer<DocumentRevision>
     {
-        private static readonly string[] IgnoredKeys = { "_id", "_rev", "hercules_metadata", "_attachments" };
+        private static readonly string[] IgnoredKeys = ["_id", "_rev", "hercules_metadata", "_attachments"];
 
         private bool CompareAttachments(IReadOnlyCollection<AttachmentRevision> attachments1, IReadOnlyCollection<AttachmentRevision> attachments2)
         {

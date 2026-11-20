@@ -4,17 +4,7 @@ using System.Collections.Generic;
 
 namespace Hercules.Forms.Elements
 {
-    public class Warning
-    {
-        public JsonPath Path { get; }
-        public string Text { get; }
-
-        public Warning(JsonPath path, string text)
-        {
-            Path = path;
-            Text = text;
-        }
-    }
+    public record Warning(JsonPath Path, string Text);
 
     public class UndoStep
     {

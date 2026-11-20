@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EnumsNET;
+using System;
 using System.Linq;
 using System.Windows.Markup;
 
@@ -6,18 +7,18 @@ namespace Hercules.Controls
 {
     public class EnumDescriptions : MarkupExtension
     {
-        internal class EnumValue<T> where T : Enum
+        internal class EnumValue<T> where T : struct, Enum
         {
             public T Value { get; }
-            public string Description { get; }
+            public string? Description { get; }
 
             public EnumValue(T val)
             {
                 this.Value = val;
-                this.Description = val.GetDescription();
+                this.Description = val.AsString(EnumFormat.Description) ?? val.AsString(EnumFormat.Name);
             }
 
-            public override string ToString() => Description;
+            public override string? ToString() => Description;
 
             public static implicit operator T(EnumValue<T> val) => val.Value;
         }

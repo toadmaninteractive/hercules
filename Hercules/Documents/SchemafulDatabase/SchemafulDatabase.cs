@@ -10,12 +10,10 @@ namespace Hercules.Documents
 {
     public sealed class SchemafulDatabase
     {
-        private static readonly Version RecommendedSchemaVersion = new Version(1, 1);
-
         public FormSchema? Schema { get; }
         public DiagramSchemaDocument? DiagramSchema { get; }
         public IReadOnlyList<Category> Categories { get; }
-        public ObservableCollection<IDocument> SchemafulDocuments { get; } = new();
+        public ObservableCollection<IDocument> SchemafulDocuments { get; } = [];
         public Category SchemalessDocuments { get; } = new Category(CategoryType.Schemaless, "_schemaless", null);
         public Category DesignDocuments { get; } = new Category(CategoryType.Design, "_design", null);
         public Category SchemaDocuments { get; } = new Category(CategoryType.Schema, "_schema", null);
@@ -25,8 +23,8 @@ namespace Hercules.Documents
         public IReadOnlyList<string> CategoryGroupNames { get; }
 
         private readonly IReadOnlyDictionary<string, Category> categoriesByName;
-        private readonly Dictionary<string, CategoryInterface> interfacesByName = new();
-        private readonly Dictionary<string, Category> categoriesByDocument = new Dictionary<string, Category>();
+        private readonly Dictionary<string, CategoryInterface> interfacesByName = [];
+        private readonly Dictionary<string, Category> categoriesByDocument = [];
         private readonly IDisposable databaseSubscription;
         private readonly IMetaSchemaProvider metaSchemaProvider;
         public bool SyncPreview { get; set; }

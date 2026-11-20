@@ -18,10 +18,7 @@ namespace Hercules
     {
         public override string ToString()
         {
-            if (Exception != null)
-                return $"[{Time:yyyy-MM-dd HH:mm:ss}] {Message}";
-            else
-                return $"[{Time:yyyy-MM-dd HH:mm:ss}] {Message}";
+            return $"[{Time:yyyy-MM-dd HH:mm:ss}] {Message}";
         }
 
         public string Copy()

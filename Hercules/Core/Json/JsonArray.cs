@@ -21,15 +21,13 @@ namespace Json
 
         public JsonArray(IEnumerable<ImmutableJson> collection)
         {
-            if (collection == null)
-                throw new ArgumentNullException(nameof(collection));
+            ArgumentNullException.ThrowIfNull(collection);
             data = new List<ImmutableJson>(collection);
         }
 
         internal JsonArray(List<ImmutableJson> list, bool seal)
         {
-            if (list == null)
-                throw new ArgumentNullException(nameof(list));
+            ArgumentNullException.ThrowIfNull(list);
             data = list;
             isSealed = seal;
         }
@@ -68,8 +66,7 @@ namespace Json
             }
             set
             {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
+                ArgumentNullException.ThrowIfNull(value);
                 Unseal();
                 data[index] = value;
             }
@@ -77,15 +74,13 @@ namespace Json
 
         public int IndexOf(ImmutableJson item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
             return data.IndexOf(item);
         }
 
         public void Insert(int index, ImmutableJson item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
             Unseal();
             data.Insert(index, item);
         }
@@ -98,8 +93,7 @@ namespace Json
 
         public void Add(ImmutableJson item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
             Unseal();
             data.Add(item);
         }
@@ -117,8 +111,7 @@ namespace Json
 
         public bool Contains(ImmutableJson item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
             return data.Contains(item);
         }
 
@@ -129,8 +122,7 @@ namespace Json
 
         public bool Remove(ImmutableJson item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
             Unseal();
             return data.Remove(item);
         }
@@ -157,8 +149,7 @@ namespace Json
 
         public void AddRange(IEnumerable<ImmutableJson> collection)
         {
-            if (collection == null)
-                throw new ArgumentNullException(nameof(collection));
+            ArgumentNullException.ThrowIfNull(collection);
             Unseal();
             data.AddRange(collection);
         }

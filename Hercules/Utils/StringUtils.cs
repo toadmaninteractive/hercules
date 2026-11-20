@@ -38,7 +38,7 @@ namespace Hercules
                 return value;
         }
 
-        static readonly char[] WordDelimiterChars = { ' ', ',', '.', ':', ';', '\t' };
+        static readonly char[] WordDelimiterChars = [' ', ',', '.', ':', ';', '\t'];
 
         public static bool SmartFilter(this string value, string filter)
         {

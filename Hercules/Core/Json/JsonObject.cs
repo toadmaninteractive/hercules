@@ -23,22 +23,19 @@ namespace Json
 
         public JsonObject(IDictionary<string, ImmutableJson> dictionary)
         {
-            if (dictionary == null)
-                throw new ArgumentNullException(nameof(dictionary));
+            ArgumentNullException.ThrowIfNull(dictionary);
             data = new Dictionary<string, ImmutableJson>(dictionary);
         }
 
         public JsonObject(IReadOnlyDictionary<string, ImmutableJson> dictionary)
         {
-            if (dictionary == null)
-                throw new ArgumentNullException(nameof(dictionary));
+            ArgumentNullException.ThrowIfNull(dictionary);
             data = dictionary.ToDictionary(p => p.Key, p => p.Value);
         }
 
         internal JsonObject(Dictionary<string, ImmutableJson> dictionary, bool seal)
         {
-            if (dictionary == null)
-                throw new ArgumentNullException(nameof(dictionary));
+            ArgumentNullException.ThrowIfNull(dictionary);
             data = dictionary;
             isSealed = seal;
         }
@@ -84,16 +81,13 @@ namespace Json
         {
             get
             {
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
+                ArgumentNullException.ThrowIfNull(key);
                 return data[key];
             }
             set
             {
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
+                ArgumentNullException.ThrowIfNull(key);
+                ArgumentNullException.ThrowIfNull(value);
                 Unseal();
                 data[key] = value;
             }
@@ -106,26 +100,22 @@ namespace Json
 
         public void Add(string key, ImmutableJson value)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(key);
+            ArgumentNullException.ThrowIfNull(value);
             Unseal();
             data.Add(key, value);
         }
 
         public bool Remove(string key)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+            ArgumentNullException.ThrowIfNull(key);
             Unseal();
             return data.Remove(key);
         }
 
         public bool TryGetValue(string key, [MaybeNullWhen(returnValue: false)] out ImmutableJson value)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+            ArgumentNullException.ThrowIfNull(key);
             return data.TryGetValue(key, out value);
         }
 

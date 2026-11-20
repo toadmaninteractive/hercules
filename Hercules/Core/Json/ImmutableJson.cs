@@ -132,8 +132,7 @@ namespace Json
 
         public ImmutableJson Fetch(JsonPath path)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
+            ArgumentNullException.ThrowIfNull(path);
 
             ImmutableJson? data = this;
             foreach (var node in path.Nodes)
@@ -148,8 +147,7 @@ namespace Json
 
         public bool TryFetch(JsonPath path, [MaybeNullWhen(returnValue: false)] out ImmutableJson result)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
+            ArgumentNullException.ThrowIfNull(path);
 
             result = default!;
 
@@ -167,10 +165,8 @@ namespace Json
 
         public ImmutableJson Update(JsonPath path, ImmutableJson update)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(path);
+            ArgumentNullException.ThrowIfNull(update);
             if (path.Head == null)
                 throw new InvalidOperationException("Json path is empty");
 
@@ -179,10 +175,8 @@ namespace Json
 
         public ImmutableJson ForceUpdate(JsonPath path, ImmutableJson update)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(path);
+            ArgumentNullException.ThrowIfNull(update);
             if (path.Head == null)
                 throw new InvalidOperationException("Json path is empty");
 
@@ -191,8 +185,7 @@ namespace Json
 
         public ImmutableJson Delete(JsonPath path)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
+            ArgumentNullException.ThrowIfNull(path);
             if (path.Head == null)
                 throw new InvalidOperationException("Json path is empty");
 
@@ -227,22 +220,19 @@ namespace Json
 
         public static ImmutableJson Create(string value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
             return new ImmutableJsonString(value);
         }
 
         public static ImmutableJson Create(JsonArray value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
             return value.ToImmutable();
         }
 
         public static ImmutableJson Create(JsonObject value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
             return value.ToImmutable();
         }
 
@@ -401,8 +391,7 @@ namespace Json
 
         internal ImmutableJsonString(string value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
             Value = value;
         }
 
@@ -428,8 +417,7 @@ namespace Json
 
         internal ImmutableJsonArray(List<ImmutableJson> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
             data = source;
             data.Capacity = data.Count;
         }
@@ -479,8 +467,7 @@ namespace Json
 
         public static implicit operator ImmutableJsonArray(JsonArray arr)
         {
-            if (arr == null)
-                throw new ArgumentNullException(nameof(arr));
+            ArgumentNullException.ThrowIfNull(arr);
             return arr.ToImmutable();
         }
 
@@ -511,8 +498,7 @@ namespace Json
 
         internal ImmutableJsonObject(Dictionary<string, ImmutableJson> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
             data = source;
         }
 
@@ -559,8 +545,7 @@ namespace Json
 
         public static implicit operator ImmutableJsonObject(JsonObject obj)
         {
-            if (obj == null)
-                throw new ArgumentNullException(nameof(obj));
+            ArgumentNullException.ThrowIfNull(obj);
             return obj.ToImmutable();
         }
 

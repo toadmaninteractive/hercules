@@ -4,7 +4,7 @@ namespace Hercules.Shell
 {
     public class NotificationService
     {
-        public ObservableCollection<Notification> Items { get; } = new();
+        public ObservableCollection<Notification> Items { get; } = [];
 
         public void Show(Notification notificationViewModel)
         {

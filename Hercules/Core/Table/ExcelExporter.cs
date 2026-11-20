@@ -12,8 +12,7 @@ namespace Hercules
     {
         public void Export(IExportTable table, string fileName)
         {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
+            ArgumentNullException.ThrowIfNull(table);
 
             var currentCulture = Thread.CurrentThread.CurrentCulture;
             try

@@ -370,8 +370,7 @@ namespace Igor.Serialization
 
         public static void WriteSize(BinaryWriter writer, int length)
         {
-            if (length < 0)
-                throw new ArgumentOutOfRangeException("length", "Size cannot be negative");
+            ArgumentOutOfRangeException.ThrowIfNegative(length);
             WriteVarint32(writer, (uint)length);
         }
 

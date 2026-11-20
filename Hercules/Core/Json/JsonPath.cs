@@ -38,8 +38,7 @@ namespace Json
 
         public override ImmutableJson? Fetch(ImmutableJson data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             if (!data.IsObject)
                 return null;
             if (data.AsObject.TryGetValue(Key, out var result))
@@ -50,8 +49,7 @@ namespace Json
 
         public override ImmutableJson Update(ImmutableJson data, ImmutableJson update)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
 
             if (!data.IsObject)
                 throw new ArgumentOutOfRangeException(nameof(data), "JSON data is not an object");
@@ -62,8 +60,7 @@ namespace Json
 
         public override ImmutableJson ForceUpdate(ImmutableJson data, ImmutableJson update)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
 
             JsonObject obj;
             if (data.IsObject)
@@ -77,8 +74,7 @@ namespace Json
 
         public override ImmutableJson Delete(ImmutableJson data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             if (!data.IsObject)
                 throw new ArgumentOutOfRangeException(nameof(data), "JSON data is not an object");
             var res = new JsonObject(data.AsObject);
@@ -88,8 +84,7 @@ namespace Json
 
         internal override JsonBuilder? BuilderFetch(JsonBuilder data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             if (!data.IsObject)
                 return null;
             if (data.AsObject.TryGetValue(Key, out var result))
@@ -100,23 +95,20 @@ namespace Json
 
         internal override JsonBuilder BuilderEnsure(JsonBuilder data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
 
             return data.GetOrAdd(Key);
         }
 
         internal override void BuilderUpdate(JsonBuilder data, JsonBuilder update)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             data.AsObject[Key] = update;
         }
 
         internal override void BuilderDelete(JsonBuilder data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             data.AsObject.Remove(Key);
         }
 
@@ -156,8 +148,7 @@ namespace Json
 
         public override ImmutableJson? Fetch(ImmutableJson data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             if (!data.IsObject)
                 return null;
             if (data.AsObject.ContainsKey(Key))
@@ -178,10 +169,8 @@ namespace Json
 
         public override ImmutableJson Update(ImmutableJson data, ImmutableJson update)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(data);
+            ArgumentNullException.ThrowIfNull(update);
             if (!data.IsObject)
                 throw new ArgumentOutOfRangeException(nameof(data), "JSON data is not an object");
             if (!IsKey(update))
@@ -195,10 +184,8 @@ namespace Json
 
         public override ImmutableJson ForceUpdate(ImmutableJson data, ImmutableJson update)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(data);
+            ArgumentNullException.ThrowIfNull(update);
             if (!IsKey(update))
                 throw new ArgumentOutOfRangeException(nameof(update), "JSON data cannot be used as an object key");
 
@@ -216,8 +203,7 @@ namespace Json
 
         public override ImmutableJson Delete(ImmutableJson data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             if (!data.IsObject)
                 throw new ArgumentOutOfRangeException(nameof(data), "JSON data is not an object");
 
@@ -228,8 +214,7 @@ namespace Json
 
         internal override JsonBuilder? BuilderFetch(JsonBuilder data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             if (!data.IsObject)
                 return null;
             if (data.GetOrCreateObject().TryGetValue(Key, out var result))
@@ -240,8 +225,7 @@ namespace Json
 
         internal override JsonBuilder BuilderEnsure(JsonBuilder data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
 
             var obj = data.GetOrCreateObject();
             if (obj.ContainsKey(Key))
@@ -252,10 +236,8 @@ namespace Json
 
         internal override void BuilderUpdate(JsonBuilder data, JsonBuilder update)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(data);
+            ArgumentNullException.ThrowIfNull(update);
             var newKeyJson = update.ToImmutable();
             if (!IsKey(newKeyJson))
                 throw new ArgumentOutOfRangeException(nameof(update), "JSON data cannot be used as an object key");
@@ -270,8 +252,7 @@ namespace Json
 
         internal override void BuilderDelete(JsonBuilder data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             data.AsObject.Remove(Key);
         }
 
@@ -310,8 +291,7 @@ namespace Json
 
         public override ImmutableJson? Fetch(ImmutableJson data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             if (!data.IsArray)
                 return null;
             if (Index < data.AsArray.Count)
@@ -322,10 +302,8 @@ namespace Json
 
         public override ImmutableJson Update(ImmutableJson data, ImmutableJson update)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(data);
+            ArgumentNullException.ThrowIfNull(update);
             if (!data.IsArray)
                 throw new ArgumentOutOfRangeException(nameof(data), "JSON data is not an array");
             var res = new JsonArray(data.AsArray);
@@ -335,10 +313,8 @@ namespace Json
 
         public override ImmutableJson ForceUpdate(ImmutableJson data, ImmutableJson update)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(data);
+            ArgumentNullException.ThrowIfNull(update);
             JsonArray res;
             if (data.IsArray)
                 res = new JsonArray(data.AsArray);
@@ -352,8 +328,7 @@ namespace Json
 
         public override ImmutableJson Delete(ImmutableJson data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             if (!data.IsArray)
                 throw new ArgumentOutOfRangeException(nameof(data), "JSON data is not an object");
             var res = new JsonArray(data.AsArray);
@@ -363,8 +338,7 @@ namespace Json
 
         internal override JsonBuilder? BuilderFetch(JsonBuilder data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             if (!data.IsArray)
                 return null;
             var arr = data.AsArray;
@@ -376,23 +350,20 @@ namespace Json
 
         internal override JsonBuilder BuilderEnsure(JsonBuilder data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
 
             return data.GetOrAdd(Index);
         }
 
         internal override void BuilderUpdate(JsonBuilder data, JsonBuilder update)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             data.AsArray[Index] = update;
         }
 
         internal override void BuilderDelete(JsonBuilder data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
             data.AsArray.RemoveAt(Index);
         }
 

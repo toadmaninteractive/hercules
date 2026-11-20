@@ -194,7 +194,7 @@ namespace Hercules.Analysis
 
         public void SetRootDocument(IDocument document)
         {
-            rootDocuments = new[] { document };
+            rootDocuments = [document];
             Refresh();
         }
     }

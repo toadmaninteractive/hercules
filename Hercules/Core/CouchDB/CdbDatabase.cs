@@ -22,10 +22,8 @@ namespace CouchDB
 
         public CdbDatabase(CdbServer server, string name)
         {
-            if (server == null)
-                throw new ArgumentNullException(nameof(server));
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            ArgumentNullException.ThrowIfNull(server);
+            ArgumentNullException.ThrowIfNull(name);
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Database name cannot be empty", nameof(name));
             Server = server;
@@ -204,8 +202,7 @@ namespace CouchDB
 
         public async Task<T> GetDocumentAsync<T>(IJsonSerializer<T> serializer, string docId, bool attachments = false, bool attEncodingInfo = false, IEnumerable<string>? attsSince = null, bool conflicts = false, bool deletedConflicts = false, bool latest = false, bool localSeq = false, bool meta = false, IEnumerable<string>? openRevs = null, bool openRevsAll = false, string? rev = null, bool revs = false, bool revsInfo = false, CancellationToken cancellationToken = default)
         {
-            if (serializer == null)
-                throw new ArgumentNullException(nameof(serializer));
+            ArgumentNullException.ThrowIfNull(serializer);
             var json = await GetDocumentAsync(docId, attachments, attEncodingInfo, attsSince, conflicts, deletedConflicts, latest, localSeq, meta, openRevs, openRevsAll, rev, revs, revsInfo, cancellationToken).ConfigureAwait(false);
             return serializer.Deserialize(json);
         }
@@ -271,10 +268,8 @@ namespace CouchDB
 
         public async Task<CdbDocumentOperationResponse> PutDocumentAsync(string docId, ImmutableJson data, CancellationToken cancellationToken = default)
         {
-            if (docId == null)
-                throw new ArgumentNullException(nameof(docId));
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(docId);
+            ArgumentNullException.ThrowIfNull(data);
             using var requestContent = new StringContent(data.ToString(), Encoding.UTF8, "application/json");
             using var response = await Server.HttpClient.PutAsync($"{Name}/{docId}", requestContent, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
@@ -283,12 +278,9 @@ namespace CouchDB
 
         public async Task<CdbDocumentOperationResponse> PutMultipartDocumentAsync(string docId, ImmutableJson data, IEnumerable<Stream> attachments, CancellationToken cancellationToken = default)
         {
-            if (docId == null)
-                throw new ArgumentNullException(nameof(docId));
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-            if (attachments == null)
-                throw new ArgumentNullException(nameof(attachments));
+            ArgumentNullException.ThrowIfNull(docId);
+            ArgumentNullException.ThrowIfNull(data);
+            ArgumentNullException.ThrowIfNull(attachments);
             using var requestContent = new MultipartContent("related");
             requestContent.Add(new StringContent(data.ToString(), Encoding.UTF8, "application/json"));
             foreach (var stream in attachments)

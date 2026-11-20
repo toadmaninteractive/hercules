@@ -25,9 +25,9 @@ namespace Hercules.Documents
         public bool IsSchemaful => Type == CategoryType.Schemaful;
 
         private List<CategoryInterface>? interfaces;
-        public IReadOnlyList<CategoryInterface> Interfaces => interfaces ??= new List<CategoryInterface>();
+        public IReadOnlyList<CategoryInterface> Interfaces => interfaces ??= [];
 
-        public ObservableCollection<IDocument> Documents { get; } = new ObservableCollection<IDocument>();
+        public ObservableCollection<IDocument> Documents { get; } = [];
 
         public Category(CategoryType type, string name, string? group, string? aiHint = null)
         {
@@ -76,7 +76,7 @@ namespace Hercules.Documents
     public sealed class CategoryInterface
     {
         public string Name { get; }
-        public ObservableCollection<IDocument> Documents { get; } = new ObservableCollection<IDocument>();
+        public ObservableCollection<IDocument> Documents { get; } = [];
         public IReadOnlyList<Category> Categories { get; }
 
         public void AddDocument(IDocument document)

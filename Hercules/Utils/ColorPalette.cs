@@ -9,8 +9,8 @@ namespace Hercules
             return PaletteBrushes[i % PaletteBrushes.Length];
         }
 
-        public static readonly SolidColorBrush[] PaletteBrushes = new[]
-        {
+        public static readonly SolidColorBrush[] PaletteBrushes =
+        [
             Brushes.AliceBlue,
             Brushes.AntiqueWhite,
             Brushes.Aqua,
@@ -132,6 +132,6 @@ namespace Hercules
             Brushes.WhiteSmoke,
             Brushes.Yellow,
             Brushes.YellowGreen,
-        };
+        ];
     }
 }

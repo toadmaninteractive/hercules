@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 
 namespace Json
@@ -29,31 +28,16 @@ namespace Json
                     return jsonFormat;
             }
 
-            switch (format)
+            return format switch
             {
-                case null:
-                case "G":
-                case "g":
-                    return Compact;
-
-                case "T":
-                    return new JsonFormat(true, "\t");
-
-                case "1":
-                    return new JsonFormat(true, " ");
-
-                case "2":
-                    return new JsonFormat(true, "  ");
-
-                case "3":
-                    return new JsonFormat(true, "   ");
-
-                case "4":
-                    return new JsonFormat(true, "    ");
-
-                default:
-                    return Compact;
-            }
+                null or "G" or "g" => Compact,
+                "T" => new JsonFormat(true, "\t"),
+                "1" => new JsonFormat(true, " "),
+                "2" => new JsonFormat(true, "  "),
+                "3" => new JsonFormat(true, "   "),
+                "4" => new JsonFormat(true, "    "),
+                _ => Compact,
+            };
         }
 
         public object? GetFormat(Type? formatType)

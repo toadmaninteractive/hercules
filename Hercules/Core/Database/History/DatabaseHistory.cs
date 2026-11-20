@@ -18,8 +18,7 @@ namespace Hercules.DB
         public void Apply()
         {
             Revision.Snapshot = Snapshot;
-            if (NextRevision != null)
-                NextRevision.PreviousSnapshot = Snapshot;
+            NextRevision?.PreviousSnapshot = Snapshot;
         }
 
         public DatabaseHistoryLoadedData(DocumentCommit revision, DocumentCommit? nextRevision)

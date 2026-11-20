@@ -3,27 +3,15 @@ using System.Collections.Generic;
 
 namespace Hercules.Shell
 {
-    public class UiMenuOption
-    {
-        public UiOption Option { get; }
-        public UiCategoryPath CategoryPath { get; }
-        public bool ShowInToolbar { get; }
-
-        public UiMenuOption(UiOption option, UiCategoryPath categoryPath, bool showInToolbar)
-        {
-            Option = option;
-            CategoryPath = categoryPath;
-            ShowInToolbar = showInToolbar;
-        }
-    }
+    public record UiMenuOption(UiOption Option, UiCategoryPath CategoryPath, bool ShowInToolbar);
 
     public class UiOptionManager : IComparer<UiCategoryPath>
     {
         public IReadOnlyList<UiMenuOption> Options => options;
 
-        readonly List<UiMenuOption> options = new();
-        readonly Dictionary<string, int> categoryWeights = new();
-        readonly Dictionary<Type, List<UiOption>> contextMenus = new();
+        readonly List<UiMenuOption> options = [];
+        readonly Dictionary<string, int> categoryWeights = [];
+        readonly Dictionary<Type, List<UiOption>> contextMenus = [];
 
         public UiOptionManager()
         {

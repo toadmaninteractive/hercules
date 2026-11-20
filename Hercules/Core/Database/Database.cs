@@ -277,11 +277,8 @@ namespace Hercules.DB
         public void Close()
         {
             documents.Clear();
-            if (listener != null)
-            {
-                listener.Dispose();
-                listener = null;
-            }
+            listener?.Dispose();
+            listener = null;
             cancellationTokenSource.Cancel();
         }
 

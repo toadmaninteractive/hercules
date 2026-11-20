@@ -73,10 +73,7 @@ namespace System.Reactive.Concurrency
         /// <exception cref="ArgumentNullException"><paramref name="action"/> is <c>null</c>.</exception>
         public override IDisposable Schedule<TState>(TState state, Func<IScheduler, TState, IDisposable> action)
         {
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
+            ArgumentNullException.ThrowIfNull(action);
 
             var d = new SingleAssignmentDisposable();
 
@@ -105,10 +102,7 @@ namespace System.Reactive.Concurrency
         /// <exception cref="ArgumentNullException"><paramref name="action"/> is <c>null</c>.</exception>
         public override IDisposable Schedule<TState>(TState state, TimeSpan dueTime, Func<IScheduler, TState, IDisposable> action)
         {
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
+            ArgumentNullException.ThrowIfNull(action);
 
             var dt = Scheduler.Normalize(dueTime);
             if (dt.Ticks == 0)
@@ -170,15 +164,8 @@ namespace System.Reactive.Concurrency
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="period"/> is less than <see cref="TimeSpan.Zero"/>.</exception>
         public IDisposable SchedulePeriodic<TState>(TState state, TimeSpan period, Func<TState, TState> action)
         {
-            if (period < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(period));
-            }
-
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
+            ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
+            ArgumentNullException.ThrowIfNull(action);
 
             var timer = new System.Windows.Threading.DispatcherTimer(Priority, Dispatcher);
 

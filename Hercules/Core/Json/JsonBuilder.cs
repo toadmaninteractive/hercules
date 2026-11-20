@@ -125,8 +125,7 @@ namespace Json
 
         public void Set(ImmutableJson value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
             data = value;
         }
 
@@ -169,8 +168,7 @@ namespace Json
 
         public JsonBuilder Fetch(JsonPath path)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
+            ArgumentNullException.ThrowIfNull(path);
 
             JsonBuilder? res = this;
             foreach (var node in path.Nodes)
@@ -185,8 +183,7 @@ namespace Json
 
         public bool TryFetch(JsonPath path, [MaybeNullWhen(returnValue: false)] out JsonBuilder result)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
+            ArgumentNullException.ThrowIfNull(path);
 
             result = default!;
             JsonBuilder? data = this;
@@ -208,10 +205,8 @@ namespace Json
 
         public void Update(JsonPath path, JsonBuilder update)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(path);
+            ArgumentNullException.ThrowIfNull(update);
             if (path.Head == null)
                 throw new InvalidOperationException("JSON path is empty");
 
@@ -229,10 +224,8 @@ namespace Json
 
         public void ForceUpdate(JsonPath path, JsonBuilder update)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(path);
+            ArgumentNullException.ThrowIfNull(update);
             if (path.Head == null)
                 throw new InvalidOperationException("JSON path is empty");
 
@@ -245,8 +238,7 @@ namespace Json
 
         public void Delete(JsonPath path)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
+            ArgumentNullException.ThrowIfNull(path);
             if (path.Head == null)
                 throw new InvalidOperationException("JSON path is empty");
 
@@ -287,36 +279,27 @@ namespace Json
 
         public JsonBuilder(Dictionary<string, JsonBuilder> value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
             data = value;
         }
 
         public JsonBuilder(List<JsonBuilder> value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
             data = value;
         }
 
         public JsonBuilder(ImmutableJson value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
             data = value;
         }
 
         public static JsonBuilder Null => new JsonBuilder();
 
-        public static JsonBuilder EmptyArray
-        {
-            get { return new JsonBuilder(new List<JsonBuilder>()); }
-        }
+        public static JsonBuilder EmptyArray => new JsonBuilder(new List<JsonBuilder>());
 
-        public static JsonBuilder EmptyObject
-        {
-            get { return new JsonBuilder(new Dictionary<string, JsonBuilder>()); }
-        }
+        public static JsonBuilder EmptyObject => new JsonBuilder(new Dictionary<string, JsonBuilder>());
 
         #endregion
     }

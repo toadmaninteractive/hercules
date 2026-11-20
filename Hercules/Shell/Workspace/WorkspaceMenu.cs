@@ -6,7 +6,7 @@ namespace Hercules.Shell
 {
     public class WorkspaceMenu
     {
-        public ObservableCollection<UiOption> Items { get; } = new();
+        public ObservableCollection<UiOption> Items { get; } = [];
 
         public void Build(IEnumerable<UiMenuOption> options, AdviceManager adviceManager)
         {

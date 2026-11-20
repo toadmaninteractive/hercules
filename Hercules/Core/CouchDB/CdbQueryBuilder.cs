@@ -16,8 +16,7 @@ namespace CouchDB
 
         public CdbQueryBuilder(Uri baseUrl, params string[] urlParts)
         {
-            if (baseUrl == null)
-                throw new ArgumentNullException(nameof(baseUrl));
+            ArgumentNullException.ThrowIfNull(baseUrl);
             builder = new StringBuilder(baseUrl.AbsoluteUri);
             foreach (var urlPart in urlParts)
             {
@@ -28,8 +27,7 @@ namespace CouchDB
 
         public CdbQueryBuilder(string baseUrl, params string[] urlParts)
         {
-            if (baseUrl == null)
-                throw new ArgumentNullException(nameof(baseUrl));
+            ArgumentNullException.ThrowIfNull(baseUrl);
             builder = new StringBuilder(baseUrl);
             foreach (var urlPart in urlParts)
             {

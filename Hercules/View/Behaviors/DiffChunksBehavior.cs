@@ -35,12 +35,8 @@ namespace Hercules.Controls
                 margin.DiffChunks = newChunks;
             if (colorizer != null)
                 colorizer.Chunks = newChunks;
-
-            if (subscription != null)
-            {
-                subscription.Dispose();
-                subscription = null;
-            }
+            subscription?.Dispose();
+            subscription = null;
             if (newChunks != null)
             {
                 subscription = newChunks.WhenChanged.Throttle(TimeSpan.FromSeconds(0.1)).ObserveOn(DispatcherScheduler.Current).Subscribe(_ => Update());
